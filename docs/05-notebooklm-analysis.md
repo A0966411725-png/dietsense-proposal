@@ -12,12 +12,12 @@
 |----------------|---------|-----------------|------|--------------|
 | Introduction（20%） | 重要性、動機、Evidence、Innovation；A–F 結構；有客觀證據 | [02-introduction.md](02-introduction.md)：A–F + L；WHO、國健署原始附件、2025–2026 研究 | ✅ | 移除查不到的數字；加入拍照 App 與珍奶誤差的新證據 |
 | Related Work（20%） | 約 1/2 AI + 1/2 Domain；Article Summary Table；Existing → Limitations → Gap → Our Project | [03-related-work.md](03-related-work.md)：M1–M3（AI）+ D1–D5（Domain）；9 篇摘要表；4 個缺口 | ✅ | 原表 [1]–[5] 沒有作者，已全部換成可查證文獻；R1–R24 都附 DOI 或官方網址 |
-| Deep Research（20%） | 5 個核心思維、3 個爭論、10 個深度問題 | 期中 Word 第四節（內容可沿用）；本文件第三節補上新證據 | ⚠️ 部分 | 爭論二的證據已更新（見第三節）；Q1–Q3 尚未搬進 repo |
+| Deep Research（20%） | 5 個核心思維、3 個爭論、10 個深度問題 | [06-deep-research.md](06-deep-research.md)：Q1–Q3 完整版，證據全面更新 | ✅ | 移除查不到的引用；每個思維與爭論都對應到系統設計 |
 | Proposed AI Agent + Architecture（20%） | ①–⑧ 模組架構圖，正文逐一說明 | [design.md](../openspec/changes/add-dietsense-agent/design.md)：Mermaid 架構圖 + 模組對應表 | ✅ | 每個模組都對應到 OpenSpec capability |
 | Flowchart + Pseudocode + Feasibility（15%） | 含 Decision／Loop／Exception 的流程圖；有行號的 Pseudocode | design.md：Mermaid 流程圖、Algorithm 1（18 行） | ✅ | 修正原稿兩個錯誤：早餐後誤報、`recommend` 用到未定義變數；追問改為有上限 |
 | GitHub + DESIGN.md + 完整度（5%） | 正式 Repository；從 Proposal 階段開始維護 DESIGN.md | 私人 repo `dietsense-proposal`；[DESIGN.md](../DESIGN.md) | ✅ | 原稿沒有 repo |
 | Abstract（必繳） | A–F；Findings 不得虛構 | [01-abstract-A-F.md](01-abstract-A-F.md)：5 核心、3 取捨、10 細節、約 500 字摘要 | ✅ | 明確標註「預期目標，非實驗結果」 |
-| Proposal PPT（必繳） | 動機、文獻、Gap、Agent Design、Architecture、Flowchart、Pseudocode | 期中 PPT 尚未依重構內容更新 | ❌ 待做 | — |
+| Proposal PPT（必繳） | 動機、文獻、Gap、Agent Design、Architecture、Flowchart、Pseudocode | [presentation/](../presentation/)：依重構內容更新的簡報 | ✅ | 數據、引用與架構全部同步 |
 
 **規範的核心原則檢查：「不要只做一個 Model，也不要只做一個 Chatbot」**
 
@@ -36,7 +36,7 @@
 
 | 字母 | A2Z 定義 | DietSense 重構後內容 | 文件位置 |
 |------|---------|--------------------|---------|
-| **A** | Attention Getter | WHO 2022 年逾 8.9 億成人肥胖 [R14]；台灣男性過重 + 肥胖 58.4%、女性 42.6% [R15] | 01、02-A |
+| **A** | Attention Getter | WHO 2022 年逾 8.9 億成人肥胖 [R14]；台灣男性過重 + 肥胖 58.4%、女性 42.6% [R15]；成人 68% 每天至少外食一餐 [N4] | 01、02-A |
 | **B** | But | App 持續度 5.4 → 1.4 天／週 [R11]；漏記 18% [R13]；拍照 App 每餐少算 250–345 kcal [N2]；珍奶低估 76% [N1] | 01、02-C |
 | **C** | Cure | DietSense 對話式熱量攝取 Domain AI Agent | 01、proposal |
 | **D** | Development | LLM Planner + 台灣優先 RAG + 份量表 + Mifflin-St Jeor + 區間 + 安全守門 | 01、design |
@@ -102,7 +102,7 @@
 
 ### 爭論三：個人化 vs. 通用指引
 
-證據（Zeevi et al. 2015 [R16]）可沿用。補充：AI 聊天機器人替青少年產生的菜單平均每天少將近 700 kcal 的報導 [N5]（二手資料），說明「個人化」若缺少安全基線可能造成傷害，支持 DietSense 以通用指引作為安全底線的設計。
+證據（Zeevi et al. 2015 [R16]）可沿用。補充：Bilen 等人（2026）發現 5 個 AI 聊天機器人替青少年排的菜單平均每天比營養師少約 695 kcal [N5]，說明「個人化」若缺少安全基線可能造成傷害，支持 DietSense 以通用指引作為安全底線的設計。
 
 ---
 
@@ -114,6 +114,6 @@
 3. 誠實處理反證（Open-KNEAD），把它變成實驗設計的一部分。
 
 **送出前還要做的事**
-1. 依重構內容更新 Proposal PPT（規範必繳）。
-2. 把 Deep Research Q1–Q3 搬進 repo（例如 `docs/06-deep-research.md`），並套用第三節的證據更新。
-3. 補上「台灣外食超過七成」與「AI 青少年菜單」兩筆二手資料的原始來源；找不到就不要放進正式文件。
+1. ~~依重構內容更新 Proposal PPT~~ 已完成：[presentation/](../presentation/)。
+2. ~~把 Deep Research Q1–Q3 搬進 repo~~ 已完成：[06-deep-research.md](06-deep-research.md)。
+3. ~~補上二手資料的原始來源~~ 已完成：外食比例改用國健署成果報告表 3.9.1，AI 青少年菜單改用 Bilen et al. (2026)。

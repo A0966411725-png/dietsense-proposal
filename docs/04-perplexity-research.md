@@ -5,7 +5,7 @@
 > 2. 「幫我整理這份研究主題的預期貢獻與學術價值」
 > 3. 「(Continue) review A to F，你想加強的部分盡量補充」
 >
-> **製作方式**：本文件由 Claude 用網路搜尋完成，沒有實際使用 Perplexity。每個數字都盡量回到原始來源（期刊、PubMed、官方網站）確認；只找到新聞或二手資料的項目，表中會標示「二手」。
+> **製作方式**：本文件由 Claude 用網路搜尋完成，沒有實際使用 Perplexity。每個數字都回到原始來源（期刊、PubMed、Crossref、官方報告）確認；N3 為科技媒體報導，數字由收購方提供。
 > 文獻編號 R1–R24 見 [03-related-work.md](03-related-work.md)；本文件新增的來源編號為 N1–N6。
 
 ---
@@ -25,7 +25,7 @@
 | V-1 | 台灣團隊在 AJCN（2025）發表：加入台灣食物知識的客製化 Diabot-GPT-4o，只用影像的食物辨識率為 74%，未客製化的 GPT-4o 為 59% [R4] | **在地知識確實有用**，支持「台灣資料優先」的設計 | 頂級期刊 |
 | V-2 | Open-KNEAD（2026）把餐點拆成單項，再錨定到 USDA 食品代碼；作者也發現新一代 MLLM 直接估算已追上檢索管線 [R6] | 「Agent + 資料錨定」是 2026 年的新方向；但也提醒我們必須和純 LLM 正面比較 | 預印本 |
 | V-3 | 斯洛維尼亞團隊（2026）把國家食品成分資料庫接上 RAG，評估 4 個 LLM 的檢索能力 [R10] | 「國家資料庫 + LLM」已有歐洲先例，但台灣還沒有 | 預印本 |
-| V-4 | 拍照記熱量的 Cal AI 據報導年營收約 3,000–4,000 萬美元，下載量逾千萬，之後被 MyFitnessPal 收購 [N3] | 市場已證明「低負擔記錄」有強烈需求；但 I-2 顯示準確度還跟不上 | **二手**（新聞與資料彙整網站，數字為估計值，收購時間各家說法不一） |
+| V-4 | MyFitnessPal 於 2026 年 3 月 2 日宣布收購拍照記熱量的 Cal AI；依 MyFitnessPal 提供的數字，Cal AI 兩年內安裝數超過 1,500 萬、年營收超過 3,000 萬美元；交易已於 2025 年 12 月完成，金額未公開 [N3] | 市場已證明「低負擔記錄」有強烈需求；但 I-2 顯示準確度還跟不上 | 科技媒體報導（數字由收購方提供，非稽核數字） |
 
 ## 三、Important：為什麼重要
 
@@ -33,9 +33,9 @@
 |---|------|---------|
 | P-1 | WHO：2022 年全球 25 億成人過重，其中逾 8.9 億人肥胖；肥胖盛行率 1990–2022 年間增加超過一倍 [R14]；2025 年 12 月 WHO 發布首份 GLP-1 用藥指引，指出全球肥胖人口已超過 10 億 [R21] | 官方 |
 | P-2 | 台灣 2017–2020 年國民營養調查：成人男性過重 30.31%、肥胖 28.12%；女性過重 22.98%、肥胖 19.57% [R15] | 官方（已讀取原始附件） |
-| P-3 | 多家媒體引用國民營養調查指出，台灣成人外食比例超過七成 [N4] | **二手**（尚未找到原始報告頁面，正式引用前要補） |
+| P-3 | 國民營養健康狀況變遷調查（106–109 年）成果報告表 3.9.1（n = 9,954）：19 歲以上成人有 **68.0%** 每週外食 7 次以上（平均每天至少一餐），只有 11.4% 完全不外食；19–44 歲成人每週外食 7 次以上達 **83.7%** [N4] | 官方報告（已讀取原始 PDF） |
 | P-4 | 熱量 App 的記錄頻率在第 4 到 12 週間由每週 5.4 天降到 1.4 天 [R11]；即使有記錄，使用者也平均漏記約 18% 的品項 [R13] | 期刊論文 |
-| P-5 | 2026 年的研究報導指出，聊天機器人替青少年產生的菜單平均每天比營養師的建議少將近 700 kcal，被醫師警告可能助長飲食失調 [N5] | **二手**（新聞報導，原始論文待查） |
+| P-5 | Bilen 等人（2026，*Frontiers in Nutrition*）讓 ChatGPT-4o、Gemini 2.5 Pro、Claude 4.1、Bing Chat、Perplexity 替 4 位虛構的過重／肥胖 15 歲青少年排三天菜單：AI 菜單平均每天比營養師的菜單少約 **695 kcal**，碳水偏低、蛋白質與脂肪偏高 [N5] | 期刊論文（書目經 Science News 報導核對；樣本為 4 個虛構個案，提示詞為土耳其文） |
 | P-6 | 營養師對 ChatGPT 飲食建議最主要的疑慮是資訊不夠嚴謹，容易造成誤解或誤用（台灣 30 位營養師的研究，2024）[N6] | 期刊論文 |
 
 **一句話總結**：問題很大（P-1～P-3）、現有工具在台灣常見食物上最不準（I-1～I-3）、而 AI 工具也可能帶來安全風險（P-5、P-6）。DietSense 的「在地資料錨定 + 區間 + 安全守門」剛好對準這三點。
@@ -67,7 +67,7 @@
 
 | 段落 | 原本 | 建議補強 | 已套用到 |
 |------|------|---------|---------|
-| **A. Attention** | WHO + 國健署數據 | 加一句「台灣成人外食超過七成」（補上原始來源後）；用 Cal AI 被收購的案例說明市場需求 | **尚未套用**：外食比例還缺原始來源；Cal AI 只有二手資料，建議只放在簡報口頭說明 |
+| **A. Attention** | WHO + 國健署數據 | 加一句「台灣成人 68% 平均每天至少外食一餐」[N4]；用 Cal AI 被收購的案例說明市場需求 [N3] | 01 摘要 A、02 Introduction A／B；Cal AI 放在 02 Background 與簡報 |
 | **B. But** | 持續度下降、LLM MAPE 約 36% | 加入 NIDDK 2026「拍照 App 每餐少算 250–345 kcal」[N2] 與雪梨大學「珍奶低估最多 76%」[N1]，讓挑戰更貼近台灣 | 01 摘要 B、02 Introduction C/D |
 | **C. Cure** | DietSense 對話式 Agent | 明確點出「讓使用者用語言補充照片看不到的資訊（油、湯、份量）」 | 01 摘要 C |
 | **D. Development** | LLM + RAG + 公式 + 區間 + 安全 | 補一句「以台灣在地知識客製化可提升辨識」的證據 [R4] | 02 Introduction E |
@@ -83,7 +83,7 @@
 |------|------|------|
 | N1 | Li, X., Yin, A., Choi, H. Y., Chan, V., Allman-Farinelli, M., & Chen, J. (2024). Evaluating the quality and comparative validity of manual food logging and artificial intelligence-enabled food image recognition in apps for nutrition care. *Nutrients*, 16(15), 2573. https://doi.org/10.3390/nu16152573 ；雪梨大學新聞稿（2024-08-29） | 期刊論文（Crossref 已確認） |
 | N2 | Hengist, A., et al. (2026). 拍照熱量 App 準確度研究，發表於 American Society for Nutrition 年會 NUTRITION 2026；ScienceDaily（2026-07-26）、Newsweek、HealthDay（2026-07-27）報導 | 研討會摘要，尚未經完整同儕審查；第一作者以正式摘要為準 |
-| N3 | Cal AI 營收與 MyFitnessPal 收購報導（Latka、Let's Data Science 等，2025–2026） | 二手；數字為估計值 |
-| N4 | 台灣外食比例超過七成（TVBS 健康 2026、工商時報 2025 等媒體引用國民營養健康狀況變遷調查） | 二手；需補國健署原始報告 |
-| N5 | AI 聊天機器人替青少年產生菜單，平均每天比營養師少將近 700 kcal（WJLA/7News 2026-03-23，引用 Science News） | 二手；原始論文待查 |
+| N3 | Bort, J. (2026, March 2). MyFitnessPal has acquired Cal AI, the viral calorie app built by teens. *TechCrunch*. https://techcrunch.com/2026/03/02/myfitnesspal-has-acquired-cal-ai-the-viral-calorie-app-built-by-teens | 科技媒體；營收與下載數由 MyFitnessPal 提供 |
+| N4 | 潘文涵（計畫主持人）。國民營養健康狀況變遷調查（106–109 年）成果報告。衛生福利部國民健康署委託研究計畫。第三章第九節「國人外食情形」，表 3.9.1，頁 162–163。https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=dbeb2e2da047472f9a8dd816d0b021ac | 官方報告（已讀取原始 PDF；68.0% = 34.8 + 27.2 + 6.0） |
+| N5 | Bilen, A. B., Kalkan, G. E., & Yılmaz Önal, H. Y. (2026). Artificial intelligence diet plans underestimate nutrient intake compared to dietitians in adolescents. *Frontiers in Nutrition*, 13, 1765598. https://doi.org/10.3389/fnut.2026.1765598 | 期刊論文（Crossref 已確認） |
 | N6 | Assessing the quality of ChatGPT's dietary advice for college students from dietitians' perspectives. *Nutrients*（2024）. PMC11206595 | 期刊論文 |

@@ -14,6 +14,8 @@
 | 第一段 NotebookLM：依 A2Z 與規範解析 | 規範評分項目檢核、A2Z 26 字母對照、Deep Research 爭論證據更新、送出前待辦 | [docs/05-notebooklm-analysis.md](docs/05-notebooklm-analysis.md) |
 | 第一段 ChatGPT：A4 橫式高密度編號資訊圖表 | 9 個編號區塊的一頁圖表（HTML、PDF、PNG） | [docs/infographic/](docs/infographic/) |
 | 第二段 Perplexity：最新研究、數據與案例 | Interesting／Innovation／Important 證據、預期貢獻與學術價值、A–F 補強建議 | [docs/04-perplexity-research.md](docs/04-perplexity-research.md) |
+| 規範第三節 Deep Research（20%） | Q1 五個核心思維、Q2 三個爭論、Q3 十個問題＋回答；引用全部重新核對 | [docs/06-deep-research.md](docs/06-deep-research.md) |
+| 規範必繳 Proposal PPT | 依重構內容重建的 24 頁簡報（PPTX、PDF、產生腳本） | [presentation/](presentation/) |
 
 ## OpenSpec workflow
 
@@ -54,8 +56,7 @@ openspec validate add-dietsense-agent --strict
 
 ## 待補事項
 
-- 二手資料 N3–N5（Cal AI 營收、台灣外食超過七成、AI 青少年菜單）還缺原始來源；正式文件目前沒有引用 N3、N4，N5 只出現在 Deep Research 補充。
-- N2（NUTRITION 2026）是研討會摘要，尚未經完整同儕審查。
-- 依重構內容更新 Proposal PPT（規範必繳）。
-- 把 Deep Research Q1–Q3 搬進 repo 並套用 docs/05 第三節的證據更新。
-- `design.md` 的 Open Questions（安全下限是否依性別區分、語音輸入時程、營養師抽樣複核）。
+- N2（NUTRITION 2026）是研討會摘要，尚未經完整同儕審查；正式論文發表後再更新。
+- R28（國健署每日飲食指南的三大營養素比例）目前經政府教材引用核對，正式引用時建議附上國健署手冊網址。
+- `design.md` 的 Open Questions（安全下限是否依性別區分、語音輸入時程、營養師抽樣複核）需要你決定。
+- 簡報用 `presentation/build-deck.js` 產生（pptxgenjs），想改內容可以直接改腳本重建，或在 PowerPoint 裡編輯。

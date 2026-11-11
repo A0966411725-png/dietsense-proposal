@@ -74,18 +74,18 @@
           <tr><th>#</th><th>項目（比例）</th><th>對應內容</th><th>狀態</th></tr>
           <tr><td class="k">1.1</td><td>Introduction 20%</td><td>A–F + L；WHO、國健署原始附件、2025–26 研究</td><td class="ok">✔</td></tr>
           <tr><td class="k">1.2</td><td>Related Work 20%</td><td>1/2 AI + 1/2 Domain；9 篇摘要表；G1–G4</td><td class="ok">✔</td></tr>
-          <tr><td class="k">1.3</td><td>Deep Research 20%</td><td>5 思維・3 爭論・10 問題（爭論證據已更新）</td><td class="warn">△</td></tr>
+          <tr><td class="k">1.3</td><td>Deep Research 20%</td><td>5 思維・3 爭論・10 問題＋回答（引用全部核對）</td><td class="ok">✔</td></tr>
           <tr><td class="k">1.4</td><td>Agent + Architecture 20%</td><td>①–⑧ 模組、對應 5 個 capability</td><td class="ok">✔</td></tr>
           <tr><td class="k">1.5</td><td>Flowchart + Pseudocode 15%</td><td>含判斷／迴圈／例外；18 行 Algorithm 1</td><td class="ok">✔</td></tr>
           <tr><td class="k">1.6</td><td>GitHub + DESIGN.md 5%</td><td>私人 repo；OpenSpec <code>--strict</code> 通過</td><td class="ok">✔</td></tr>
-          <tr><td class="k">1.7</td><td>Proposal PPT（必繳）</td><td>尚未依重構內容更新</td><td class="no">✘</td></tr>
+          <tr><td class="k">1.7</td><td>Proposal PPT（必繳）</td><td>依重構內容更新（presentation/）</td><td class="ok">✔</td></tr>
         </table></div>
       </section>
 
       <section class="card c-orange">
         <h2><span class="n">2</span>Abstract A–F 研究故事</h2>
         <div class="body"><table>
-          <tr><td><span class="letter">A</span></td><td><b>Attention</b>：全球逾 8.9 億成人肥胖（WHO 2022）；台灣男性過重＋肥胖 58.4%、女性 42.6%（國健署 2017–20）</td></tr>
+          <tr><td><span class="letter">A</span></td><td><b>Attention</b>：全球逾 8.9 億成人肥胖（WHO 2022）；台灣男性過重＋肥胖 58.4%、女性 42.6%；成人 68% 每天至少外食一餐（國健署）</td></tr>
           <tr><td><span class="letter">B</span></td><td><b>But</b>：App 記錄 5.4→1.4 天／週（12 週）；漏記 18% 品項；拍照 App 每餐少算 250–345 kcal；珍奶低估達 76%</td></tr>
           <tr><td><span class="letter">C</span></td><td><b>Cure</b>：DietSense 對話式熱量攝取 Domain AI Agent，用一句中文完成記錄</td></tr>
           <tr><td><span class="letter">D</span></td><td><b>Development</b>：LLM Planner＋台灣優先 RAG＋份量表＋Mifflin-St Jeor＋區間＋安全守門</td></tr>
@@ -155,7 +155,7 @@
             <ol class="tight" start="6">
               <li>份量表依食物類別換算克數</li>
               <li>TDEE = BMR × 1.2–1.9</li>
-              <li>AMDR：碳 45–65／蛋 10–35／脂 20–35%</li>
+              <li>國健署指南：醣 50–60／蛋 10–20／脂 20–30%</li>
               <li>&lt;1,200 kcal 以完整日／7 日判斷</li>
               <li>評估：MAE、MAPE、coverage、SUS</li>
             </ol>

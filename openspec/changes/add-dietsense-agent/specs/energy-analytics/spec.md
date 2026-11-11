@@ -18,11 +18,11 @@ The system SHALL 為每筆記錄與每日總量輸出 low / point / high 三個�
 - **THEN** 系統回報每日總量的區間，而不是只給單一數字
 
 ### Requirement: 巨量營養素比例
-The system SHALL 計算每日蛋白質、碳水化合物、脂肪的熱量占比，並與 AMDR（碳水 45–65%、蛋白質 10–35%、脂肪 20–35%）比較。
+The system SHALL 計算每日蛋白質、碳水化合物、脂肪的熱量占比，並以國健署每日飲食指南（醣類 50–60%、蛋白質 10–20%、脂質 20–30%）為主要比較基準，AMDR 為較寬的參考範圍。
 
 #### Scenario: 脂肪占比超出範圍
 - **WHEN** 當日脂肪熱量占比為 42%
-- **THEN** 系統指出脂肪占比高於建議範圍
+- **THEN** 系統指出脂肪占比高於每日飲食指南與 AMDR 的建議範圍
 
 ### Requirement: 個人 TDEE
 The system SHALL 依使用者資料，以 Mifflin-St Jeor 公式乘上活動係數計算 TDEE；缺少必要資料時 MUST 詢問使用者，不得使用預設值。
