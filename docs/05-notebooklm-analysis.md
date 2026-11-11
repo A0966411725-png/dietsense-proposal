@@ -59,7 +59,7 @@
 | **PF** | Formulation | kcal = 克數 × kcal/100g ÷ 100；半寬比例 w = w0 + α(1 − c) + β·模糊度；BMR 公式 | design Pseudocode |
 | **PG** | Graph | Mermaid 架構圖與流程圖 | design |
 | **PH** | How | NER 抽取 → 多來源檢索排序 → 信心門檻 → 區間 → 安全檢查 | design Flowchart |
-| **PI** | Implementation | Algorithm 1（18 行）+ tasks.md 31 項任務 | design、tasks |
+| **PI** | Implementation | Algorithm 1（18 行）+ tasks.md 34 項任務 | design、tasks |
 | **PJ** | Jump to an example | 「一碗加蛋的台式牛肉麵，湯喝一半」端到端範例 | conversational-food-logging spec |
 | **PK** | Key contribution | 系統、500 筆台式料理標註集、評估框架、錨定管線 | 02-F、04 第四節 |
 | **PL** | Later simulation | W6 離線評估 + W7 使用者研究 | tasks 6–7 |
@@ -73,7 +73,7 @@
 | **W** | What proposed | 解決「記錄負擔高 → 放棄」與「AI 數字無來源」兩個問題 | 結論（Final 再寫） |
 | **X** | eXcel | 台灣外食、混合料理、口語份量描述 | 02-E |
 | **Y** | Yields | GitHub repo、DESIGN.md、OpenSpec 規格、標註集、評估報告 | README |
-| **Z** | Zen | 限制：只支援文字、自報偏差仍在、安全下限採固定值；未來：影像輸入、微量營養素、依性別調整下限 | design Non-Goals、Open Questions |
+| **Z** | Zen | 限制：只支援文字（語音為 W8 延伸）、自報偏差仍在、安全下限只依性別區分；未來：影像輸入、微量營養素、依身體組成調整下限 | design Non-Goals、Open Questions |
 
 ---
 

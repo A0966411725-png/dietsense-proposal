@@ -228,7 +228,7 @@ s = content("系統設計", "5 個核心與 3 個取捨");
   badge(s, MX, y + 0.1, k, C.accent1, 0.58);
   txt(s, [{ text: t + "　", options: { bold: true, color: C.text2 } }, { text: d }], { x: MX + 0.75, y: y + 0.12, w: 5.2, h: 0.6, fontSize: 16 });
 });
-[["T1", "準確 vs. 負擔", "信心 < 0.80 才追問，每項最多一次，其餘加寬區間"], ["T2", "資料錨定 vs. LLM 直估", "以錨定為主，但把純 LLM 列為必測基準"], ["T3", "個人化 vs. 安全可解釋", "Mifflin-St Jeor＋固定安全下限，不做醫療個人化"]].forEach(([k, t, d], i) => {
+[["T1", "準確 vs. 負擔", "信心 < 0.80 才追問，每項最多一次，其餘加寬區間"], ["T2", "資料錨定 vs. LLM 直估", "以錨定為主，但把純 LLM 列為必測基準"], ["T3", "個人化 vs. 安全可解釋", "Mifflin-St Jeor＋依性別的安全下限，不做醫療個人化"]].forEach(([k, t, d], i) => {
   const y = 1.45 + i * 1.65;
   card(s, 6.6, y, 6.13, 1.45, "FFF1E3");
   badge(s, 6.8, y + 0.42, k);
@@ -252,7 +252,7 @@ note(s, "規格位置：openspec/changes/add-dietsense-agent/specs/。");
 
 // ================= 13. Architecture =================
 s = content("系統設計", "System Architecture：①–⑧ 模組");
-const mods = [["①", "使用情境", "文字／語音描述飲食"], ["②", "輸入處理", "正規化・意圖・NER"], ["③", "Planner", "LLM function calling・對話記憶"], ["④", "資料檢索", "食藥署 DB・台式料理庫・USDA"], ["⑧", "輸出互動", "Markdown・區間圖・來源"], ["⑦", "決策建議", "缺口分析・替換・安全守門"], ["⑥", "領域知識", "份量表・飲食指南・安全規則"], ["⑤", "分析引擎", "克數・kcal 區間・TDEE"]];
+const mods = [["①", "使用情境", "文字描述飲食（語音為延伸）"], ["②", "輸入處理", "正規化・意圖・NER"], ["③", "Planner", "LLM function calling・對話記憶"], ["④", "資料檢索", "食藥署 DB・台式料理庫・USDA"], ["⑧", "輸出互動", "Markdown・區間圖・來源"], ["⑦", "決策建議", "缺口分析・替換・安全守門"], ["⑥", "領域知識", "份量表・飲食指南・安全規則"], ["⑤", "分析引擎", "克數・kcal 區間・TDEE"]];
 mods.forEach(([k, t, d], i) => {
   const col = i % 4, row = Math.floor(i / 4);
   const x = MX + col * 3.1, y = 1.6 + row * 2.55;
@@ -383,9 +383,9 @@ table(s, [
   ["5", "Evidence", "如何用 RCT 驗證？", "隨機分派，主要結果為 12 週持續記錄天數"],
   ["6", "Comparison", "RAG、微調、知識圖譜？", "RAG＋規則表：可更新、可追溯"],
   ["7", "Design", "對話何時比傳統 UI 差？", "重複餐點用一鍵再記（Future Work）"],
-  ["8", "Real-world", "夜市食物資料怎麼建？", "食藥署原料＋拆解計算＋營養師抽樣"],
+  ["8", "Real-world", "夜市食物資料怎麼建？", "食材拆解＋雙人標註＋業者標示比對"],
   ["9", "Why", "BMR 公式何時失準？", "運動員、高齡、孕婦；回應說明為估計值"],
-  ["10", "What-if", "建議助長飲食失調怎麼辦？", "7 日規則、拒絕極低熱量、轉介"],
+  ["10", "What-if", "建議助長飲食失調怎麼辦？", "下限女 1,200／男 1,500、7 日規則、轉介"],
 ], { fontSize: 14, rowH: 0.47, colW: [0.5, 1.35, 4.9, 5.38] });
 note(s, "每題都附上回答重點與設計位置。");
 
@@ -429,7 +429,7 @@ note(s, "Findings 嚴守規範：不得虛構實驗結果。");
 
 // ================= 22. OpenSpec workflow & timeline =================
 s = content("評估與成果", "OpenSpec Workflow 與 W1–W8 時程");
-[["explore", "釐清 5 核心／3 取捨"], ["propose", "proposal・specs・design・tasks（目前）"], ["apply", "依 tasks.md 實作 31 項"], ["archive", "delta specs 合併到主規格"]].forEach(([k, d], i) => {
+[["explore", "釐清 5 核心／3 取捨"], ["propose", "proposal・specs・design・tasks（目前）"], ["apply", "依 tasks.md 實作 34 項"], ["archive", "delta specs 合併到主規格"]].forEach(([k, d], i) => {
   const x = MX + i * 3.1;
   card(s, x, 1.45, 2.8, 1.35, i === 1 ? "FFF1E3" : C.background2);
   txt(s, "/opsx:" + k, { x: x + 0.2, y: 1.55, w: 2.5, h: 0.5, fontSize: 17, bold: true, color: i === 1 ? C.accent2 : C.text2, fontFace: "Consolas" });

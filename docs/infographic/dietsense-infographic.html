@@ -107,7 +107,7 @@
           <div class="two" style="margin-top:1mm">
             <div class="pill"><b>T1</b> 準確 vs. 負擔 → 最多追問 1 次，其餘加寬區間</div>
             <div class="pill"><b>T2</b> 資料錨定 vs. LLM 直估 → 錨定為主，純 LLM 必測</div>
-            <div class="pill" style="grid-column:span 2"><b>T3</b> 個人化 vs. 安全可解釋 → Mifflin-St Jeor＋固定安全下限，不做醫療個人化</div>
+            <div class="pill" style="grid-column:span 2"><b>T3</b> 個人化 vs. 安全可解釋 → Mifflin-St Jeor＋依性別安全下限，不做醫療個人化</div>
           </div>
         </div>
       </section>
@@ -119,7 +119,7 @@
         <h2><span class="n">4</span>Proposed Scheme：①–⑧ 架構與流程</h2>
         <div class="body">
           <div class="arch">
-            <div class="mod"><b>① 使用情境</b><br>文字／語音描述飲食</div>
+            <div class="mod"><b>① 使用情境</b><br>文字描述飲食（語音為延伸）</div>
             <div class="mod"><b>② 輸入處理</b><br>正規化・意圖・NER</div>
             <div class="mod"><b>③ Planner</b><br>LLM function calling・對話記憶</div>
             <div class="mod"><b>④ 資料檢索</b><br>食藥署 DB・台式料理庫・USDA</div>
@@ -156,7 +156,7 @@
               <li>份量表依食物類別換算克數</li>
               <li>TDEE = BMR × 1.2–1.9</li>
               <li>國健署指南：醣 50–60／蛋 10–20／脂 20–30%</li>
-              <li>&lt;1,200 kcal 以完整日／7 日判斷</li>
+              <li>下限女 1,200／男 1,500，7 日判斷</li>
               <li>評估：MAE、MAPE、coverage、SUS</li>
             </ol>
           </div>
@@ -167,7 +167,7 @@
         <h2><span class="n">6</span>OpenSpec Workflow（design.md → 規格）</h2>
         <div class="body">
           <div class="flow" style="margin-top:0">
-            <span>/opsx:explore</span><i>→</i><span class="d">/opsx:propose ◀ 目前</span><i>→</i><span>/opsx:apply（W1–W8，31 項）</span><i>→</i><span>/opsx:archive</span>
+            <span>/opsx:explore</span><i>→</i><span class="d">/opsx:propose ◀ 目前</span><i>→</i><span>/opsx:apply（W1–W8，34 項）</span><i>→</i><span>/opsx:archive</span>
           </div>
           <table style="margin-top:1mm">
             <tr><th>#</th><th>Capability</th><th>模組</th><th>重點</th></tr>

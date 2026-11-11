@@ -128,6 +128,7 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 | R26 | Hall, K. D., Chen, K. Y., Guo, J., Lam, Y. Y., et al. (2016). Energy expenditure and body composition changes after an isocaloric ketogenic diet in overweight and obese men. *American Journal of Clinical Nutrition*, 104(2), 324–333. https://doi.org/10.3945/ajcn.116.133561 | PubMed（結果數字已核對） |
 | R27 | Koenders, P. G., & van Strien, T. (2011). Emotional eating, rather than lifestyle behavior, drives weight gain in a prospective study in 1562 employees. *Journal of Occupational and Environmental Medicine*, 53(11), 1287–1293. https://doi.org/10.1097/JOM.0b013e31823078a2 | PubMed |
 | R28 | 衛生福利部國民健康署。每日飲食指南（三大營養素占總熱量比例：蛋白質 10–20%、脂質 20–30%、醣類 50–60%）。 | 比例數值經政府教材引用核對；正式引用時附國健署手冊網址 |
+| R29 | Harvard Health Publishing. (2024, April 3). *Calorie counting made easy*. https://www.health.harvard.edu/staying-healthy/calorie-counting-made-easy | 原文確認：女性不低於 1,200、男性不低於 1,500 kcal，除非有專業人員監督 |
 
 > 原本的 R13（Teixeira et al., 2018）查證後發現摘要裡沒有「漏記 18%、低估 1,863 kJ」這兩個數字，真正的出處是 Chen et al.（2019），已更正。
 
