@@ -102,6 +102,6 @@
 | 5 | Evidence | 有什麼證據支持 AI 輔助記錄比傳統日記有效？若要做 RCT 怎麼設計？ | 證據：持續記錄與減重正相關 [R24]，負擔是放棄主因 [R11]。RCT：隨機分派 DietSense vs. 傳統 App，主要結果為 12 週持續記錄天數，次要結果為體重與 SUS | docs/02、tasks 7 |
 | 6 | Comparison | RAG LLM、微調領域 LLM、知識圖譜 + 規則引擎，各適合什麼條件？ | RAG：資料常更新、需要來源；微調：大量標註資料、追求語言流暢；知識圖譜：規則明確、需要可解釋推理。DietSense 用 RAG + 規則表 | design Decision 2 |
 | 7 | Design Decision | 為什麼選對話式 Agent？什麼情況下對話反而比傳統 UI 差？ | 外食、混合料理、口語份量適合對話；但重複吃同樣早餐時，一鍵「再記一次」比對話快——列為 Future Work | docs/02-E |
-| 8 | Real-world | 珍奶、雞排、蚵仔煎在 USDA 幾乎沒有，怎麼建立、維護、驗證台灣在地資料？ | 食藥署資料庫為原料基礎，自建台式料理庫以食材拆解計算並標示來源；≥ 50 筆雙人獨立標註、≥ 30 筆與業者營養標示比對，有營養師時再抽樣複核 | nutrient-retrieval、agent-evaluation |
+| 8 | Real-world | 珍奶、雞排、蚵仔煎在 USDA 幾乎沒有，怎麼建立、維護、驗證台灣在地資料？ | 食藥署資料庫為原料基礎，自建台式料理庫以食材拆解計算並標示來源；≥ 50 筆雙人獨立標註、≥ 30 筆與業者營養標示比對 | nutrient-retrieval、agent-evaluation |
 | 9 | Why | Harris-Benedict、Mifflin-St Jeor、Katch-McArdle 各有什麼假設？哪些人會失準？ | Mifflin-St Jeor 以健康成人建立 [R17]；對運動員（肌肉量高）、高齡者、孕婦、慢性病患可能失準。Agent 選用 Mifflin-St Jeor，並在回應中說明它是估計值 | energy-analytics |
 | 10 | What-if | 如果 Agent 長期建議 < 1,200 kcal，反而助長飲食失調，該怎麼設計？ | 下限依性別區分（女 1,200／男 1,500 kcal [R29]），以完整日或 7 日平均判斷、拒絕低於下限的菜單、偵測暴食-節食交替、提供轉介；AI 菜單過低的風險有實證 [N5] | dietary-safety-guard |

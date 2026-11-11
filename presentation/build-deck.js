@@ -429,7 +429,7 @@ note(s, "Findings 嚴守規範：不得虛構實驗結果。");
 
 // ================= 22. OpenSpec workflow & timeline =================
 s = content("評估與成果", "OpenSpec Workflow 與 W1–W8 時程");
-[["explore", "釐清 5 核心／3 取捨"], ["propose", "proposal・specs・design・tasks（目前）"], ["apply", "依 tasks.md 實作 34 項"], ["archive", "delta specs 合併到主規格"]].forEach(([k, d], i) => {
+[["explore", "釐清 5 核心／3 取捨"], ["propose", "proposal・specs・design・tasks（目前）"], ["apply", "依 tasks.md 實作 33 項"], ["archive", "delta specs 合併到主規格"]].forEach(([k, d], i) => {
   const x = MX + i * 3.1;
   card(s, x, 1.45, 2.8, 1.35, i === 1 ? "FFF1E3" : C.background2);
   txt(s, "/opsx:" + k, { x: x + 0.2, y: 1.55, w: 2.5, h: 0.5, fontSize: 17, bold: true, color: i === 1 ? C.accent2 : C.text2, fontFace: "Consolas" });

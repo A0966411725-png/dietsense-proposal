@@ -59,7 +59,7 @@
 | **PF** | Formulation | kcal = 克數 × kcal/100g ÷ 100；半寬比例 w = w0 + α(1 − c) + β·模糊度；BMR 公式 | design Pseudocode |
 | **PG** | Graph | Mermaid 架構圖與流程圖 | design |
 | **PH** | How | NER 抽取 → 多來源檢索排序 → 信心門檻 → 區間 → 安全檢查 | design Flowchart |
-| **PI** | Implementation | Algorithm 1（18 行）+ tasks.md 34 項任務 | design、tasks |
+| **PI** | Implementation | Algorithm 1（18 行）+ tasks.md 33 項任務 | design、tasks |
 | **PJ** | Jump to an example | 「一碗加蛋的台式牛肉麵，湯喝一半」端到端範例 | conversational-food-logging spec |
 | **PK** | Key contribution | 系統、500 筆台式料理標註集、評估框架、錨定管線 | 02-F、04 第四節 |
 | **PL** | Later simulation | W6 離線評估 + W7 使用者研究 | tasks 6–7 |
