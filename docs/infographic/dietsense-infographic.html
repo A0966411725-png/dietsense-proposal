@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>DietSense 提案資訊圖表</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  :root{
+    --navy:#12355b; --blue:#1f6fb2; --teal:#0f8b8d; --orange:#e07a1f; --green:#2e8b57; --red:#c0392b;
+    --ink:#1b1f24; --muted:#5b6670; --line:#d5dde5; --bg:#ffffff; --soft:#f2f6fa;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink)}
+  body{width:297mm;height:210mm;overflow:hidden;font-family:"Microsoft JhengHei","微軟正黑體","Noto Sans TC",sans-serif;font-size:6.9pt;line-height:1.32}
+  .page{width:297mm;height:210mm;padding:4.5mm 5mm 3.5mm;display:flex;flex-direction:column;gap:2.2mm}
+  header{display:flex;align-items:center;gap:4mm;background:var(--navy);color:#fff;border-radius:2mm;padding:2.2mm 4mm}
+  header h1{font-size:15pt;letter-spacing:.5pt;white-space:nowrap}
+  header .sub{font-size:7pt;opacity:.92;border-left:1px solid rgba(255,255,255,.4);padding-left:4mm}
+  header .badge{margin-left:auto;background:#fff;color:var(--navy);font-weight:700;border-radius:1.5mm;padding:1mm 2.5mm;font-size:7pt;white-space:nowrap}
+  .grid{flex:1;display:grid;grid-template-columns:1.02fr 1.08fr 1fr;gap:2.2mm;min-height:0}
+  .col{display:flex;flex-direction:column;gap:2.2mm;min-height:0}
+  .card{border:1px solid var(--line);border-radius:1.8mm;overflow:hidden;background:#fff}
+  .card h2{display:flex;align-items:center;gap:1.8mm;font-size:8.6pt;color:#fff;padding:1.1mm 2.2mm;background:var(--blue)}
+  .card h2 .n{display:inline-grid;place-items:center;width:4.6mm;height:4.6mm;border-radius:50%;background:#fff;color:var(--blue);font-size:7.5pt;font-weight:800}
+  .c-teal h2{background:var(--teal)} .c-teal h2 .n{color:var(--teal)}
+  .c-orange h2{background:var(--orange)} .c-orange h2 .n{color:var(--orange)}
+  .c-green h2{background:var(--green)} .c-green h2 .n{color:var(--green)}
+  .c-navy h2{background:var(--navy)} .c-navy h2 .n{color:var(--navy)}
+  .body{padding:1.4mm 2mm}
+  table{width:100%;border-collapse:collapse}
+  td,th{border-bottom:1px solid var(--line);padding:.55mm 1mm;vertical-align:top;text-align:left}
+  th{background:var(--soft);font-weight:700;color:var(--navy)}
+  tr:last-child td{border-bottom:none}
+  .k{font-weight:800;color:var(--navy);white-space:nowrap}
+  .ok{color:var(--green);font-weight:800;white-space:nowrap}
+  .warn{color:var(--orange);font-weight:800;white-space:nowrap}
+  .no{color:var(--red);font-weight:800;white-space:nowrap}
+  .ref{color:var(--muted);font-size:5.8pt}
+  .letter{display:inline-grid;place-items:center;width:4.2mm;height:4.2mm;border-radius:1mm;background:var(--orange);color:#fff;font-weight:800}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:1.6mm}
+  .pill{border:1px solid var(--line);border-radius:1.4mm;padding:.9mm 1.2mm;background:var(--soft)}
+  .pill b{color:var(--navy)}
+  ol.tight{padding-left:3.6mm} ol.tight li{margin:.15mm 0}
+  .arch{display:grid;grid-template-columns:repeat(4,1fr);gap:1mm}
+  .mod{border:1px solid var(--line);border-left:1.2mm solid var(--teal);border-radius:1mm;padding:.7mm 1mm;background:#fff}
+  .mod b{color:var(--teal)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:.8mm;margin-top:1.1mm}
+  .flow span{background:var(--soft);border:1px solid var(--line);border-radius:1mm;padding:.4mm 1mm}
+  .flow .d{background:#fff4e8;border-color:#f3c79a}
+  .flow i{color:var(--muted);font-style:normal}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2mm;margin:1mm 0}
+  .stat{border-radius:1.4mm;background:var(--soft);text-align:center;padding:1mm .5mm}
+  .stat .v{font-size:12pt;font-weight:800;color:var(--green);line-height:1.1}
+  .stat .l{font-size:5.9pt;color:var(--muted)}
+  .note{font-size:6pt;color:var(--red);font-weight:700}
+  pre{font-family:Consolas,"Microsoft JhengHei",monospace;font-size:5.9pt;line-height:1.28;background:#0f2238;color:#e8eef5;border-radius:1.2mm;padding:1.2mm 1.6mm;white-space:pre}
+  footer{font-size:5.6pt;color:var(--muted);border-top:1px solid var(--line);padding-top:1mm;line-height:1.25}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>DietSense 專題提案系統性解析圖表</h1>
+    <div class="sub">對話式每日熱量攝取 Domain AI Agent ｜ 依據《期末專題提案作業規範》×《A2Z outline》｜ 以 OpenSpec 重構（spec-driven）</div>
+    <div class="badge">Proposal 階段・成效皆為預期目標</div>
+  </header>
+
+  <div class="grid">
+    <!-- ===== 左欄 ===== -->
+    <div class="col">
+      <section class="card">
+        <h2><span class="n">1</span>規範符合度（評分項目）</h2>
+        <div class="body"><table>
+          <tr><th>#</th><th>項目（比例）</th><th>對應內容</th><th>狀態</th></tr>
+          <tr><td class="k">1.1</td><td>Introduction 20%</td><td>A–F + L；WHO、國健署原始附件、2025–26 研究</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.2</td><td>Related Work 20%</td><td>1/2 AI + 1/2 Domain；9 篇摘要表；G1–G4</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.3</td><td>Deep Research 20%</td><td>5 思維・3 爭論・10 問題（爭論證據已更新）</td><td class="warn">△</td></tr>
+          <tr><td class="k">1.4</td><td>Agent + Architecture 20%</td><td>①–⑧ 模組、對應 5 個 capability</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.5</td><td>Flowchart + Pseudocode 15%</td><td>含判斷／迴圈／例外；18 行 Algorithm 1</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.6</td><td>GitHub + DESIGN.md 5%</td><td>私人 repo；OpenSpec <code>--strict</code> 通過</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.7</td><td>Proposal PPT（必繳）</td><td>尚未依重構內容更新</td><td class="no">✘</td></tr>
+        </table></div>
+      </section>
+
+      <section class="card c-orange">
+        <h2><span class="n">2</span>Abstract A–F 研究故事</h2>
+        <div class="body"><table>
+          <tr><td><span class="letter">A</span></td><td><b>Attention</b>：全球逾 8.9 億成人肥胖（WHO 2022）；台灣男性過重＋肥胖 58.4%、女性 42.6%（國健署 2017–20）</td></tr>
+          <tr><td><span class="letter">B</span></td><td><b>But</b>：App 記錄 5.4→1.4 天／週（12 週）；漏記 18% 品項；拍照 App 每餐少算 250–345 kcal；珍奶低估達 76%</td></tr>
+          <tr><td><span class="letter">C</span></td><td><b>Cure</b>：DietSense 對話式熱量攝取 Domain AI Agent，用一句中文完成記錄</td></tr>
+          <tr><td><span class="letter">D</span></td><td><b>Development</b>：LLM Planner＋台灣優先 RAG＋份量表＋Mifflin-St Jeor＋區間＋安全守門</td></tr>
+          <tr><td><span class="letter">E</span></td><td><b>Experiments</b>：500 筆台式料理標註集；純 LLM、手動查詢兩種基準；20 人 × 7 天</td></tr>
+          <tr><td><span class="letter">F</span></td><td><b>Findings</b>（Expected）：±20% 命中率優於純 LLM、記錄時間更短、SUS &gt; 70</td></tr>
+        </table></div>
+      </section>
+
+      <section class="card c-navy">
+        <h2><span class="n">3</span>5 個核心 ＋ 3 個取捨</h2>
+        <div class="body">
+          <ol class="tight">
+            <li><b>C1 問題</b>：記錄太累 → 沒人持續記錄</li>
+            <li><b>C2 缺口</b>：好用的不準，準的不好用</li>
+            <li><b>C3 解法</b>：LLM 只理解語言，數字交給資料庫與公式</li>
+            <li><b>C4 誠實</b>：區間 low / point / high＋來源</li>
+            <li><b>C5 安全</b>：不助長過度節食</li>
+          </ol>
+          <div class="two" style="margin-top:1mm">
+            <div class="pill"><b>T1</b> 準確 vs. 負擔 → 最多追問 1 次，其餘加寬區間</div>
+            <div class="pill"><b>T2</b> 資料錨定 vs. LLM 直估 → 錨定為主，純 LLM 必測</div>
+            <div class="pill" style="grid-column:span 2"><b>T3</b> 個人化 vs. 安全可解釋 → Mifflin-St Jeor＋固定安全下限，不做醫療個人化</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== 中欄 ===== -->
+    <div class="col">
+      <section class="card c-teal">
+        <h2><span class="n">4</span>Proposed Scheme：①–⑧ 架構與流程</h2>
+        <div class="body">
+          <div class="arch">
+            <div class="mod"><b>① 使用情境</b><br>文字／語音描述飲食</div>
+            <div class="mod"><b>② 輸入處理</b><br>正規化・意圖・NER</div>
+            <div class="mod"><b>③ Planner</b><br>LLM function calling・對話記憶</div>
+            <div class="mod"><b>④ 資料檢索</b><br>食藥署 DB・台式料理庫・USDA</div>
+            <div class="mod"><b>⑤ 分析引擎</b><br>克數・kcal 區間・巨量營養素・TDEE</div>
+            <div class="mod"><b>⑥ 領域知識</b><br>份量表・AMDR／DRI・安全規則</div>
+            <div class="mod"><b>⑦ 決策建議</b><br>缺口分析・替換建議・安全守門</div>
+            <div class="mod"><b>⑧ 輸出互動</b><br>Markdown・區間圖・來源</div>
+          </div>
+          <div class="flow">
+            <span>輸入</span><i>→</i><span class="d">意圖?</span><i>→</i><span>NER</span><i>→</i><span>多來源檢索</span><i>→</i><span class="d">信心 ≥ 0.80?</span><i>否→</i><span>追問 1 次 / 加寬區間</span><i>→</i><span>kcal 區間</span><i>→</i><span>日誌</span><i>→</i><span class="d">安全檢查</span><i>→</i><span>建議 or 警示</span><i>→</i><span>輸出</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card c-teal">
+        <h2><span class="n">5</span>Algorithm 1（節錄）與 10 個細節</h2>
+        <div class="body">
+<pre>01 q ← normalize(Q);  intent, ents ← classify_and_extract(q)
+06 C ← retrieve(e, [TW_FCD, TW_DISH_VEC, USDA_FDC]); (m,c) ← rank(C)
+08 if c &lt; τ and not e.asked: ask(clarify(e)); e.asked ← true
+11 k ← grams · m.kcal_per_100g / 100
+12 w ← w0 + α(1−c) + β·vagueness(e);  log (k(1−w), k, k(1+w))
+14 S ← compute_daily_state(D, P)     ▷ 總量・巨量營養素・TDEE
+15 risk ← safety_check(D, H7, P, S)   ▷ 完整日 / 7 日平均</pre>
+          <div class="two" style="margin-top:1.1mm">
+            <ol class="tight">
+              <li>意圖四分類，不明就回問</li>
+              <li>實體＝食物＋份量＋修飾＋餐別</li>
+              <li>檢索順序：TW → 台式庫 → USDA</li>
+              <li>信心門檻 τ = 0.80（W6 校準）</li>
+              <li>區間：w0 .10、α .50、β .15</li>
+            </ol>
+            <ol class="tight" start="6">
+              <li>份量表依食物類別換算克數</li>
+              <li>TDEE = BMR × 1.2–1.9</li>
+              <li>AMDR：碳 45–65／蛋 10–35／脂 20–35%</li>
+              <li>&lt;1,200 kcal 以完整日／7 日判斷</li>
+              <li>評估：MAE、MAPE、coverage、SUS</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2><span class="n">6</span>OpenSpec Workflow（design.md → 規格）</h2>
+        <div class="body">
+          <div class="flow" style="margin-top:0">
+            <span>/opsx:explore</span><i>→</i><span class="d">/opsx:propose ◀ 目前</span><i>→</i><span>/opsx:apply（W1–W8，31 項）</span><i>→</i><span>/opsx:archive</span>
+          </div>
+          <table style="margin-top:1mm">
+            <tr><th>#</th><th>Capability</th><th>模組</th><th>重點</th></tr>
+            <tr><td class="k">6.1</td><td>conversational-food-logging</td><td>①②③</td><td>意圖、抽取、單次追問、修改</td></tr>
+            <tr><td class="k">6.2</td><td>nutrient-retrieval</td><td>④</td><td>多來源錨定、來源追溯、未知食物降級</td></tr>
+            <tr><td class="k">6.3</td><td>energy-analytics</td><td>⑤⑥</td><td>kcal 區間、巨量營養素、TDEE</td></tr>
+            <tr><td class="k">6.4</td><td>dietary-safety-guard</td><td>⑥⑦</td><td>7 日規則、拒絕極低熱量、暴食-節食</td></tr>
+            <tr><td class="k">6.5</td><td>agent-evaluation</td><td>評估</td><td>500 筆、高誤差類別、校準、安全測試</td></tr>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== 右欄 ===== -->
+    <div class="col">
+      <section class="card c-orange">
+        <h2><span class="n">7</span>Related Work 關鍵證據（2024–2026）</h2>
+        <div class="body"><table>
+          <tr><th>#</th><th>研究</th><th>發現</th></tr>
+          <tr><td class="k">7.1</td><td>NutriBench（ICLR '25）</td><td>11,857 筆描述；GPT-4o＋CoT 準確率 66.8%</td></tr>
+          <tr><td class="k">7.2</td><td>Fridolfsson（CDN '25）</td><td>GPT-4o／Claude 熱量 MAPE ≈ 36%</td></tr>
+          <tr><td class="k">7.3</td><td>Chen（AJCN '25，台灣）</td><td>客製化 GPT-4o 辨識 74% vs. 59%</td></tr>
+          <tr><td class="k">7.4</td><td>DiningBench（ACL '26）</td><td>2,086 道中式料理，最佳 MAPE 24.45%</td></tr>
+          <tr><td class="k">7.5</td><td>Open-KNEAD（'26 預印本）</td><td>錨定 FNDDS；新 MLLM 直估已追上 → 反證</td></tr>
+          <tr><td class="k">7.6</td><td>Li（Nutrients '24）</td><td>珍奶低估達 76%、河粉高估 49%</td></tr>
+          <tr><td class="k">7.7</td><td>NIDDK（NUTRITION '26）</td><td>4 個拍照 App 每餐少算 250–345 kcal（初步）</td></tr>
+          <tr><td class="k">7.8</td><td>Dugas（JMIR '26）</td><td>MyFitnessPal 5.4 → 1.4 天／週</td></tr>
+        </table></div>
+      </section>
+
+      <section class="card c-navy">
+        <h2><span class="n">8</span>Research Gap → DietSense</h2>
+        <div class="body"><table>
+          <tr><td class="k">G1</td><td>好用又可追溯的估算方式</td><td>→ LLM 不產生數值，全部附來源</td></tr>
+          <tr><td class="k">G2</td><td>台灣在地錨定資料</td><td>→ 食藥署 DB 優先＋自建台式料理庫</td></tr>
+          <tr><td class="k">G3</td><td>不確定性呈現與校準</td><td>→ 區間＋coverage／寬度雙指標</td></tr>
+          <tr><td class="k">G4</td><td>低負擔又安全的流程</td><td>→ 單次追問＋7 日安全守門</td></tr>
+        </table></div>
+      </section>
+
+      <section class="card c-green">
+        <h2><span class="n">9</span>評估規劃與預期成效</h2>
+        <div class="body">
+          <div class="stats">
+            <div class="stat"><div class="v">500</div><div class="l">台式料理標註筆數</div></div>
+            <div class="stat"><div class="v">≥30</div><div class="l">珍奶／湯麵／燴飯／油炸 各類</div></div>
+            <div class="stat"><div class="v">&gt;70</div><div class="l">SUS 可用性目標</div></div>
+            <div class="stat"><div class="v">100%</div><div class="l">安全攔截率目標</div></div>
+          </div>
+          <table>
+            <tr><td class="k">9.1</td><td>基準：純 LLM 直估、手動資料庫查詢（可選：商業拍照 App）</td></tr>
+            <tr><td class="k">9.2</td><td>指標：MAE、MAPE、±10%／±20%、coverage、寬度、記錄秒數、追問率</td></tr>
+            <tr><td class="k">9.3</td><td>使用者研究：20 人 × 7 天，與傳統 App 交叉使用</td></tr>
+          </table>
+          <div class="note" style="margin-top:.8mm">※ 以上為提案階段的預期目標，不是實驗結果。</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    來源：WHO Obesity fact sheet（2025-12）；國健署 2017–2020 國民營養健康狀況變遷調查新聞稿附件；Hua 2025（ICLR）；Fridolfsson 2025（Curr Dev Nutr 9:107556）；Chen YJ 2025（AJCN 122:1836）；Jin 2026（ACL, arXiv:2604.10425）；Coburn 2026（arXiv:2607.12911）；Li 2024（Nutrients 16:2573）；Hengist et al.（NUTRITION 2026 摘要）；Dugas 2026（JMIR mHealth 14:e64139）；Chen J 2019（Nutrition 57:208）。完整書目見 repo 的 docs/03-related-work.md 與 docs/04-perplexity-research.md。
+  </footer>
+</div>
+</body>
+</html>

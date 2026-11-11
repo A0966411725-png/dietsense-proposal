@@ -6,7 +6,7 @@
 
 | 期中稿的問題 | 重構後 |
 |-------------|-------|
-| Article Summary Table 的 [1]–[5] 沒有作者與出處，無法查證 | 換成 9 篇可查證的文獻（2020–2026，其中 2025–2026 有 7 篇），附作者、期刊或會議 |
+| Article Summary Table 的 [1]–[5] 沒有作者與出處，無法查證 | 換成 9 篇可查證的文獻（2019–2026，其中 2025–2026 有 7 篇），附作者、期刊或會議 |
 | 部分引用和內容對不上（見文末「引用修正表」） | 逐條修正或刪除，改用可查證的來源 |
 | AI 和 Domain 兩部分各自列點，沒有比較 | 新增方法分類 × 評估面向的比較表（A2Z 的 O. Organize） |
 | Research Gap 只有一句話 | 拆成四個具體缺口，各自對應到 DietSense 的設計 |
@@ -71,7 +71,7 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 | [R6] Open-KNEAD | 2026 | 錨定食品資料庫的營養估算 | Agentic decomposition + FNDDS 錨定 | USDA FNDDS 代碼 | 餐點影像 benchmark | 錨定可得到逐項紀錄；新一代 MLLM 直接估算已追上檢索管線 | 以美國食品代碼為主 |
 | [R7] Yang et al.（ChatDiet） | 2024 | 個人化營養推薦聊天機器人 | LLM + 因果個人模型 + orchestrator | 營養成分族群模型 | 1 人 3 年穿戴裝置資料 | 推薦測試有效率 92% | n = 1；不是熱量記錄 |
 | [R11] JMIR mHealth 範疇回顧 | 2026 | 熱量計數 App 的使用與持續度 | （回顧研究） | 行為體重管理 | 2013–2024 的研究 | MyFitnessPal 記錄頻率在第 4–12 週由每週 5.4 天降到 1.4 天 | 範疇回顧，沒有合併效果量 |
-| [R13] Teixeira et al. | 2018 | MyFitnessPal 的相對效度 | （無；人工記錄 App） | 24 小時回憶法 | 成人 App 記錄 vs. 回憶 | 平均漏記 18% 品項；能量低估 1,863 kJ | 2018 年資料；非台灣族群 |
+| [R13] Chen et al. | 2019 | 自然情境下用 App 記錄飲食是否準確 | （無；人工記錄 App） | 24 小時回憶法、食物類別編碼 | 成人 4 天 MyFitnessPal 記錄 vs. 2 天 24 小時回憶 | 平均漏記 18% 品項（多為高熱量、低營養食物）；能量低估 1,863 kJ | 非台灣族群；樣本為澳洲成人 |
 
 ### 方法分類比較（A2Z 的 J. Judgement / O. Organize）
 
@@ -98,32 +98,34 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 
 ## References（已查證）
 
-| 編號 | 文獻 | 查證狀態 |
+| 編號 | 文獻 | 查證來源 |
 |------|------|---------|
-| R1 | Hua, A., et al. (2025). NutriBench: A dataset for evaluating large language models on nutrition estimation from meal descriptions. *ICLR 2025*. arXiv:2407.12843 | 已確認（ICLR proceedings、arXiv） |
-| R2 | O'Hara, C., et al. (2025). An evaluation of ChatGPT for nutrient content estimation from meal photographs. *Nutrients*, 17(4), 607. | 已確認（MDPI、PMC11858203） |
-| R3 | Fridolfsson, J., Sjöberg, E., Thiwång, M., & Pettersson, S. (2025). Performance evaluation of 3 large language models for nutritional content estimation from food images. *Current Developments in Nutrition*, 9(10), 107556. | 已確認（PMC12513282） |
-| R4 | Chen, Y. J., … Wei, P. H., & Chang, J. S. (2025). Customized multimodal Diabot-GPT-4o enhances accuracy of image-based dietary assessments in dietetic trainees in Taiwan: Validation against weighed food records. *American Journal of Clinical Nutrition*, 122(6), 1836–1849. | 已確認（UMN Experts 收錄頁） |
-| R5 | DiningBench: A hierarchical multi-view benchmark for perception and reasoning in the dietary domain. *ACL 2026* (long). arXiv:2604.10425 | 已確認題名與數據；**作者需補** |
-| R6 | Open-KNEAD: Knowledge-grounded nutrition estimation via agentic decomposition (2026). arXiv:2607.12911 | 已確認（arXiv）；**作者需補**；預印本 |
-| R7 | Yang, Z., et al. (2024). ChatDiet: Empowering personalized nutrition-oriented food recommender chatbots through an LLM-augmented framework. arXiv:2403.00781 | 已確認（arXiv） |
-| R8 | Lo, F. P.-W., et al. (2024). Dietary assessment with multimodal ChatGPT: A systematic analysis. *IEEE JBHI*. arXiv:2312.08592 | 已確認 arXiv；期刊卷期需補 |
-| R9 | Coburn, B., et al. (2025). Evaluating large multimodal models for nutrition analysis: A benchmark enriched with contextual metadata. arXiv:2507.07048 | 已確認（arXiv）；第一作者姓名需再核對 |
-| R10 | Evaluation of LLMs in retrieving food and nutritional context for RAG systems (Slovenian food composition data) (2026). arXiv:2603.09704 | 已確認 arXiv 編號；**完整題名與作者需補** |
-| R11 | Scoping review of calorie-counting apps (2013–2024). *JMIR mHealth and uHealth*, 2026, 14, e64139. | 已確認期刊、編號與數據；**題名與作者需補**（網站無法擷取） |
-| R12 | Evenepoel, C., et al. (2020). Accuracy of nutrient calculations using the consumer-focused online app MyFitnessPal. *JMIR*, 22(10), e18237. | 已確認（PMC7641788） |
-| R13 | Teixeira, V., Voci, S. M., Mendes-Netto, R. S., & da Silva, D. G. (2018). The relative validity of a food record using the smartphone application MyFitnessPal. *Nutrition & Dietetics*, 75(2), 219–225. | 已確認研究與數據；卷期頁碼請再核對 |
-| R14 | World Health Organization (2025). Obesity and overweight [Fact sheet], updated Dec 2025. | 已確認（who.int） |
-| R15 | 衛生福利部國民健康署。2017–2020 年國民營養健康狀況變遷調查。 | 已確認數據；引用時附國健署原始報告網址 |
-| R16 | Zeevi, D., et al. (2015). Personalized nutrition by prediction of glycemic responses. *Cell*, 163(5), 1079–1094. | 經典文獻 |
-| R17 | Mifflin, M. D., et al. (1990). A new predictive equation for resting energy expenditure in healthy individuals. *AJCN*, 51(2), 241–247. | 經典文獻 |
-| R18 | Hall, K. D., et al. (2011). Quantification of the effect of energy imbalance on bodyweight. *The Lancet*, 378(9793), 826–837. | 經典文獻（期中稿誤植為 2012） |
-| R19 | Poslusna, K., et al. (2009). Misreporting of energy and micronutrient intake estimated by food records and 24 hour recalls. *British Journal of Nutrition*, 101(S2), S73–S85. | 經典文獻 |
-| R20 | Gardner, C. D., et al. (2018). Effect of low-fat vs low-carbohydrate diet on 12-month weight loss (DIETFITS). *JAMA*, 319(7), 667–679. | 經典文獻 |
-| R21 | WHO (2025, Dec 1). WHO issues global guideline on the use of GLP-1 medicines in treating obesity [News release]. | 已確認（who.int） |
-| R22 | 衛生福利部食品藥物管理署。台灣地區食品營養成分資料庫。 | 官方資料庫；使用時記錄版本 |
-| R23 | U.S. Department of Agriculture. FoodData Central. https://fdc.nal.usda.gov/ | 官方資料庫 |
-| R24 | Burke, L. E., Wang, J., & Sevick, M. A. (2011). Self-monitoring in weight loss: A systematic review of the literature. *J Am Diet Assoc*, 111(1), 92–102. | 經典文獻 |
+| R1 | Hua, A., Dhaliwal, M. P., Pullela, L., Burke, R., & Qin, Y. (2025). NutriBench: A dataset for evaluating large language models on nutrition estimation from meal descriptions. *ICLR 2025*. arXiv:2407.12843 | ICLR proceedings、arXiv |
+| R2 | O'Hara, C., Kent, G., Flynn, A. C., Gibney, E. R., et al. (2025). An evaluation of ChatGPT for nutrient content estimation from meal photographs. *Nutrients*, 17(4), 607. https://doi.org/10.3390/nu17040607 | PubMed、PMC11858203 |
+| R3 | Fridolfsson, J., Sjöberg, E., Thiwång, M., & Pettersson, S. (2025). Performance evaluation of 3 large language models for nutritional content estimation from food images. *Current Developments in Nutrition*, 9(10), 107556. | PMC12513282 |
+| R4 | Chen, Y. J., Chang, C. C., Hoang, Y. N., … Wei, P. H., & Chang, J. S. (2025). Customized multimodal Diabot-GPT-4o enhances accuracy of image-based dietary assessments in dietetic trainees in Taiwan: Validation against weighed food records. *American Journal of Clinical Nutrition*, 122(6), 1836–1849. https://doi.org/10.1016/j.ajcnut.2025.10.013 | PubMed 41138916 |
+| R5 | Jin, S., Zhang, J., Zhang, X., Tian, Z., Jiang, F., Yin, G., Lin, W., Liu, Y., & Yan, R. (2026). DiningBench: A hierarchical multi-view benchmark for perception and reasoning in the dietary domain. *ACL 2026* (Main). arXiv:2604.10425 | arXiv |
+| R6 | Coburn, B., Yue, J., Ma, J., Raghavan, S., Vinod, G., & Zhu, F. (2026). Open-KNEAD: Knowledge-grounded nutrition estimation via agentic decomposition. arXiv:2607.12911 | arXiv（預印本，尚未經同儕審查） |
+| R7 | Yang, Z., Khatibi, E., Nagesh, N., Abbasian, M., Azimi, I., Jain, R., & Rahmani, A. M. (2024). ChatDiet: Empowering personalized nutrition-oriented food recommender chatbots through an LLM-augmented framework. arXiv:2403.00781 | arXiv |
+| R8 | Lo, F. P.-W., Qiu, J., Wang, Z., Chen, J., Xiao, B., Yuan, W., Giannarou, S., Frost, G., & Lo, B. (2024). Dietary assessment with multimodal ChatGPT: A systematic analysis. *IEEE Journal of Biomedical and Health Informatics*, 28(12), 7577–7587. | 大學機構典藏（PMID 38900623） |
+| R9 | Coburn, B., He, J., Rollo, M. E., Dhaliwal, S. S., Kerr, D. A., & Zhu, F. (2025). Comprehensive evaluation of large multimodal models for nutrition analysis: A new benchmark enriched with contextual metadata. arXiv:2507.07048（短版發表於 IEEE BHI 2025） | arXiv |
+| R10 | Požarnik Vavken, M., Ogrinc, M., Eftimov, T., & Koroušić Seljak, B. (2026). Evaluation of LLMs in retrieving food and nutritional context for RAG systems. arXiv:2603.09704 | arXiv |
+| R11 | Dugas, K., Giroux, M.-A., Guerroudj, A., Leger, J., Rouhafzay, A., Rouhafzay, G., & Jbilou, J. (2026). Calorie-counting apps for monitoring and managing calorie intake in adults living with weight-related chronic diseases: Decade-long scoping review (2013–2024). *JMIR mHealth and uHealth*, 14, e64139. https://doi.org/10.2196/64139 | PMC13085986；5.4 → 1.4 天的數據已在摘要中確認 |
+| R12 | Evenepoel, C., Clevers, E., Deroover, L., Van Loo, W., et al. (2020). Accuracy of nutrient calculations using the consumer-focused online app MyFitnessPal: Validation study. *Journal of Medical Internet Research*, 22(10), e18237. https://doi.org/10.2196/18237 | PubMed |
+| R13 | Chen, J., Berkman, W., Bardouh, M., Ng, C. Y. K., & Allman-Farinelli, M. (2019). The use of a food logging app in the naturalistic setting fails to provide accurate measurements of nutrients and poses usability challenges. *Nutrition*, 57, 208–216. https://doi.org/10.1016/j.nut.2018.05.003 | PubMed 30184514；18% 與 1,863 kJ 已在摘要中確認 |
+| R14 | World Health Organization. (2025, December 8). *Obesity and overweight* [Fact sheet]. https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight | who.int |
+| R15 | 衛生福利部國民健康署。（2022）。新聞稿附件：18 歲以上國人三高及過重肥胖盛行率（資料來源：2017–2020 年國民營養健康狀況變遷調查）。https://mohw.gov.tw/dl-80876-5cf922a3-7c1e-47b8-9e88-f66c5be96106.html | 已讀取原始附件，四個數字相符 |
+| R16 | Zeevi, D., Korem, T., Zmora, N., et al. (2015). Personalized nutrition by prediction of glycemic responses. *Cell*, 163(5), 1079–1094. https://doi.org/10.1016/j.cell.2015.11.001 | 經典文獻 |
+| R17 | Mifflin, M. D., St Jeor, S. T., Hill, L. A., Scott, B. J., et al. (1990). A new predictive equation for resting energy expenditure in healthy individuals. *American Journal of Clinical Nutrition*, 51(2), 241–247. https://doi.org/10.1093/ajcn/51.2.241 | PubMed |
+| R18 | Hall, K. D., Sacks, G., Chandramohan, D., Chow, C. C., et al. (2011). Quantification of the effect of energy imbalance on bodyweight. *The Lancet*, 378(9793), 826–837. https://doi.org/10.1016/S0140-6736(11)60812-X | PubMed（期中稿誤植為 2012） |
+| R19 | Poslusna, K., Ruprich, J., de Vries, J. H., Jakubikova, M., et al. (2009). Misreporting of energy and micronutrient intake estimated by food records and 24 hour recalls, control and adjustment methods in practice. *British Journal of Nutrition*, 101(Suppl 2), S73–S85. https://doi.org/10.1017/S0007114509990602 | PubMed |
+| R20 | Gardner, C. D., Trepanowski, J. F., Del Gobbo, L. C., Hauser, M. E., et al. (2018). Effect of low-fat vs low-carbohydrate diet on 12-month weight loss in overweight adults and the association with genotype pattern or insulin secretion: The DIETFITS randomized clinical trial. *JAMA*, 319(7), 667–679. https://doi.org/10.1001/jama.2018.0245 | PubMed |
+| R21 | World Health Organization. (2025, December 1). *WHO issues global guideline on the use of GLP-1 medicines in treating obesity* [News release]. https://www.who.int/news/item/01-12-2025-who-issues-global-guideline-on-the-use-of-glp-1-medicines-in-treating-obesity | who.int |
+| R22 | 衛生福利部食品藥物管理署。台灣地區食品營養成分資料庫。https://consumer.fda.gov.tw/Food/TFND.aspx | 官方資料庫；使用時記錄版本 |
+| R23 | U.S. Department of Agriculture, Agricultural Research Service. FoodData Central. https://fdc.nal.usda.gov/ | 官方資料庫 |
+| R24 | Burke, L. E., Wang, J., & Sevick, M. A. (2011). Self-monitoring in weight loss: A systematic review of the literature. *Journal of the American Dietetic Association*, 111(1), 92–102. https://doi.org/10.1016/j.jada.2010.10.008 | PubMed |
+
+> 原本的 R13（Teixeira et al., 2018）查證後發現摘要裡沒有「漏記 18%、低估 1,863 kJ」這兩個數字，真正的出處是 Chen et al.（2019），已更正。
 
 ## 引用修正表（期中稿 → 重構後）
 

@@ -11,6 +11,9 @@
 | 3. convert design.md to workflow in openspec | 期中稿第五節 → `proposal → specs → design → tasks` 四份文件；修正原稿 3 個設計問題；tasks 依 W1–W8 排成可追蹤的 workflow | [openspec/changes/add-dietsense-agent/](openspec/changes/add-dietsense-agent/)、[DESIGN.md](DESIGN.md) |
 | 4. Introduction refactor | A–F 重寫，所有數據改用可查證來源，補上 A2Z 的 L | [docs/02-introduction.md](docs/02-introduction.md) |
 | 5. related work refactor | 1/2 AI + 1/2 Domain；9 篇文獻的 Article Summary Table；方法比較表；4 個 Research Gap；引用修正表 | [docs/03-related-work.md](docs/03-related-work.md) |
+| 第一段 NotebookLM：依 A2Z 與規範解析 | 規範評分項目檢核、A2Z 26 字母對照、Deep Research 爭論證據更新、送出前待辦 | [docs/05-notebooklm-analysis.md](docs/05-notebooklm-analysis.md) |
+| 第一段 ChatGPT：A4 橫式高密度編號資訊圖表 | 9 個編號區塊的一頁圖表（HTML、PDF、PNG） | [docs/infographic/](docs/infographic/) |
+| 第二段 Perplexity：最新研究、數據與案例 | Interesting／Innovation／Important 證據、預期貢獻與學術價值、A–F 補強建議 | [docs/04-perplexity-research.md](docs/04-perplexity-research.md) |
 
 ## OpenSpec workflow
 
@@ -45,7 +48,14 @@ openspec validate add-dietsense-agent --strict
 | `dietary-safety-guard` | 攝取過低、拒絕極低熱量、暴食-節食提示 | ⑥⑦ |
 | `agent-evaluation` | 500 筆標註集、基準比較、校準、安全測試 | 評估 |
 
+## 關於 Perplexity、NotebookLM、ChatGPT 步驟
+
+這三個步驟的產出都由 Claude 用網路搜尋與本機工具完成，**沒有實際使用這三個服務**；各文件開頭都有註明。數字盡量回到原始來源（期刊、PubMed、官方網站）確認，只有二手資料的項目會標示「二手」。
+
 ## 待補事項
 
-- 參考文獻中標示「需補」的作者與卷期（R5、R6、R9、R10、R11、R13），送出前請到原始頁面確認。
+- 二手資料 N3–N5（Cal AI 營收、台灣外食超過七成、AI 青少年菜單）還缺原始來源；正式文件目前沒有引用 N3、N4，N5 只出現在 Deep Research 補充。
+- N2（NUTRITION 2026）是研討會摘要，尚未經完整同儕審查。
+- 依重構內容更新 Proposal PPT（規範必繳）。
+- 把 Deep Research Q1–Q3 搬進 repo 並套用 docs/05 第三節的證據更新。
 - `design.md` 的 Open Questions（安全下限是否依性別區分、語音輸入時程、營養師抽樣複核）。
