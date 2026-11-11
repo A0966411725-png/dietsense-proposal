@@ -1,0 +1,27 @@
+schema: spec-driven
+
+context: |
+  Language: zh-TW
+  All artifacts must be written in zh-TW.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  Project: DietSense — 對話式每日熱量攝取 Domain AI Agent（期末專題）
+  Domain: Nutrition AI / Health Informatics；使用者為台灣成人，飲食以外食、小吃、夜市、便當、複合料理為主。
+  Core stack (planned): Python 3.11+、FastAPI、LLM function calling（Planner）、向量資料庫（RAG）、
+    USDA FoodData Central API、衛福部食藥署「台灣地區食品營養成分資料庫」、SQLite 個人飲食日誌。
+  Non-negotiables:
+    - 熱量一律以區間（low / point / high）輸出，不得只給單一數字。
+    - 所有營養數值必須可追溯到資料來源（資料庫名稱 + 品項 ID），LLM 不得自行產生營養數值。
+    - 不提供醫療診斷；偵測到極端限制或暴食-節食模式時，只提供安全提示與轉介資訊。
+    - Proposal 階段的成效一律寫成 Expected Outcomes，不得虛構實驗結果。
+  Assignment frame: 期末專題提案作業規範（Abstract A–F、Introduction A–F、Related Work 1/2 AI + 1/2 Domain、
+    Deep Research、Proposed Scheme ①–⑧）與 A2Z SOP outline。
+
+rules:
+  proposal:
+    - 說明動機時引用可查證的來源（年份 + 機構或作者），不可使用無法查證的統計。
+  design:
+    - 架構模組沿用 ①–⑧ 編號，與 proposal 文件、PPT 一致。
+    - 每個關鍵決策都要寫出被放棄的替代方案。
+  tasks:
+    - 依 W1–W8 週次分組，每個任務都能在一次工作時段內完成。
