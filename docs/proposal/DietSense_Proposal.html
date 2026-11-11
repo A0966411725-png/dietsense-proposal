@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>DietSense 期末專題提案</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 16mm 15mm; }
+  :root { --ink:#1b2420; --green:#1f4d3a; --orange:#b85c0f; --line:#cfdcd4; --soft:#eef4f0; }
+  body { font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.65; max-width: 190mm; margin: 0 auto; }
+  h1 { font-size: 22pt; color: var(--green); margin: 0 0 4pt; }
+  h2 { font-size: 16pt; color: var(--green); border-bottom: 2px solid var(--green); padding-bottom: 3pt; margin-top: 22pt; break-before: page; }
+  h2:first-of-type { break-before: auto; }
+  h3 { font-size: 12.5pt; color: var(--green); margin-top: 16pt; break-after: avoid; }
+  h4 { font-size: 11pt; color: var(--orange); margin-top: 12pt; break-after: avoid; }
+  p, li { orphans: 2; widows: 2; }
+  table { border-collapse: collapse; width: 100%; font-size: 8.6pt; line-height: 1.45; margin: 8pt 0 12pt; }
+  th { background: var(--green); color: #fff; text-align: left; }
+  th, td { border: 0.75pt solid var(--line); padding: 3pt 5pt; vertical-align: top; overflow-wrap: break-word; }
+  th { white-space: nowrap; }
+  tr { break-inside: avoid; }
+  tr:nth-child(even) td { background: var(--soft); }
+  blockquote { margin: 8pt 0; padding: 4pt 10pt; border-left: 3pt solid var(--orange); background: #fff6ec; font-size: 9.5pt; }
+  blockquote p { margin: 2pt 0; }
+  code { font-family: Consolas, "Microsoft JhengHei", monospace; font-size: 0.92em; background: var(--soft); padding: 0 2pt; border-radius: 2pt; }
+  pre { background: #14261e; color: #fff; padding: 8pt 10pt; border-radius: 4pt; font-size: 7.4pt; line-height: 1.5; white-space: pre-wrap; break-inside: avoid; }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  .mermaid { text-align: center; margin: 10pt 0; break-inside: avoid; }
+  .mermaid svg { max-width: 100%; height: auto; max-height: 235mm; }
+  a { color: #1f6fb2; text-decoration: none; word-break: break-all; }
+</style>
+</head>
+<body>
+<main id="out"></main>
+<script type="text/plain" id="src">
+# DietSense：對話式每日熱量攝取 Domain AI Agent
+
+**期末專題提案（Final Project Proposal）**
+
+> 本文件依《期末專題提案作業規範》的順序撰寫：Abstract、Introduction、Related Work、Deep Research、Proposed Scheme、References。
+> 內容由 GitHub repository 的 `docs/` 與 `openspec/` 自動合成（`scripts/build_docs.py`）。Repository：https://github.com/A0966411725-png/dietsense-proposal
+> 目前是 Proposal 階段：沒有程式碼，也沒有實驗結果；所有成效都是預期目標。
+
+## 1. Abstract
+
+飲食自我記錄是行為體重管理的核心策略，但記錄負擔讓多數人難以持續。WHO 指出 2022 年全球逾 8.9 億成人肥胖；台灣 2017–2020 年國民營養調查顯示，約一半成人體重高於建議範圍。然而 2026 年的範疇回顧發現，熱量 App 的記錄頻率在第 4 至 12 週間由每週 5.4 天降至 1.4 天。現有工具要求使用者搜尋品項、估計份量並拆解複合料理，對台灣小吃支援不足；拍照 App 與大型語言模型雖然方便，照片估熱量的誤差約 36%，珍珠奶茶等混合飲品甚至低估達 76%，數值也無法追溯來源。
+
+為解決上述問題，本專題提出 DietSense 對話式熱量攝取 Domain AI Agent。使用者用一句中文描述飲食，LLM 負責意圖分類、食物抽取與任務規劃；營養數值則錨定於食藥署資料庫、自建台式料理庫與 USDA FoodData Central，再以份量對照表與 Mifflin-St Jeor 公式進行確定性計算。系統以熱量區間取代單一數字，信心不足時最多追問一次，並設有安全守門機制避免助長過度節食。
+
+評估上，本研究將建立 500 筆台式料理標註集，與純 LLM 估算及手動查詢比較 MAE、±20% 命中率、區間覆蓋率、記錄時間、SUS 與安全攔截率，並進行 20 人 7 天使用者研究。預期 DietSense 的準確度優於純 LLM、記錄時間短於手動查詢、SUS 高於 70；以上皆為預期目標，實際成效將依實驗結果報告。
+
+### 摘要的 A–F 結構
+
+| 段落 | 內容 | 用到的核心 / 取捨 / 細節 |
+|------|------|-----------------------|
+| **A. Attention** | WHO：2022 年全球 25 億成人過重，其中逾 8.9 億人肥胖 [R14]；台灣 2017–2020 成人過重加肥胖，男性約 58%、女性約 43% [R15]；成人 68% 平均每天至少外食一餐（19–44 歲達 84%）[N4]；拍照記熱量 App Cal AI 兩年安裝逾 1,500 萬、被 MyFitnessPal 收購 [N3] | C1 |
+| **B. But** | App 記錄頻率在 12 週內大幅下降 [R11]；MyFitnessPal 使用者漏記約 18% 的品項 [R13]；GPT-4o 照片估熱量 MAPE 約 36% [R3]；四個熱門拍照 App 每餐少算 250–345 kcal（NUTRITION 2026，初步結果）[N2]；AI App 把珍珠奶茶的熱量低估最多 76% [N1]；中式料理 benchmark 的最佳模型 MAPE 仍有 24% [R5] | C1、C2 |
+| **C. Cure** | 提出 DietSense 對話式熱量攝取 Domain AI Agent：讓使用者用語言補充照片看不到的資訊（油、湯、份量） | C3 |
+| **D. Development** | LLM function calling Planner + 台灣優先的多來源 RAG + 份量對照表 + Mifflin-St Jeor + 區間量化 + 安全守門；完整設計見 design.md | C3–C5、T1–T3、細節 1–9 |
+| **E. Experiments** | 500 筆標註集（必含珍奶、湯麵、燴飯等高誤差類別，並分類別回報誤差）、兩種基準、六類指標、20 人 7 天研究、30+ 筆安全測試 | 細節 10 |
+| **F. Findings（Expected）** | 預期 ±20% 命中率優於純 LLM 基準、區間 coverage ≥ 80%、每餐記錄時間低於手動查詢、SUS > 70、安全攔截率 100%；學術產出為台式料理 benchmark 與區間校準結果。**這些是規劃目標，不是實驗結果。** | C4、C5 |
+
+## 2. Introduction
+
+### A. Attention Getter（A2Z：G. General）
+
+肥胖已是全球性的慢性病問題。WHO 指出，2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖，而且全球肥胖盛行率在 1990–2022 年間增加超過一倍 [R14]；2025 年 12 月，WHO 首度發布 GLP-1 藥物治療肥胖的指引，並提到全球肥胖人口已超過 10 億 [R21]。台灣也不例外：2017–2020 年國民營養健康狀況變遷調查顯示，成人男性過重 30.31%、肥胖 28.12%，女性過重 22.98%、肥胖 19.57% [R15]，也就是約一半的成人體重高於建議範圍。
+
+藥物之外，飲食自我記錄是行為體重管理的核心策略：系統性回顧一致發現，自我記錄與減重顯著相關 [R24]。問題在於，**人們做不到持續記錄**。
+
+### B. Background（A2Z：G. General）
+
+- **應用領域**：個人營養與體重管理，屬於 Health Informatics。
+- **使用者**：台灣成人，三餐以外食為主（便當、小吃、夜市、手搖飲），通常不會秤重，只會用「一碗」、「一份」、「半杯」描述。國民營養調查顯示，19 歲以上成人有 68.0% 每週外食 7 次以上，19–44 歲更達 83.7%，只有 11.4% 的成人完全不外食 [N4]。外食正是份量與油脂最難掌握的情境。
+- **市場**：低負擔記錄的需求很明確。拍照記熱量 App Cal AI 兩年內安裝超過 1,500 萬次，2026 年被 MyFitnessPal 收購 [N3]；但同類 App 的準確度仍有明顯問題（見 C. Problem）。
+- **技術背景**：大型語言模型已能理解這類口語描述，多模態模型也能辨識照片中的食物 [R2][R4]；同時，Agent 架構可以讓 LLM 透過 function calling 查詢外部資料庫，把回答錨定在可信資料上 [R6][R10]。這讓「用一句話記錄一餐」在技術上變得可行。
+
+### C. Problem（A2Z：H. However）
+
+本專題要解決的問題是：**如何讓台灣使用者用最少的力氣記錄飲食，同時得到有來源、誠實呈現不確定性、而且安全的熱量分析？**
+
+這個問題可以拆成四個具體障礙：
+
+1. **查詢負擔**：要在上萬筆品項中搜尋正確名稱。
+2. **份量模糊**：日常生活不會秤重，只有「一碗」、「一份」。
+3. **複合料理**：一碗牛肉麵包含麵、湯、肉、蛋，需要拆解。
+4. **在地資料不足**：台灣小吃與熟食在常用資料庫中覆蓋不足 [R22][R23]。
+
+證據顯示這些障礙會直接造成放棄：熱量 App 的記錄頻率在第 4 到 12 週間，由每週約 5.4 天降到 1.4 天 [R11]；即使有記錄，使用者也平均漏記約 18% 的品項，而且能量明顯被低估 [R13]。改用拍照也沒有解決問題：AI App 對混合料理特別不準，把珍珠奶茶的熱量低估最多 76% [N1]；美國 NIDDK 團隊在 2026 年的初步結果也顯示，四個熱門拍照 App 平均每餐少算 250–345 kcal，主要是看不到油脂 [N2]。
+
+### D. Existing Limitations（A2Z：I. In literature → J. Judgement）
+
+| 現有方法 | 優點 | 限制（附證據） |
+|---------|------|---------------|
+| 手動資料庫 App（MyFitnessPal 等） | 能量與巨量營養素有可接受的相對效度 [R12] | 負擔高、持續度快速下降 [R11]；使用者自建資料品質不一；台灣小吃少 |
+| 影像 MLLM 直接估算 | 拍照即可，負擔低 | GPT-4o 熱量 MAPE 約 35.8% [R3]；與營養師一致性只有中等（ICC 0.31–0.67）[R2]；中式料理最佳 MAPE 仍有 24.45% [R5] |
+| 商業拍照 App（Cal AI 等） | 下載量大，市場接受度高 | 每餐少算 250–345 kcal、脂肪少算約 30 g（初步結果）[N2]；珍奶低估最多 76% [N1] |
+| 文字 LLM 直接估算 | 輸入最自然 | 最佳模型的碳水估算準確率約 67%，不同國家的餐點誤差差距很大 [R1]；數字沒有來源，可能有幻覺 |
+| 資料錨定 Agent | 數字可追溯 | 現有研究以美國或歐洲資料庫為主 [R6][R10]；缺台灣熟食；較少處理對話與安全 |
+
+**判斷**：沒有任何一類方法同時做到「低負擔、可追溯、在地化、誠實呈現不確定性、具安全機制」。
+
+### E. Innovation（A2Z：K. Keypoint）
+
+DietSense 和現有系統的不同之處：
+
+1. **分工**：LLM 只負責理解語言與規劃，營養數值全部來自資料庫與公式，所以每個數字都能追溯。
+2. **台灣優先**：檢索順序以食藥署資料庫與自建台式料理庫為先，USDA 補足其他食物。台灣團隊的研究已顯示，加入在地食物知識的客製化 GPT-4o，食物辨識率由 59% 提升到 74% [R4]。
+3. **用語言補足照片看不到的資訊**：油、湯喝多少、加了什麼料，都可以用一句話說明，正好對應拍照 App 最大的誤差來源 [N2]。
+4. **誠實的不確定性**：以熱量區間取代單一數字，並用 coverage 與寬度兩個指標一起校準，避免用過寬的區間灌水。
+5. **有上限的追問**：每項食物最多追問一次，在準確度與負擔之間取得平衡（Trade-off T1）。
+6. **安全守門**：用完整日或 7 日資料判斷攝取過低，避免早餐後就誤報，並拒絕極低熱量計畫。
+
+### F. Contributions
+
+1. **系統**：一個可運作的繁體中文對話式熱量攝取 Domain AI Agent（DietSense），附 OpenSpec 規格與 DESIGN.md。
+2. **資料**：一套 500 筆台式料理自然語言描述標註集，包含參考熱量、份量重量與來源。
+3. **評估框架**：涵蓋準確度（MAE、MAPE、±10%/±20%）、不確定性（coverage、寬度）、效率（記錄秒數、追問率）、可用性（SUS）與安全（攔截率、誤報率），並與純 LLM、手動查詢兩種基準比較。
+4. **錨定管線**：一套整合食藥署資料庫、台式料理庫與 USDA 的檢索與排序流程，可供後續研究重用。
+
+### L. List the organization（文章結構）
+
+本提案其餘章節安排如下：第二章 Related Work 依 AI 技術與營養領域知識兩部分回顧文獻，並整理 Article Summary Table 與 Research Gap；第三章 Deep Research 回答五個核心思維、三個專業爭論與十個深度問題；第四章 Proposed Scheme 以 ①–⑧ 模組說明系統架構、流程圖、虛擬碼與技術可行性；第五章說明實驗設計與預期成果；第六章為結論與未來工作。
+
+## 3. Related Work
+
+### M. Methods：AI Technology（約 1/2）
+
+#### M1. 從文字估營養：LLM 直接估算
+
+NutriBench [R1]（ICLR 2025）用 11,857 筆由真實飲食調查資料產生的自然語言餐點描述，評估 12 個 LLM 估算碳水化合物的能力。表現最好的 GPT-4o 搭配 CoT，準確率（誤差在 ±7.5 g 內）為 66.8%；作者也請 3 位營養師估算同一批樣本，LLM 的準確度相當或更高，而且快得多。有三個發現和 DietSense 直接相關：
+
+1. GPT-4o 與 GPT-4o mini 在克數描述（「80 g 飯」）上，比在自然份量描述（「一杯飯」）上準。
+2. RAG 不一定提升準確率。
+3. 不同國家的餐點誤差差距很大：GPT-4o + CoT 的 MAE 最低 2.20 g、最高 15.12 g。
+
+**意義**：文字估算可行，但口語份量與在地食物仍是弱點；而且「加上檢索就會變準」不是理所當然，必須實測（見 Trade-off T2）。
+
+#### M2. 從照片估營養：多模態 LLM
+
+- O'Hara et al.（2025）[R2]：ChatGPT-4 辨識照片中食物的精確度約 93%，但熱量、蛋白質、碳水估算與 7 位營養師的一致性只有中等（ICC 0.31–0.67）。
+- Fridolfsson et al.（2025）[R3]：52 張標準化照片，GPT-4o 和 Claude 3.5 Sonnet 的熱量 MAPE 都約 35.8%，Gemini 1.5 Pro 約 64.2%。
+- Chen et al.（2025，台灣，AJCN）[R4]：客製化的 Diabot-GPT-4o 在 57 人、714 張照片上，只用影像的食物辨識率為 74%，未客製化的 GPT-4o 為 59%；熱量大致落在秤重記錄的 ±10–20% 內。**意義**：加入領域客製化（台灣食物知識）能明顯提升表現。
+- DiningBench（ACL 2026）[R5]：3,021 道菜，其中 2,086 道為中式料理；表現最好的模型營養估算平均 MAPE 仍有 24.45%，作者把誤差歸因於無法從 2D 推斷 3D 份量。
+- Lo et al.（2024）[R8]：用穿戴式相機拍攝的半自由生活飲食資料測試 GPT-4V。模型不需微調就能辨識食物；加上語言提示（例如指定料理類型）後能辨識地區性料理，也能用周圍物品當比例尺推估份量。**意義**：語言提示可以補足影像，和 DietSense「用一句話補充資訊」的想法一致。
+- Coburn et al.（2025）[R9]：提出 ACETADA 資料集並評估 8 個多模態模型。把地點、時間與食物項目等情境資訊寫進提示，可以降低熱量、巨量營養素與份量估算的 MAE 與 MAPE。**意義**：餐別與用餐情境值得記錄。
+
+#### M3. 資料錨定與 Agent 化（新趨勢）
+
+- ChatDiet（2024）[R7]：LLM + 個人模型 + 族群模型 + orchestrator，可以產生個人化、可解釋的飲食推薦；但只用一位使用者的三年資料做個案研究。
+- 斯洛維尼亞食品成分 RAG 評估（2026）[R10]：在斯洛維尼亞食品成分資料庫上建立 RAG，比較 4 個 LLM（Gemini、GPT、Claude、Mistral）把自然語言查詢轉成檢索條件的能力。簡單與中等難度的查詢準確度高，條件無法用欄位表達的困難查詢則不可靠。**意義**：把國家資料庫接到 LLM 的做法已有先例，但尚未延伸到對話式記錄。
+- Open-KNEAD（2026）[R6]：把餐點拆解成單項，再錨定到 USDA FNDDS 代碼，屬於 training-free 的 Agent 框架。作者也發現，新一代 MLLM 直接估算已能追上甚至超過完整檢索管線。**意義**：這是對 DietSense 的重要反證，所以我們把「純 LLM」列為必測基準（見 Trade-off T2）。
+
+### M. Methods：Domain Know-how（約 1/2）
+
+#### D1. 能量平衡與 TDEE
+
+體重變化來自長期的能量不平衡，而且身體會動態適應，不能用「每 7,700 kcal = 1 kg」線性推算 [R18]。TDEE 估算採用 Mifflin-St Jeor 公式 [R17]，它在一般成人上是常用的實務選擇。**設計影響**：缺口分析以區間和趨勢呈現，不宣稱精確減重預測。
+
+#### D2. 自我記錄的效果與誤差
+
+- 自我記錄和減重有一致的正相關 [R24]，但持續度會快速下降 [R11]。
+- 自我報告本身就有系統性誤差，尤其是低報 [R19]。
+- MyFitnessPal 在能量與巨量營養素上有可接受的相對效度 [R12]，但使用者平均漏記約 18% 的品項，而且能量明顯被低估 [R13]。**設計影響**：降低每次記錄的負擔，比把單次估算做到極致更能改善整體資料品質。
+
+#### D3. 食物成分資料與台灣在地性
+
+台灣的官方來源是食藥署「台灣地區食品營養成分資料庫」[R22]，以原料與初級加工食品為主，複合熟食料理很少；USDA FoodData Central [R23] 涵蓋廣，但缺乏台灣小吃。**設計影響**：需要自建台式料理庫，以食材拆解計算營養，並標示資料來源與衍生方式。
+
+#### D4. 品質 vs. 數量、個人化 vs. 通用指引
+
+- DIETFITS 隨機試驗 [R20]：健康低脂與健康低碳飲食在 12 個月的減重成效沒有顯著差異，支持「總熱量與飲食品質」比單一巨量營養素比例重要。
+- Zeevi et al. [R16]：同一種食物在不同人身上的血糖反應差異很大，支持精準個人化；但需要血糖監測與腸道菌資料，超出一般使用情境。**設計影響**：以每日飲食指南與 AMDR 等通用指引作為安全基線，不做醫療層級的個人化。
+
+#### D5. 公共衛生背景
+
+WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R14]；2025 年 WHO 在 GLP-1 用藥指引中提到全球肥胖人口已超過 10 億 [R21]。台灣 2017–2020 年國民營養調查顯示，成人男性過重 30.31%、肥胖 28.12%；女性過重 22.98%、肥胖 19.57%（過重定義為 24 ≤ BMI < 27，肥胖為 BMI ≥ 27）[R15]。
+
+---
+
+### O. Organize：Article Summary Table
+
+共 14 篇：AI 技術 8 篇（R1–R7、R10），營養與行為領域 6 篇（R11–R13、R19、R20、R24）。
+
+| Ref | Year | Problem | AI Method | Domain Knowledge | Dataset | Findings | Limitation |
+|-----|------|---------|-----------|------------------|---------|----------|------------|
+| [R1] Hua et al. | 2025 | 從餐點文字估碳水 | 12 個 LLM、CoT、RAG 等提示策略 | 全球飲食攝取調查資料、營養標註 | NutriBench，11,857 筆描述 | GPT-4o + CoT 準確率約 66.8% | 以碳水為主；非中文、非台灣食物 |
+| [R2] O'Hara et al. | 2025 | 照片估營養是否可取代營養師 | ChatGPT-4（多模態） | 營養師估算作為比較 | 114 張餐點照片（38 張與營養師比較） | 食物辨識精確度約 93%；與營養師 ICC 0.31–0.67 | 樣本小；一致性只有中等 |
+| [R3] Fridolfsson et al. | 2025 | 比較三個 LLM 從照片估重量與熱量 | GPT-4o、Claude 3.5 Sonnet、Gemini 1.5 Pro | 秤重參考值 | 52 張標準化照片 | 熱量 MAPE：GPT-4o 35.8%、Claude 35.8%、Gemini 64.2% | 照片標準化，與真實情境有落差；沒有資料錨定 |
+| [R4] Chen et al.（台灣） | 2025 | 客製化 GPT-4o 能否提升影像飲食評估 | 客製化 Diabot-GPT-4o vs. GPT-4o | 秤重飲食記錄、台灣飲食 | 57 人、714 張照片、171 天 | 食物辨識 74% vs. 59%；熱量多在 ±10–20% | 受試者為營養系學生；需要拍照 |
+| [R5] DiningBench | 2026 | 飲食領域的感知與推理 benchmark | 多個 MLLM | 中式料理營養標註 | 3,021 道菜（中式 2,086） | 最佳模型營養估算 MAPE 24.45% | 只有影像；作者指出文化偏向中式料理 |
+| [R6] Open-KNEAD | 2026 | 錨定食品資料庫的營養估算 | Agentic decomposition + FNDDS 錨定 | USDA FNDDS 代碼 | 餐點影像 benchmark | 錨定可得到逐項紀錄；新一代 MLLM 直接估算已追上檢索管線 | 以美國食品代碼為主 |
+| [R7] Yang et al.（ChatDiet） | 2024 | 個人化營養推薦聊天機器人 | LLM + 因果個人模型 + orchestrator | 營養成分族群模型 | 1 人 3 年穿戴裝置資料 | 推薦測試有效率 92% | n = 1；不是熱量記錄 |
+| [R10] Požarnik Vavken et al. | 2026 | LLM 能否把自然語言查詢轉成食品成分資料庫的檢索條件 | 4 個 LLM（Gemini、GPT、Claude、Mistral）+ RAG | 斯洛維尼亞食品成分資料庫 | 依難度分級的查詢 | 簡單與中等難度查詢準確度高 | 困難查詢不可靠；預印本；不是對話式記錄 |
+| [R11] Dugas et al. | 2026 | 熱量計數 App 的使用與持續度 | （回顧研究） | 行為體重管理 | 2013–2024 的研究 | MyFitnessPal 記錄頻率在第 4–12 週由每週 5.4 天降到 1.4 天 | 範疇回顧，沒有合併效果量 |
+| [R12] Evenepoel et al. | 2020 | MyFitnessPal 資料庫算出的營養值是否準確 | （無；商用 App 資料庫） | 比利時食品成分資料庫 Nubel | 50 人，兩次 4 天飲食記錄 | 能量 r = 0.96，碳水、脂肪、蛋白質 r = 0.90；膽固醇與鈉相關性弱 | 受試者事先接受詳細指導；比利時食物 |
+| [R13] Chen et al. | 2019 | 自然情境下用 App 記錄飲食是否準確 | （無；人工記錄 App） | 24 小時回憶法、食物類別編碼 | 成人 4 天 MyFitnessPal 記錄 vs. 2 天 24 小時回憶 | 平均漏記 18% 品項（多為高熱量、低營養食物）；能量低估 1,863 kJ | 非台灣族群；樣本為澳洲成人 |
+| [R19] Poslusna et al. | 2009 | 飲食記錄與 24 小時回憶法的誤報有多嚴重 | （無；文獻回顧） | 食物記錄、24 小時回憶法 | 37 篇研究 | 約 30% 的受試者是低報者；能量約低估 15% | 回顧的是紙本與訪談方法，未涵蓋 App |
+| [R20] Gardner et al.（DIETFITS） | 2018 | 健康低脂與健康低碳飲食，哪個減重效果好 | （無；隨機試驗） | 巨量營養素組成、基因型、胰島素分泌 | 609 位過重成人，12 個月 | 兩組減重沒有顯著差異 | 美國族群；不是熱量記錄研究 |
+| [R24] Burke et al. | 2011 | 自我記錄和減重有沒有關聯 | （無；系統性回顧） | 行為減重的飲食、運動、體重自我記錄 | 22 篇研究（15 篇為飲食記錄） | 自我記錄與減重一致呈顯著相關 | 證據等級偏弱；樣本多為白人女性、依賴自報 |
+
+#### 方法分類比較（A2Z 的 J. Judgement / O. Organize）
+
+| 方法類別 | 準確度 | 使用者負擔 | 可追溯性 | 台灣在地性 | 主要缺點 |
+|---------|-------|-----------|---------|-----------|---------|
+| 手動資料庫 App（MyFitnessPal 等） | 中高（依使用者） | **高** | 中（使用者自建資料品質不一） | 低 | 搜尋、秤重、拆解很累 → 放棄 |
+| 影像 MLLM 直接估算 [R2–R5] | 中（MAPE 24–36%） | 低 | **低** | 低到中 | 看不出份量與隱藏油脂；數字無來源 |
+| 文字 LLM 直接估算 [R1] | 中 | **低** | **低** | 低 | 最佳模型碳水準確率約 67%；不同國家的餐點誤差差距大；數字無來源 |
+| 錨定 / RAG Agent [R6][R10] | 中高 | 低到中 | **高** | 依資料庫而定 | 錨定資料庫缺台灣熟食；多半只處理單次估算 |
+| **DietSense（本專題）** | 目標：中高（待驗證） | 低（最多一次追問） | **高** | **高**（台灣優先） | 需要自建料理庫；只支援文字 |
+
+---
+
+### N. New proposed：Existing Research → Limitations → Research Gap → Our Project
+
+| Existing Research | Limitations | Research Gap | Our Project（DietSense） |
+|-------------------|------------|--------------|-------------------------|
+| LLM／MLLM 直接估營養 [R1–R5] | MAPE 24–36%；數字沒有來源 | **G1** 缺少「好用」又「可追溯」的估算方式 | LLM 只負責理解；數值錨定到資料庫並附來源 |
+| 資料錨定 Agent [R6][R10] | 以美國或歐洲資料庫為主；缺台灣熟食 | **G2** 缺少台灣在地的錨定資料 | 食藥署資料庫優先 + 自建台式料理庫 |
+| 現有研究多回報單一點估計 | 使用者看不出估算有多不確定 | **G3** 缺少不確定性的呈現與校準 | 熱量區間 + coverage／寬度校準 |
+| 記錄 App 的持續度與誤差研究 [R11][R13] | 負擔高導致放棄；也缺安全機制 | **G4** 缺少兼顧低負擔與飲食安全的對話式流程 | 單次追問 + 安全守門（7 日規則、拒絕極低熱量） |
+
+## 4. Deep Research
+
+### Q1. 五個核心思維
+
+#### 1. 能量平衡（Energy Balance）是動態的，不是線性的
+
+- **意義**：體重變化來自攝取與消耗的長期差距；但身體會隨體重下降而降低消耗，所以不能用「少吃 7,700 kcal 就瘦 1 公斤」直線推算。
+- **證據**：Hall 等人（2011）的動態模型指出，能量不平衡對體重的影響需要考慮代謝適應 [R18]；Hall 等人（2016）在代謝病房讓 17 位男性改吃等熱量的生酮飲食，體脂下降並沒有加快，能量消耗只小幅增加約 57 kcal/天（代謝艙測量）[R26]。
+- **對系統設計的影響**：⑤ 分析引擎以「區間 + 7 日趨勢」呈現缺口，不提供精確的減重日期預測。
+
+#### 2. 巨量營養素組成（Macronutrient Composition）
+
+- **意義**：同樣的熱量，蛋白質、碳水、脂肪的比例會影響飽足感、身體組成與長期健康。
+- **證據**：美國 AMDR 建議碳水 45–65%、蛋白質 10–35%、脂肪 20–35%；國健署每日飲食指南的規劃原則較窄：醣類 50–60%、蛋白質 10–20%、脂質 20–30% [R28]。
+- **對系統設計的影響**：`energy-analytics` 以**台灣每日飲食指南**為主要比較基準，AMDR 作為較寬的參考範圍；輸出一定附巨量營養素比例，不只報總熱量。
+
+#### 3. 份量估算是最大的誤差來源，必須量化不確定性
+
+- **意義**：同一道菜的份量差異遠大於資料庫數值的差異，而使用者通常低報。
+- **證據**：Poslusna 等人（2009）回顧 37 篇研究，約 30% 的受試者是低報者，能量攝取平均約低估 15% [R19]；拍照 App 每餐少算 250–345 kcal，主要是看不到脂肪 [N2]。
+- **對系統設計的影響**：每筆記錄輸出 low / point / high 區間，區間寬度隨配對信心與份量描述的模糊程度變寬（design.md 的 `w` 公式）。
+
+#### 4. 個體差異（Individual Variation）
+
+- **意義**：同樣的食物在不同人身上的代謝反應不同。
+- **證據**：Zeevi 等人（2015）發現，同一種食物引起的餐後血糖反應在不同人之間差異很大，個人化模型的預測優於通用規則 [R16]。
+- **對系統設計的影響**：收集性別、年齡、身高、體重、活動量來計算個人 TDEE；但**不做**需要血糖或腸道菌資料的醫療級個人化（Trade-off T3）。
+
+#### 5. 飲食行為受情境影響（Behavioral Context）
+
+- **意義**：壓力、情緒、睡眠與社交場合都會改變飲食，單看熱量無法理解行為。
+- **證據**：Koenders 與 van Strien（2011）追蹤 1,562 位員工，發現情緒性進食（而不是生活型態因素）是 BMI 增加的穩定預測因子，運動可以減弱這個關聯 [R27]。
+- **對系統設計的影響**：日誌記錄用餐時間與餐別；`dietary-safety-guard` 偵測暴食-節食交替模式，用非評判的語氣提示，而不是只算熱量。
+
+---
+
+### Q2. 三個最重要的專業爭論
+
+結構：觀點 A ↔ 觀點 B → Evidence → Consensus → Unresolved → 對 DietSense 的影響
+
+#### 爭論一：熱量數量 vs. 食物品質（A calorie is a calorie?）
+
+| | 觀點 A：熱量就是熱量 | 觀點 B：食物組成會改變代謝 |
+|---|---|---|
+| 主張 | 只要總熱量相同，巨量營養素比例對體重影響不大 | 低碳飲食會降低胰島素、提高能量消耗（碳水-胰島素模型） |
+| 最強證據 | DIETFITS：609 位成人，健康低脂與健康低碳 12 個月減重沒有顯著差異 [R20]；Hall 2016：等熱量生酮飲食沒有加快體脂下降 [R26] | Ebbeling 2018：164 位成人減重後維持期，低碳（20%）組的總能量消耗比高碳（60%）組多約 209 kcal/天（意向治療分析）[R25] |
+
+- **目前共識**：長期熱量不足是減重的必要條件；食物品質影響飽足感、可持續性與健康指標。
+- **尚未解決**：Ebbeling 的能量消耗差異能否重現、是否只出現在胰島素分泌高的人身上。
+- **對 DietSense 的影響**：同時顯示熱量與巨量營養素比例；建議以「總熱量 + 飲食品質」為主，不推銷特定飲食法。
+
+#### 爭論二：AI 估算份量與熱量，夠不夠準？
+
+| | 觀點 A：AI 已足夠日常使用 | 觀點 B：AI 還不夠準 |
+|---|---|---|
+| 主張 | 新模型的準確度接近或超過營養師，適合日常追蹤 | 份量、隱藏油脂、混合料理的誤差仍大，數字也無法追溯 |
+| 最強證據 | 客製化 GPT-4o 的熱量多在秤重記錄 ±10–20% 內 [R4]；新一代 MLLM 直估已追上檢索管線 [R6]；NutriBench 中 LLM 的碳水估算與 3 位營養師相當或更準，而且快得多 [R1] | GPT-4o 照片估熱量 MAPE 約 36% [R3]；中式料理最佳 MAPE 24.45% [R5]；珍奶低估最多 76% [N1]；拍照 App 每餐少算 250–345 kcal [N2] |
+
+- **目前共識**：AI 適合趨勢追蹤，不適合臨床精確計算；誤差集中在份量、油脂與混合料理。
+- **尚未解決**：資料錨定在新一代模型上是否仍有優勢（NutriBench 發現 RAG 不一定提升準確率 [R1]）；如何讓使用者理解不確定性。
+- **對 DietSense 的影響**：熱量以區間呈現；純 LLM 列為必測基準；高誤差類別分項評估。
+
+#### 爭論三：通用指引 vs. 高度個人化
+
+| | 觀點 A：通用指引是安全基線 | 觀點 B：精準個人化才有效 |
+|---|---|---|
+| 主張 | DRI、每日飲食指南適用大多數人，安全、可解釋 | 基因、腸道菌、代謝決定最佳飲食，需要個人化 |
+| 最強證據 | Bilen 2026：5 個 AI 聊天機器人替過重青少年排的菜單，平均每天比營養師少約 695 kcal [N5]——缺少安全基線的「個人化」可能有害 | Zeevi 2015：個人化血糖預測模型優於通用建議 [R16] |
+
+- **目前共識**：通用指引是安全基線，個人化是優化方向，兩者不互斥。
+- **尚未解決**：AI 個人化建議的法律責任（是否構成醫療建議）與資料隱私。
+- **對 DietSense 的影響**：分層設計——通用指引與安全下限一定生效；個人資料只用於 TDEE；明確的非醫療聲明（`dietary-safety-guard`）。
+
+---
+
+### Q3. 十個深度理解問題（附 DietSense 的回答）
+
+| # | 類型 | 問題 | DietSense 的回答重點 | 設計位置 |
+|---|------|------|--------------------|---------|
+| 1 | Why | 為什麼吃一樣多熱量的兩個人，一個瘦了、一個沒有？Agent 如何避免給所有人同樣的建議？ | 代謝適應與個體差異（Q1-1、Q1-4）；用個人 TDEE 與 7 日趨勢，而不是固定數字 | energy-analytics |
+| 2 | What-if | 使用者只說「吃了一碗泡麵」，沒說品牌、加蛋、湯喝多少，Agent 怎麼辦？ | 信心 < 0.80 時只問一個最影響熱量的問題（通常是湯）；其餘不確定性反映在區間寬度（沒有份量描述時，半寬比例多 0.15） | conversational-food-logging、design 符號與參數 |
+| 3 | Trade-off | 問越多越準、但越煩；怎麼找平衡點？用什麼指標衡量？ | 每項最多追問一次（T1）；同時量測追問率、每餐記錄秒數、±20% 命中率、7 日持續記錄天數 | agent-evaluation、design Decision 4 |
+| 4 | Failure Case | 資料庫裡沒有的食物（例如眷村阿嬤的炒年糕），如何優雅降級？ | 追問後信心仍低於 0.50，就依食材拆解估算，標示「近似估算」並加寬區間；每 100 g 的數值仍來自資料庫，不報錯也不假裝精確 | nutrient-retrieval、design Decision 9 |
+| 5 | Evidence | 有什麼證據支持 AI 輔助記錄比傳統日記有效？若要做 RCT 怎麼設計？ | 證據：持續記錄與減重正相關 [R24]，負擔是放棄主因 [R11]。RCT：隨機分派 DietSense vs. 傳統 App，主要結果為 12 週持續記錄天數，次要結果為體重與 SUS | docs/02、tasks 7 |
+| 6 | Comparison | RAG LLM、微調領域 LLM、知識圖譜 + 規則引擎，各適合什麼條件？ | RAG：資料常更新、需要來源；微調：大量標註資料、追求語言流暢；知識圖譜：規則明確、需要可解釋推理。DietSense 用 RAG + 規則表 | design Decision 2 |
+| 7 | Design Decision | 為什麼選對話式 Agent？什麼情況下對話反而比傳統 UI 差？ | 外食、混合料理、口語份量適合對話；但重複吃同樣早餐時，一鍵「再記一次」比對話快——列為 Future Work | docs/02-E |
+| 8 | Real-world | 珍奶、雞排、蚵仔煎在 USDA 幾乎沒有，怎麼建立、維護、驗證台灣在地資料？ | 食藥署資料庫為原料基礎，自建台式料理庫以食材拆解計算並標示來源；≥ 50 筆雙人獨立標註、≥ 30 筆與業者營養標示比對 | nutrient-retrieval、agent-evaluation |
+| 9 | Why | Harris-Benedict、Mifflin-St Jeor、Katch-McArdle 各有什麼假設？哪些人會失準？ | Mifflin-St Jeor 以健康成人建立 [R17]；對運動員（肌肉量高）、高齡者、孕婦、慢性病患可能失準。Agent 選用 Mifflin-St Jeor，並在回應中說明它是估計值 | energy-analytics |
+| 10 | What-if | 如果 Agent 長期建議 < 1,200 kcal，反而助長飲食失調，該怎麼設計？ | 下限依性別區分（女 1,200／男 1,500 kcal [R29]），以完整日或 7 日平均判斷、拒絕低於下限的菜單、偵測暴食-節食交替、提供轉介；AI 菜單過低的風險有實證 [N5] | dietary-safety-guard |
+
+## 5. Proposed Scheme
+
+### 5.1 設計核心：5 個核心、3 個取捨、10 個細節
+
+| # | 核心 | 一句話說明 | 落在哪一段 |
+|---|------|-----------|-----------|
+| C1 | **問題：記錄太累，所以沒人持續記錄** | 飲食自我記錄有效，但 App 使用率在 12 週內從每週約 5.4 天降到 1.4 天 [R11] | A、B |
+| C2 | **缺口：好用的不準，準的不好用** | 手動 App 準但耗時、資料庫有使用者自建的錯誤 [R12][R13]；純 LLM 好用但熱量 MAPE 約 36% 且無來源 [R3] | B |
+| C3 | **解法：LLM 只理解語言，數字交給資料庫與公式** | DietSense = 對話式 Planner + 台灣優先的多來源營養資料錨定 + 確定性計算 | C、D |
+| C4 | **誠實：以區間取代單一數字** | 每筆熱量輸出 low / point / high，並附上來源；信心不足時最多追問一次 | D、F |
+| C5 | **安全：工具不能助長過度節食** | 用完整日或 7 日資料判斷攝取過低，拒絕極低熱量計畫，並提供轉介資訊 | D、E |
+
+| # | 取捨 | 我們的選擇 | 代價與如何量測 |
+|---|------|-----------|---------------|
+| T1 | **準確度 vs. 使用者負擔**：追問越多越準，但越容易放棄 | 信心 < 0.80 才追問，每項食物**最多一次**，不足的部分加寬區間 | 區間會變寬；用「追問率」、「每餐記錄秒數」、「±20% 命中率」一起評估 |
+| T2 | **資料錨定（RAG）vs. LLM 直接估算** | 以資料錨定為主，LLM 不產生數值 | 台式熟食在資料庫覆蓋不足，需要自建料理庫；Open-KNEAD（2026）指出新一代 MLLM 直接估算已接近檢索管線 [R6]，NutriBench 也發現 RAG 不一定提升準確率 [R1]，所以把「純 LLM」列為基準方法實測，不預設一定比較差 |
+| T3 | **個人化 vs. 安全與可解釋** | TDEE 用 Mifflin-St Jeor + 依性別的安全下限，不做基因或血糖個人化 | 個人化程度較低 [R16]；換來的是可說明、可驗證、不越權給醫療建議 |
+
+1. **意圖四分類**：`log_food`、`query_nutrition`、`analyze`、`recommend`；判斷不出來就回問，不猜測。
+2. **實體結構**：食物名稱 + 份量描述 + 加料／修飾詞（例如「湯喝一半」）+ 餐別。
+3. **檢索順序**：食藥署食品營養成分資料庫 → 自建台式料理庫（向量檢索）→ USDA FoodData Central。
+4. **信心門檻 τ = 0.80**：低於門檻才追問；追問後仍低於 0.50，就改用食材拆解並標示「近似估算」。兩個門檻都是初始值，W6 用評估集校準。
+5. **區間公式**：半寬比例 w = 0.10 + 0.50·(1 − 信心) + 0.15·份量模糊度，上限 0.60。份量模糊度：有克數為 0、家用單位（碗、份、杯）為 0.5、沒有份量為 1。每日總量的半寬以平方和開根號合併。
+6. **份量對照表**：碗、份、個、杯、片依食物類別換算成克數（例如麵類一碗與飯類一碗不同）。
+7. **TDEE**：Mifflin-St Jeor BMR × 活動係數 1.2–1.9；缺少資料就詢問，不用預設值 [R17]。
+8. **巨量營養素**：以國健署每日飲食指南為主（醣類 50–60%、蛋白質 10–20%、脂質 20–30%），AMDR 為參考範圍 [R28]。
+9. **安全規則**：下限依性別區分（女 1,200／男 1,500 kcal [R29]）；當日結算後或 7 日平均低於下限才警示；拒絕低於下限的菜單請求；偵測暴食-節食交替。
+10. **評估設計**：500 筆台式料理標註集；基準為純 LLM（Base 與 CoT 兩種提示）與手動資料庫查詢；指標為 MAE、MAPE、±10%/±20% 命中率、區間 coverage、記錄秒數、SUS、安全攔截率；使用者研究 20 人 × 7 天。
+
+### 5.2 Agent 的行為需求
+
+行為需求寫成 OpenSpec 規格，每個 Requirement 都有可測試的 Scenario（WHEN / THEN）。
+
+| Capability | Requirement | Scenario 數 |
+|-----------|-------------|-----------|
+| `agent-evaluation` | 台式料理標註資料集 | 1 |
+| `agent-evaluation` | 參考值驗證 | 2 |
+| `agent-evaluation` | 高誤差類別分項報告 | 1 |
+| `agent-evaluation` | 基準方法比較 | 2 |
+| `agent-evaluation` | 區間校準度 | 1 |
+| `agent-evaluation` | 安全測試集 | 1 |
+| `conversational-food-logging` | 意圖分類 | 3 |
+| `conversational-food-logging` | 食物實體抽取 | 2 |
+| `conversational-food-logging` | 有上限的澄清追問 | 2 |
+| `conversational-food-logging` | 記錄可修改 | 1 |
+| `dietary-safety-guard` | 以完整日或多日資料判斷攝取過低 | 2 |
+| `dietary-safety-guard` | 依性別設定安全下限 | 2 |
+| `dietary-safety-guard` | 拒絕不安全的限制請求 | 1 |
+| `dietary-safety-guard` | 暴食-節食循環提示 | 1 |
+| `dietary-safety-guard` | 非醫療聲明 | 1 |
+| `energy-analytics` | 熱量以區間呈現 | 3 |
+| `energy-analytics` | 巨量營養素比例 | 1 |
+| `energy-analytics` | 個人 TDEE | 2 |
+| `energy-analytics` | 缺口分析與替換建議 | 2 |
+| `nutrient-retrieval` | 多來源錨定與優先順序 | 2 |
+| `nutrient-retrieval` | 數值來源可追溯 | 1 |
+| `nutrient-retrieval` | 未知食物降級處理 | 1 |
+| `nutrient-retrieval` | 營養查詢不寫入日誌 | 1 |
+| `nutrient-retrieval` | 資料來源失敗時的降級 | 1 |
+| **合計** | **24 個 Requirement** | **37** |
+
+### 5.3 System Architecture（①–⑧）
+
+```mermaid
+flowchart TB
+  subgraph L1["理解與取得資料（LLM + 檢索）"]
+    direction LR
+    U["① User Scenario<br/>文字（語音為延伸目標）"] --> I["② Input Processing<br/>正規化・意圖分類・NER"]
+    I --> P["③ Planner & Reasoning Agent<br/>LLM function calling・對話記憶<br/>信心低於 0.80 時追問一次"]
+    P -->|tool call| R["④ Data Retrieval<br/>TW 食品成分 DB・台式料理庫<br/>USDA FDC・個人日誌"]
+  end
+  subgraph L2["確定性計算與決策（不經 LLM 產生數值）"]
+    direction LR
+    A["⑤ Analytics Engine<br/>份量→克數・kcal 區間<br/>巨量營養素・TDEE"] --> K["⑥ Domain Knowledge<br/>份量對照表・飲食指南<br/>AMDR・安全規則"]
+    K --> D["⑦ Decision / Recommendation<br/>缺口分析・替換建議・安全守門"]
+    D --> O["⑧ Output & Interaction<br/>文字・區間圖・來源・下一步"]
+  end
+  L1 -->|"候選品項 + 信心 + 來源"| L2
+```
+
+| # | 模組 | 輸入 → 輸出 | 對應 spec |
+|---|------|-------------|-----------|
+| ① | User Scenario | 使用者訊息、個人資料 | conversational-food-logging |
+| ② | Input Processing | 原始文字 → `{intent, entities[]}` | conversational-food-logging |
+| ③ | Planner & Reasoning | intent + 對話狀態 → 工具呼叫計畫／澄清問題 | conversational-food-logging |
+| ④ | Data Retrieval | 食物名稱 → 候選品項 + 信心 + 來源 | nutrient-retrieval |
+| ⑤ | Analytics Engine | 品項 + 份量 → kcal(low, point, high)、巨量營養素、TDEE | energy-analytics |
+| ⑥ | Domain Knowledge | 規則與對照表（確定性資料，不經 LLM） | energy-analytics、dietary-safety-guard |
+| ⑦ | Decision | 每日狀態 → 建議或安全提示 | energy-analytics、dietary-safety-guard |
+| ⑧ | Output | 結構化結果 → 自然語言 + 圖表 + 來源 | 全部 |
+
+
+#### 模組逐一說明
+
+
+**① User / Application Scenario**：使用者是三餐以外食為主的台灣成人，用一句繁體中文描述剛吃的東西，或詢問「今天吃了多少」、「晚餐還能吃什麼」。第一次使用時填寫性別、年齡、身高、體重與活動量。系統不要求秤重，也不要求拍照。
+
+**② Query / Input Processing**：先做確定性的正規化（繁簡、全半形、「半碗」→ 0.5 碗），再用一次 LLM 結構化輸出同時完成意圖四分類與實體抽取，輸出固定的 JSON schema：`{intent, entities[{name, portion, modifiers[], meal}]}`。LLM 回傳的 JSON 不合 schema 時重試一次，仍失敗就回問使用者。
+
+**③ Planner & Reasoning Agent**：這是 Agent 和一般聊天機器人不同的地方。Planner 依意圖決定要呼叫哪些工具、順序如何，並維護對話狀態（每項食物的 `asked` 旗標、尚未回答的澄清問題、缺少的個人資料）。它的決策只有三種：呼叫工具、問一個問題、進入輸出；它不產生任何營養數值。
+
+**④ Data Acquisition / Retrieval**：四個資料來源。
+- 食藥署「食品營養成分資料集」（離線匯入 SQLite）：原料與初級加工食品。
+- 自建台式料理庫（向量索引）：每道菜記錄成分組成、每種成分的克數與對應的食藥署品項。
+- USDA FoodData Central（API + 快取）：西式與包裝食品。
+- 個人日誌（本機 SQLite）：當日記錄與近 7 日歷史。
+
+每個候選品項都帶有配對信心 `c` 與來源識別碼。任一外部來源逾時，就略過該來源並在回應中註明。
+
+**⑤ Analytics Engine**：全部是確定性程式碼。把份量換成克數、逐成分加總熱量、計算區間半寬、三大營養素占比、BMR 與 TDEE，以及每日總量。同樣的輸入一定得到同樣的輸出，可以用單元測試驗證。
+
+**⑥ Domain Knowledge Integration**：以表格與規則保存的營養專業知識，不經 LLM：份量對照表（依食物類別）、每日飲食指南與 AMDR 的三大營養素範圍、Mifflin-St Jeor 公式與活動係數、依性別的安全下限、暴食-節食模式的判斷規則。每條規則都有文獻或官方來源（見 docs/03 的 References）。
+
+**⑦ Decision / Recommendation**：先做安全檢查，再決定能不能給建議。有風險時只輸出安全提示與轉介資訊；沒有風險且使用者要求分析或建議時，依「TDEE − 今日攝取」的差距與三大營養素占比，從料理庫挑出熱量較低或占比較均衡的替換選項。
+
+**⑧ Output & Interaction**：回應固定包含四個部分：本次記錄的品項與熱量區間、今日累計與 TDEE 的比較、可展開的資料來源（資料庫 + 品項 ID），以及下一步（待回答的問題或建議）。區間用橫條圖呈現，低信心與「近似估算」的項目會另外標示。
+
+### 5.4 Flowchart
+
+```mermaid
+flowchart TD
+  S([開始]) --> IN[接收輸入・正規化]
+  IN --> IC{意圖?}
+  IC -->|不明| ASK0[/回問意圖・使用者回答/] --> IN
+  IC -->|query_nutrition| RQ[檢索營養資訊・不寫入日誌] --> OUT
+  IC -->|analyze / recommend| ST
+  IC -->|log_food| NER[抽取 食物・份量・修飾詞]
+  NER --> RET[多來源檢索 + 排序]
+  RET -. 某來源逾時 .-> SKIP[略過該來源・回應中註明] -.-> CF
+  RET --> CF{信心 ≥ 0.80?}
+  CF -->|是| CAL
+  CF -->|否，未追問| CLAR[/提出 1 個澄清問題・使用者回答/] --> RET
+  CF -->|否，已追問| LOW{信心 ≥ 0.50?}
+  LOW -->|是| WIDE[標記低信心・加寬區間] --> CAL
+  LOW -->|否| DEC[食材拆解估算・標示近似] --> CAL
+  CAL[份量→克數・逐成分 kcal・區間] --> LOG[寫入日誌]
+  LOG --> MORE{還有下一項?}
+  MORE -->|是| RET
+  MORE -->|否| ST[compute_daily_state：總量・巨量營養素・TDEE]
+  ST --> SG{安全檢查}
+  SG -->|風險| ALERT[安全提示 + 轉介・不給限制建議] --> OUT
+  SG -->|正常| REC[缺口分析・替換建議]
+  REC --> OUT[輸出：文字 + 區間圖 + 來源]
+  OUT --> E([結束])
+```
+
+流程圖包含規範提到的四種元素：
+- **Decision**：意圖、信心 ≥ 0.80、信心 ≥ 0.50、還有下一項、安全檢查。
+- **Loop**：逐項食物的迴圈；追問後重新檢索的迴圈（每項最多一次）。
+- **Exception**：資料來源逾時、資料庫查無此物（食材拆解）、安全風險。
+- **Human Interaction**：回問意圖、澄清問題。
+
+### 5.5 Pseudocode
+
+```text
+Algorithm 1: DietSense — Conversational Calorie Intake Agent
+Input : user message Q, user profile P, daily log D, history H (7 days)
+Output: response R, updated log D
+01: q ← normalize(Q)                                        ▷ ② 繁簡、全半形、單位
+02: (intent, ents) ← classify_and_extract(q)                ▷ ② LLM 結構化輸出；格式錯誤重試一次
+03: if intent = UNKNOWN then return ask("要記錄這餐，還是查詢營養？"), D
+04: if intent = query_nutrition then return render(lookup(ents), sources), D   ▷ 只查詢，不寫入日誌
+05: if intent = log_food then
+06:   for each e in ents do                                  ▷ 主項與加料各自成項
+07:     C ← retrieve(e.name, [TW_FCD, TW_DISH, USDA_FDC])    ▷ ④ 逾時的來源略過
+08:     (m, c) ← rank(C, e.context)                          ▷ c ∈ [0, 1]：配對信心
+09:     if c < τ and not e.asked then                        ▷ τ = 0.80；Human interaction
+10:       e ← update(e, ask(clarify(e, C))); e.asked ← true; goto 07
+11:     if c < τ_low then m ← decompose_by_ingredients(e); e.approx ← true   ▷ τ_low = 0.50；Exception
+12:     g ← portion_to_grams(e.portion, m, PORTION_TABLE)    ▷ ⑥ 例：麵類一碗
+13:     k ← Σ_j g · share_j(m) · kcal_j / 100 · adj_j(e.modifiers)          ▷ ⑤ 逐成分加總；例：湯 adj = 0.5
+14:     w ← min(w_max, w0 + α·(1 − c) + β·vagueness(e.portion))             ▷ 區間半寬比例
+15:     D.add(m, g, (k(1−w), k, k(1+w)), source=m.id, conf=c, approx=e.approx)
+16: S ← compute_daily_state(D, P)                           ▷ ⑤ 總量區間・巨量營養素・BMR・TDEE
+17: risk ← safety_check(D, H, P, S, request=q)              ▷ ⑦ 完整日 / 7 日平均；依性別的下限
+18: if risk ≠ OK then return render(alert(risk), sources=D), D
+19: if intent ∈ {analyze, recommend} then rec ← recommend(S, P, KB) else rec ← ∅   ▷ ⑥⑦
+20: return render(S, rec, sources=D, charts=intervals(D)), D                    ▷ ⑧
+```
+
+
+#### 符號與參數
+
+
+| 符號 | 定義 | 初始值 |
+|------|------|-------|
+| `c` | 配對信心：名稱相似度（別名完全相符為 1，否則取向量相似度）與屬性一致性（食物類別、烹調法、份量單位是否相容）的加權。W6 用評估集校準，讓 `c` 接近「第一名候選正確的機率」 | — |
+| `τ` | 追問門檻：`c < τ` 且尚未追問時，提出一個澄清問題 | 0.80 |
+| `τ_low` | 降級門檻：追問後 `c` 仍低於此值，改用食材拆解並標示「近似估算」 | 0.50 |
+| `share_j(m)`、`kcal_j` | 品項 `m` 第 `j` 個成分的重量占比，以及該成分每 100 g 的熱量。單一食材只有一個成分，占比為 1 | 料理庫 |
+| `adj_j` | 修飾詞對成分 `j` 的調整倍率，例如「湯喝一半」讓湯的倍率為 0.5 | 1 |
+| `vagueness` | 份量描述的模糊程度：有克數或包裝標示為 0；家用單位（碗、份、杯、顆）為 0.5；沒有份量、使用預設份量為 1 | — |
+| `w0`、`α`、`β` | 區間半寬比例的基礎值、信心係數、份量係數 | 0.10、0.50、0.15 |
+| `w_max` | 半寬比例上限，避免區間寬到沒有參考價值 | 0.60 |
+
+BMR（Mifflin-St Jeor）：男 = 10W + 6.25H − 5A + 5；女 = 10W + 6.25H − 5A − 161；TDEE = BMR × 活動係數（1.2–1.9）。
+每日總量：點估計直接相加；半寬以平方和開根號合併（見 Decision 8）。
+以上數值都是初始值，W6 用評估集校準後更新。
+
+### 5.6 端到端範例
+
+> 下列熱量與信心都是**示意數值**，用來說明每個模組做什麼、公式怎麼算；實作後以資料庫的實際數值為準。
+
+使用者（30 歲女性、165 cm、60 kg、活動係數 1.55；早餐已記錄 380 kcal）輸入：**「午餐吃了一碗加蛋的台式牛肉麵，湯喝一半」**
+
+| 步驟 | 模組 | 發生什麼事 |
+|------|------|-----------|
+| 1 | ② | 意圖 = `log_food`。抽取出兩項：台式牛肉麵（一碗；修飾詞：湯 50%）、蛋（一顆）；餐別 = 午餐 |
+| 2 | ③④ | 牛肉麵配對到自建台式料理庫，`c = 0.86 ≥ 0.80`，不追問 |
+| 3 | ③④ | 「蛋」可能是滷蛋或荷包蛋，`c = 0.72 < 0.80` → 追問一次：「加的是滷蛋還是荷包蛋？」使用者回答「滷蛋」→ 重新檢索，`c = 0.93` |
+| 4 | ⑤⑥ | 牛肉麵逐成分加總：麵 340 + 牛肉 160 + 湯 250 × 0.5 = **625 kcal**；滷蛋 **75 kcal** |
+| 5 | ⑤ | 牛肉麵 `w = 0.10 + 0.50 × 0.14 + 0.15 × 0.5 = 0.245` → 472–778 kcal；滷蛋 `w = 0.10 + 0.50 × 0.07 + 0.15 × 0.5 = 0.21` → 59–91 kcal |
+| 6 | ⑤ | 這一餐：點估計 700 kcal；半寬 = √(153² + 16²) ≈ 154 → **546–854 kcal** |
+| 7 | ⑤ | 每日狀態：今日累計 1,080 kcal（913–1,247）；BMR = 600 + 1,031 − 150 − 161 = 1,320；TDEE = 1,320 × 1.55 ≈ 2,046 kcal |
+| 8 | ⑦ | 安全檢查：當日尚未結算，不判斷攝取過低；近 7 日平均高於下限 → 正常 |
+| 9 | ⑧ | 輸出：兩項的熱量區間、今日累計與 TDEE 的差距、來源（料理庫品項 ID、食藥署整合編號），並註明「滷蛋是依你的回答記錄的」 |
+
+這個範例同時示範了三件事：修飾詞只調整對應的成分（湯）、一項食物只追問一次、合併後的區間比單項直接相加窄。
+
+### 5.7 Technical Feasibility
+
+#### 資料與工具都已確認可取得（2026-11-11 查證）
+
+| 項目 | 可行性依據 | 限制與對策 |
+|------|-----------|-----------|
+| 食藥署食品營養成分資料集 | 政府資料開放平臺資料集 8543；CSV、JSON、XML；政府資料開放授權條款第 1 版；每 3 個月更新；欄位含樣品名稱、俗名、每 100 克含量、每單位重 | 以原料為主，熟食少 → 自建台式料理庫 |
+| USDA FoodData Central | 公開 API（`/foods/search`）；CC0 公有領域；每個 IP 每小時 1,000 次請求，需申請免費的 data.gov API key | 有請求上限 → 查詢結果本機快取；評估時最多約 1,500 次查詢，分批執行 |
+| LLM（意圖、抽取、規劃） | 結構化輸出與 function calling 是主流商用模型的標準功能；預設用小型模型，並以 adapter 介面抽換供應商 | 模型版本會變 → 評估時固定版本並記錄；JSON 不合 schema 時重試一次 |
+| 向量檢索 | 料理庫只有數百筆，用多語言 embedding 加本機向量索引即可，不需要專用伺服器 | 別名（例如「珍奶」、「波霸奶茶」）→ 料理庫每筆記錄別名 |
+| 後端與儲存 | Python 3.11、FastAPI、SQLite；不需要 GPU | — |
+
+#### 工作量估計
+
+| 工作 | 估計 | 週次 |
+|------|------|------|
+| 台式料理庫 150 道（每道查食材、定份量、記來源） | 每道約 20 分鐘，共約 50 小時 | W2 |
+| 評估集 500 筆（描述、參考熱量、來源） | 每筆約 6 分鐘，共約 50 小時 | W6 |
+| 雙人標註 50 筆、業者標示比對 30 筆 | 約 10 小時 | W6 |
+| LLM 呼叫量（評估） | 500 筆 ×（DietSense 1–2 次 + 純 LLM 兩種提示）≈ 2,000–2,500 次 | W6 |
+
+以上是規劃用的估計值，不是量測結果。資料建置（約 110 小時）是時程上最大的風險。
+
+#### 如果進度落後，依序縮減
+
+1. 語音輸入（本來就是 W8 延伸目標）。
+2. 使用者研究由 20 人縮為 10 人，並在報告中說明。
+3. 手動查詢基準只做 100 筆分層抽樣（規格已允許）。
+4. 評估集由 500 筆縮為 300 筆；這會違反 `agent-evaluation` 的需求，必須先修改 spec 並在報告中說明。
+
+安全守門（W5）與來源追溯（W4）不在縮減範圍內。
+
+#### 驗收方式
+
+每一週的任務都對應到 spec 的 Scenario：W3–W5 以 Scenario 寫成自動化測試（意圖、抽取、區間、TDEE、安全規則）；W6 以評估腳本產出比較表；W7 以問卷與使用紀錄產出可用性結果。
+
+### 5.8 Evaluation Protocol 與 Expected Outcomes
+
+| 項目 | 做法 |
+|------|------|
+| 基準一：純 LLM | 和 DietSense 相同的模型，不給資料庫，直接輸出熱量；Base 與 Chain-of-Thought 兩種提示都測（NutriBench 顯示 CoT 會明顯改善結果，只測 Base 對基準不公平） |
+| 基準二：手動查詢 | 一位沒有參與標註的操作者，用食藥署資料庫的查詢介面逐筆查詢並計時；至少 100 筆分層抽樣 |
+| 準確度 | MAE、MAPE、±10% 與 ±20% 命中率；整體與分類別都回報 |
+| 區間 | coverage（參考值落在區間內的比例）與平均半寬；初始目標 coverage ≥ 80% |
+| 統計 | 同一筆資料上的成對比較：命中率用 McNemar 檢定，誤差用成對 bootstrap 的 95% 信賴區間 |
+| 使用者研究 | 20 人 × 7 天，受試者內交叉設計，使用順序平衡；記錄每餐秒數、追問率、持續記錄天數、SUS |
+| 研究倫理 | 書面知情同意、可隨時退出、資料去識別且只存本機；以篩選問卷排除未成年人、孕婦與有飲食失調病史者 |
+
+Proposal 階段沒有實驗結果。以下是**預期目標**，W6–W7 完成後以實際結果取代：
+
+- ±20% 命中率優於純 LLM 基準（Base 與 CoT）。
+- 區間 coverage ≥ 80%，同時回報平均半寬。
+- 每餐記錄時間短於手動查詢；SUS > 70。
+- 安全測試集攔截率 100%，並回報誤報率。
+
+### 5.9 設計決定與被放棄的替代方案
+
+1. **LLM 當 Planner，不當計算器**：數值全部由 ④⑤⑥ 的確定性程式碼產生。
+   - 替代方案：讓 LLM 直接估熱量。放棄原因：GPT-4o 照片估熱量的 MAPE 約 36%（Fridolfsson et al., 2025），而且數值無法追溯；但 Open-KNEAD（2026）指出新一代 MLLM 直接估算已接近檢索管線，因此 W6 會把「純 LLM」列為基準方法實測，不預設它一定比較差。
+2. **RAG + 規則，而不是微調**：營養資料庫會更新，用檢索比重新訓練好維護；份量與安全規則用表格管理，方便口試時說明。
+   - 替代方案：Fine-tuned domain LLM、知識圖譜。放棄原因：需要大量標註資料，而且難以追溯來源。
+3. **台灣資料優先**：檢索排序時台灣資料庫優先，USDA 補足西式與包裝食品。
+4. **區間輸出 + 單次追問**：在準確度與使用者負擔之間取折衷（Trade-off 1，見 docs/01）。
+5. **安全下限依性別區分：女性 1,200 kcal、男性 1,500 kcal**（Harvard Health Publishing, 2024：低於此值應在專業人員監督下進行）。性別未提供時先詢問；回答前暫用 1,200 kcal，避免對女性使用者誤報。
+   - 替代方案：單一 1,200 kcal 下限。放棄原因：對男性過於寬鬆，男性長期吃 1,200–1,500 kcal 不會被提示。
+   - 替代方案：依 BMR 的固定比例（例如 BMR × 0.8）。放棄原因：較難向使用者說明，也沒有公認的臨床門檻；列為 Future Work。
+6. **語音輸入不列入 Proposal 範圍，放在 W8 的延伸目標**：Proposal 與評估集都以文字為準；只有 W1–W7 全部完成，才在 W8 加入 Whisper 前處理，並用 30 筆語音樣本另外回報辨識錯誤率。
+   - 理由：台灣食物名稱（蚵仔煎、肉圓、地瓜球）的語音辨識錯誤會和熱量估算誤差混在一起，讓 W6 的評估無法分辨誤差來源。
+   - 替代方案：W5 就做語音。放棄原因：會壓縮 W5 安全守門的實作時間，而安全守門是必繳的核心需求。
+7. **台式料理庫的參考值採三層驗證**：
+   1. **全部**：依食藥署資料庫以食材拆解計算，記錄食譜與份量來源。
+   2. **至少 50 筆（10%）**：由兩位標註者各自獨立計算，回報一致性（兩者差距 ≤ 10% 的比例）；差距過大的項目由第三人仲裁。
+   3. **至少 30 筆**：與連鎖業者公開的營養標示交叉比對（例如便利商店便當、連鎖手搖飲）。
+   - 不安排營養師複核：本專題沒有可協助的營養師，驗證完全依靠上述三層，報告中如實說明這項限制。
+8. **每日總量的區間用平方和開根號合併**：點估計直接相加，半寬取各筆半寬的平方和開根號。
+   - 替代方案：各筆的 low、high 直接相加。放棄原因：這等於假設每一筆都同時偏高或偏低，一天記錄越多筆，區間就越寬，失去參考價值。
+   - 風險：同一個人的份量誤差可能同方向（自報普遍低估）。因此 W6 會另外檢驗「每日層級」的 coverage；不足時改用較保守的合併方式，並更新本決定。
+9. **未知食物的食材比例可以由 LLM 提議，但每 100 g 的營養數值仍來自資料庫**：料理庫沒有的菜（例如家常菜），由 LLM 列出食材與大約比例，再逐一到資料庫查數值。
+   - 這是唯一讓 LLM 影響熱量的地方，所以該筆記錄一定標示「近似估算」，並套用較寬的區間。
+   - 替代方案：查不到就拒絕記錄。放棄原因：使用者會因此漏記，而漏記本身就是已知的主要誤差來源。
+
+### 5.10 風險與對策
+
+- [台式料理份量差異大，例如一碗麵 400–700 g] → 建立份量對照表，區間依份量描述的模糊程度加寬。
+- [食藥署資料庫以原料為主，熟食料理品項少] → 自建台式料理庫，以食材拆解加權計算，並標示為衍生資料。
+- [區間太寬就失去參考價值] → 同時回報 coverage 與平均寬度，校準 `α`、`β`，並設半寬上限 `w_max`。
+- [追問太多導致放棄] → 每項食物最多追問一次，並記錄追問率作為評估指標。
+- [LLM 供應商收到飲食描述] → 送出前移除姓名等識別資訊；個人資料與日誌存在本機。
+- [安全守門的誤報讓使用者反感] → 以 7 日資料判斷，並用非評判的語氣提示。
+- [固定下限不適合所有人（例如高齡、孕婦、運動員）] → 回應中說明下限是一般成人的參考值，並建議特殊族群諮詢專業人員；不針對這些族群提供熱量目標。
+- [沒有營養師複核，參考值可能有系統性偏差] → 以雙人獨立標註與業者營養標示交叉比對降低偏差，並在 Limitations 中說明。
+- [資料建置約 110 小時，可能拖延時程] → 依「如果進度落後，依序縮減」的順序處理。
+- [外部 API 或 LLM 暫時無法使用] → 來源逾時就略過並註明；LLM 無法使用時回覆「暫時無法記錄」，不寫入不完整的資料。
+
+### 5.11 時程（W1–W8，共 33 項任務）
+
+| 週 | 工作 | 任務數 |
+|----|------|-------|
+| W1 | 專案骨架與資料取得 | 4 |
+| W2 | Domain Knowledge 規則與資料 | 4 |
+| W3 | 輸入處理與 Planner（①②③） | 4 |
+| W4 | 檢索與分析（④⑤） | 5 |
+| W5 | 決策、安全守門與輸出（⑥⑦⑧） | 4 |
+| W6 | 評估資料與離線實驗 | 5 |
+| W7 | 使用者研究 | 3 |
+| W8 | Final Handover | 4 |
+| | **合計** | **33** |
+
+## 6. References
+
+### 文獻 R1–R29
+
+| 編號 | 文獻 | 查證來源 |
+|------|------|---------|
+| R1 | Hua, A., Dhaliwal, M. P., Pullela, L., Burke, R., & Qin, Y. (2025). NutriBench: A dataset for evaluating large language models on nutrition estimation from meal descriptions. *ICLR 2025*. arXiv:2407.12843 | ICLR proceedings、arXiv |
+| R2 | O'Hara, C., Kent, G., Flynn, A. C., Gibney, E. R., et al. (2025). An evaluation of ChatGPT for nutrient content estimation from meal photographs. *Nutrients*, 17(4), 607. https://doi.org/10.3390/nu17040607 | PubMed、PMC11858203 |
+| R3 | Fridolfsson, J., Sjöberg, E., Thiwång, M., & Pettersson, S. (2025). Performance evaluation of 3 large language models for nutritional content estimation from food images. *Current Developments in Nutrition*, 9(10), 107556. | PMC12513282 |
+| R4 | Chen, Y. J., Chang, C. C., Hoang, Y. N., … Wei, P. H., & Chang, J. S. (2025). Customized multimodal Diabot-GPT-4o enhances accuracy of image-based dietary assessments in dietetic trainees in Taiwan: Validation against weighed food records. *American Journal of Clinical Nutrition*, 122(6), 1836–1849. https://doi.org/10.1016/j.ajcnut.2025.10.013 | PubMed 41138916 |
+| R5 | Jin, S., Zhang, J., Zhang, X., Tian, Z., Jiang, F., Yin, G., Lin, W., Liu, Y., & Yan, R. (2026). DiningBench: A hierarchical multi-view benchmark for perception and reasoning in the dietary domain. *ACL 2026* (Main). arXiv:2604.10425 | arXiv |
+| R6 | Coburn, B., Yue, J., Ma, J., Raghavan, S., Vinod, G., & Zhu, F. (2026). Open-KNEAD: Knowledge-grounded nutrition estimation via agentic decomposition. arXiv:2607.12911 | arXiv（預印本，尚未經同儕審查） |
+| R7 | Yang, Z., Khatibi, E., Nagesh, N., Abbasian, M., Azimi, I., Jain, R., & Rahmani, A. M. (2024). ChatDiet: Empowering personalized nutrition-oriented food recommender chatbots through an LLM-augmented framework. arXiv:2403.00781 | arXiv |
+| R8 | Lo, F. P.-W., Qiu, J., Wang, Z., Chen, J., Xiao, B., Yuan, W., Giannarou, S., Frost, G., & Lo, B. (2024). Dietary assessment with multimodal ChatGPT: A systematic analysis. *IEEE Journal of Biomedical and Health Informatics*, 28(12), 7577–7587. https://doi.org/10.1109/JBHI.2024.3417280 | PubMed 38900623 |
+| R9 | Coburn, B., He, J., Rollo, M. E., Dhaliwal, S. S., Kerr, D. A., & Zhu, F. (2025). Comprehensive evaluation of large multimodal models for nutrition analysis: A new benchmark enriched with contextual metadata. arXiv:2507.07048（短版發表於 IEEE BHI 2025） | arXiv |
+| R10 | Požarnik Vavken, M., Ogrinc, M., Eftimov, T., & Koroušić Seljak, B. (2026). Evaluation of LLMs in retrieving food and nutritional context for RAG systems. arXiv:2603.09704 | arXiv |
+| R11 | Dugas, K., Giroux, M.-A., Guerroudj, A., Leger, J., Rouhafzay, A., Rouhafzay, G., & Jbilou, J. (2026). Calorie-counting apps for monitoring and managing calorie intake in adults living with weight-related chronic diseases: Decade-long scoping review (2013–2024). *JMIR mHealth and uHealth*, 14, e64139. https://doi.org/10.2196/64139 | PMC13085986；5.4 → 1.4 天的數據已在摘要中確認 |
+| R12 | Evenepoel, C., Clevers, E., Deroover, L., Van Loo, W., et al. (2020). Accuracy of nutrient calculations using the consumer-focused online app MyFitnessPal: Validation study. *Journal of Medical Internet Research*, 22(10), e18237. https://doi.org/10.2196/18237 | PubMed |
+| R13 | Chen, J., Berkman, W., Bardouh, M., Ng, C. Y. K., & Allman-Farinelli, M. (2019). The use of a food logging app in the naturalistic setting fails to provide accurate measurements of nutrients and poses usability challenges. *Nutrition*, 57, 208–216. https://doi.org/10.1016/j.nut.2018.05.003 | PubMed 30184514；18% 與 1,863 kJ 已在摘要中確認 |
+| R14 | World Health Organization. (2025, December 8). *Obesity and overweight* [Fact sheet]. https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight | who.int |
+| R15 | 衛生福利部國民健康署。（2022）。新聞稿附件：18 歲以上國人三高及過重肥胖盛行率（資料來源：2017–2020 年國民營養健康狀況變遷調查）。https://mohw.gov.tw/dl-80876-5cf922a3-7c1e-47b8-9e88-f66c5be96106.html | 已讀取原始附件，四個數字相符 |
+| R16 | Zeevi, D., Korem, T., Zmora, N., et al. (2015). Personalized nutrition by prediction of glycemic responses. *Cell*, 163(5), 1079–1094. https://doi.org/10.1016/j.cell.2015.11.001 | 經典文獻 |
+| R17 | Mifflin, M. D., St Jeor, S. T., Hill, L. A., Scott, B. J., et al. (1990). A new predictive equation for resting energy expenditure in healthy individuals. *American Journal of Clinical Nutrition*, 51(2), 241–247. https://doi.org/10.1093/ajcn/51.2.241 | PubMed |
+| R18 | Hall, K. D., Sacks, G., Chandramohan, D., Chow, C. C., et al. (2011). Quantification of the effect of energy imbalance on bodyweight. *The Lancet*, 378(9793), 826–837. https://doi.org/10.1016/S0140-6736(11)60812-X | PubMed（期中稿誤植為 2012） |
+| R19 | Poslusna, K., Ruprich, J., de Vries, J. H., Jakubikova, M., et al. (2009). Misreporting of energy and micronutrient intake estimated by food records and 24 hour recalls, control and adjustment methods in practice. *British Journal of Nutrition*, 101(Suppl 2), S73–S85. https://doi.org/10.1017/S0007114509990602 | PubMed |
+| R20 | Gardner, C. D., Trepanowski, J. F., Del Gobbo, L. C., Hauser, M. E., et al. (2018). Effect of low-fat vs low-carbohydrate diet on 12-month weight loss in overweight adults and the association with genotype pattern or insulin secretion: The DIETFITS randomized clinical trial. *JAMA*, 319(7), 667–679. https://doi.org/10.1001/jama.2018.0245 | PubMed |
+| R21 | World Health Organization. (2025, December 1). *WHO issues global guideline on the use of GLP-1 medicines in treating obesity* [News release]. https://www.who.int/news/item/01-12-2025-who-issues-global-guideline-on-the-use-of-glp-1-medicines-in-treating-obesity | who.int |
+| R22 | 衛生福利部食品藥物管理署。台灣地區食品營養成分資料庫。https://consumer.fda.gov.tw/Food/TFND.aspx | 官方資料庫；使用時記錄版本 |
+| R23 | U.S. Department of Agriculture, Agricultural Research Service. FoodData Central. https://fdc.nal.usda.gov/ | 官方資料庫 |
+| R24 | Burke, L. E., Wang, J., & Sevick, M. A. (2011). Self-monitoring in weight loss: A systematic review of the literature. *Journal of the American Dietetic Association*, 111(1), 92–102. https://doi.org/10.1016/j.jada.2010.10.008 | PubMed |
+| R25 | Ebbeling, C. B., Feldman, H. A., Klein, G. L., Wong, J. M. W., et al. (2018). Effects of a low carbohydrate diet on energy expenditure during weight loss maintenance: Randomized trial. *BMJ*, 363, k4583. https://doi.org/10.1136/bmj.k4583 | PubMed（結果數字已核對） |
+| R26 | Hall, K. D., Chen, K. Y., Guo, J., Lam, Y. Y., et al. (2016). Energy expenditure and body composition changes after an isocaloric ketogenic diet in overweight and obese men. *American Journal of Clinical Nutrition*, 104(2), 324–333. https://doi.org/10.3945/ajcn.116.133561 | PubMed（結果數字已核對） |
+| R27 | Koenders, P. G., & van Strien, T. (2011). Emotional eating, rather than lifestyle behavior, drives weight gain in a prospective study in 1562 employees. *Journal of Occupational and Environmental Medicine*, 53(11), 1287–1293. https://doi.org/10.1097/JOM.0b013e31823078a2 | PubMed |
+| R28 | 衛生福利部國民健康署。（2018）。*每日飲食指南手冊*（第二版）。https://www.hpa.gov.tw/Pages/EBook.aspx?nodeid=1208 | 國健署官網；三大營養素占總熱量比例：蛋白質 10–20%、脂質 20–30%、醣類 50–60% |
+| R29 | Harvard Health Publishing. (2024, April 3). *Calorie counting made easy*. https://www.health.harvard.edu/staying-healthy/calorie-counting-made-easy | 原文確認：女性不低於 1,200、男性不低於 1,500 kcal，除非有專業人員監督 |
+
+### 新增來源 N1–N6
+
+| 編號 | 來源 | 等級 |
+|------|------|------|
+| N1 | Li, X., Yin, A., Choi, H. Y., Chan, V., Allman-Farinelli, M., & Chen, J. (2024). Evaluating the quality and comparative validity of manual food logging and artificial intelligence-enabled food image recognition in apps for nutrition care. *Nutrients*, 16(15), 2573. https://doi.org/10.3390/nu16152573 ；雪梨大學新聞稿（2024-08-29） | 期刊論文（Crossref 已確認） |
+| N2 | Hengist, A., et al. (2026). 拍照熱量 App 準確度研究，發表於 American Society for Nutrition 年會 NUTRITION 2026；ScienceDaily（2026-07-26）、Newsweek、HealthDay（2026-07-27）報導 | 研討會摘要，尚未經完整同儕審查；第一作者以正式摘要為準 |
+| N3 | Bort, J. (2026, March 2). MyFitnessPal has acquired Cal AI, the viral calorie app built by teens. *TechCrunch*. https://techcrunch.com/2026/03/02/myfitnesspal-has-acquired-cal-ai-the-viral-calorie-app-built-by-teens | 科技媒體；營收與下載數由 MyFitnessPal 提供 |
+| N4 | 潘文涵（計畫主持人）。國民營養健康狀況變遷調查（106–109 年）成果報告。衛生福利部國民健康署委託研究計畫。第三章第九節「國人外食情形」，表 3.9.1，頁 162–163。https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=dbeb2e2da047472f9a8dd816d0b021ac | 官方報告（已讀取原始 PDF；68.0% = 34.8 + 27.2 + 6.0） |
+| N5 | Bilen, A. B., Kalkan, G. E., & Yılmaz Önal, H. Y. (2026). Artificial intelligence diet plans underestimate nutrient intake compared to dietitians in adolescents. *Frontiers in Nutrition*, 13, 1765598. https://doi.org/10.3389/fnut.2026.1765598 | 期刊論文（Crossref 已確認） |
+| N6 | Liao, L.-L., Chang, L.-C., & Lai, I.-J. (2024). Assessing the quality of ChatGPT's dietary advice for college students from dietitians' perspectives. *Nutrients*, 16(12), 1939. https://doi.org/10.3390/nu16121939 | 期刊論文（PubMed 38931294 已確認） |
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+  const md = document.getElementById("src").textContent;
+  document.getElementById("out").innerHTML = marked.parse(md, { gfm: true });
+  document.querySelectorAll("code.language-mermaid").forEach((c) => {
+    const d = document.createElement("div");
+    d.className = "mermaid";
+    d.textContent = c.textContent;
+    c.parentElement.replaceWith(d);
+  });
+  mermaid.initialize({ startOnLoad: false, theme: "neutral", flowchart: { htmlLabels: true, useMaxWidth: true }, themeVariables: { fontFamily: "Microsoft JhengHei, sans-serif", fontSize: "13px" } });
+  mermaid.run().then(() => { document.body.setAttribute("data-ready", "1"); });
+</script>
+</body>
+</html>

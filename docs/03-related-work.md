@@ -6,7 +6,7 @@
 
 | 期中稿的問題 | 重構後 |
 |-------------|-------|
-| Article Summary Table 的 [1]–[5] 沒有作者與出處，無法查證 | 換成 9 篇可查證的文獻（2019–2026，其中 2025–2026 有 7 篇），附作者、期刊或會議 |
+| Article Summary Table 的 [1]–[5] 沒有作者與出處，無法查證 | 換成 14 篇可查證的文獻（2009–2026，其中 2025–2026 有 8 篇），附作者、期刊或會議 |
 | 部分引用和內容對不上（見文末「引用修正表」） | 逐條修正或刪除，改用可查證的來源 |
 | AI 和 Domain 兩部分各自列點，沒有比較 | 新增方法分類 × 評估面向的比較表（A2Z 的 O. Organize） |
 | Research Gap 只有一句話 | 拆成四個具體缺口，各自對應到 DietSense 的設計 |
@@ -17,7 +17,13 @@
 
 ### M1. 從文字估營養：LLM 直接估算
 
-NutriBench [R1]（ICLR 2025）用 11,857 筆真實飲食資料轉成的自然語言餐點描述，評估 12 個 LLM 估算碳水化合物的能力。表現最好的 GPT-4o 搭配 CoT，準確率約 66.8%。另有摘要指出，模型在「一碗飯」這類自然份量描述上的表現，比「80 公克飯」差（此點來自二手摘要，引用前需回原文確認）。**意義**：文字估算可行，但份量描述的模糊程度是主要誤差來源，這正是台灣口語飲食描述的常態。
+NutriBench [R1]（ICLR 2025）用 11,857 筆由真實飲食調查資料產生的自然語言餐點描述，評估 12 個 LLM 估算碳水化合物的能力。表現最好的 GPT-4o 搭配 CoT，準確率（誤差在 ±7.5 g 內）為 66.8%；作者也請 3 位營養師估算同一批樣本，LLM 的準確度相當或更高，而且快得多。有三個發現和 DietSense 直接相關：
+
+1. GPT-4o 與 GPT-4o mini 在克數描述（「80 g 飯」）上，比在自然份量描述（「一杯飯」）上準。
+2. RAG 不一定提升準確率。
+3. 不同國家的餐點誤差差距很大：GPT-4o + CoT 的 MAE 最低 2.20 g、最高 15.12 g。
+
+**意義**：文字估算可行，但口語份量與在地食物仍是弱點；而且「加上檢索就會變準」不是理所當然，必須實測（見 Trade-off T2）。
 
 ### M2. 從照片估營養：多模態 LLM
 
@@ -25,11 +31,13 @@ NutriBench [R1]（ICLR 2025）用 11,857 筆真實飲食資料轉成的自然語
 - Fridolfsson et al.（2025）[R3]：52 張標準化照片，GPT-4o 和 Claude 3.5 Sonnet 的熱量 MAPE 都約 35.8%，Gemini 1.5 Pro 約 64.2%。
 - Chen et al.（2025，台灣，AJCN）[R4]：客製化的 Diabot-GPT-4o 在 57 人、714 張照片上，只用影像的食物辨識率為 74%，未客製化的 GPT-4o 為 59%；熱量大致落在秤重記錄的 ±10–20% 內。**意義**：加入領域客製化（台灣食物知識）能明顯提升表現。
 - DiningBench（ACL 2026）[R5]：3,021 道菜，其中 2,086 道為中式料理；表現最好的模型營養估算平均 MAPE 仍有 24.45%，作者把誤差歸因於無法從 2D 推斷 3D 份量。
+- Lo et al.（2024）[R8]：用穿戴式相機拍攝的半自由生活飲食資料測試 GPT-4V。模型不需微調就能辨識食物；加上語言提示（例如指定料理類型）後能辨識地區性料理，也能用周圍物品當比例尺推估份量。**意義**：語言提示可以補足影像，和 DietSense「用一句話補充資訊」的想法一致。
+- Coburn et al.（2025）[R9]：提出 ACETADA 資料集並評估 8 個多模態模型。把地點、時間與食物項目等情境資訊寫進提示，可以降低熱量、巨量營養素與份量估算的 MAE 與 MAPE。**意義**：餐別與用餐情境值得記錄。
 
 ### M3. 資料錨定與 Agent 化（新趨勢）
 
 - ChatDiet（2024）[R7]：LLM + 個人模型 + 族群模型 + orchestrator，可以產生個人化、可解釋的飲食推薦；但只用一位使用者的三年資料做個案研究。
-- 斯洛維尼亞食品成分 RAG 評估（2026）[R10]：在國家食品成分資料庫上建立 RAG，比較 4 個 LLM 的檢索能力。**意義**：把國家資料庫接到 LLM 的做法已有先例，但尚未延伸到對話式記錄。
+- 斯洛維尼亞食品成分 RAG 評估（2026）[R10]：在斯洛維尼亞食品成分資料庫上建立 RAG，比較 4 個 LLM（Gemini、GPT、Claude、Mistral）把自然語言查詢轉成檢索條件的能力。簡單與中等難度的查詢準確度高，條件無法用欄位表達的困難查詢則不可靠。**意義**：把國家資料庫接到 LLM 的做法已有先例，但尚未延伸到對話式記錄。
 - Open-KNEAD（2026）[R6]：把餐點拆解成單項，再錨定到 USDA FNDDS 代碼，屬於 training-free 的 Agent 框架。作者也發現，新一代 MLLM 直接估算已能追上甚至超過完整檢索管線。**意義**：這是對 DietSense 的重要反證，所以我們把「純 LLM」列為必測基準（見 Trade-off T2）。
 
 ## M. Methods：Domain Know-how（約 1/2）
@@ -51,7 +59,7 @@ NutriBench [R1]（ICLR 2025）用 11,857 筆真實飲食資料轉成的自然語
 ### D4. 品質 vs. 數量、個人化 vs. 通用指引
 
 - DIETFITS 隨機試驗 [R20]：健康低脂與健康低碳飲食在 12 個月的減重成效沒有顯著差異，支持「總熱量與飲食品質」比單一巨量營養素比例重要。
-- Zeevi et al. [R16]：同一種食物在不同人身上的血糖反應差異很大，支持精準個人化；但需要血糖監測與腸道菌資料，超出一般使用情境。**設計影響**：採用 AMDR 等通用指引作為安全基線，不做醫療層級的個人化。
+- Zeevi et al. [R16]：同一種食物在不同人身上的血糖反應差異很大，支持精準個人化；但需要血糖監測與腸道菌資料，超出一般使用情境。**設計影響**：以每日飲食指南與 AMDR 等通用指引作為安全基線，不做醫療層級的個人化。
 
 ### D5. 公共衛生背景
 
@@ -60,6 +68,8 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 ---
 
 ## O. Organize：Article Summary Table
+
+共 14 篇：AI 技術 8 篇（R1–R7、R10），營養與行為領域 6 篇（R11–R13、R19、R20、R24）。
 
 | Ref | Year | Problem | AI Method | Domain Knowledge | Dataset | Findings | Limitation |
 |-----|------|---------|-----------|------------------|---------|----------|------------|
@@ -70,8 +80,13 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 | [R5] DiningBench | 2026 | 飲食領域的感知與推理 benchmark | 多個 MLLM | 中式料理營養標註 | 3,021 道菜（中式 2,086） | 最佳模型營養估算 MAPE 24.45% | 只有影像；作者指出文化偏向中式料理 |
 | [R6] Open-KNEAD | 2026 | 錨定食品資料庫的營養估算 | Agentic decomposition + FNDDS 錨定 | USDA FNDDS 代碼 | 餐點影像 benchmark | 錨定可得到逐項紀錄；新一代 MLLM 直接估算已追上檢索管線 | 以美國食品代碼為主 |
 | [R7] Yang et al.（ChatDiet） | 2024 | 個人化營養推薦聊天機器人 | LLM + 因果個人模型 + orchestrator | 營養成分族群模型 | 1 人 3 年穿戴裝置資料 | 推薦測試有效率 92% | n = 1；不是熱量記錄 |
-| [R11] JMIR mHealth 範疇回顧 | 2026 | 熱量計數 App 的使用與持續度 | （回顧研究） | 行為體重管理 | 2013–2024 的研究 | MyFitnessPal 記錄頻率在第 4–12 週由每週 5.4 天降到 1.4 天 | 範疇回顧，沒有合併效果量 |
+| [R10] Požarnik Vavken et al. | 2026 | LLM 能否把自然語言查詢轉成食品成分資料庫的檢索條件 | 4 個 LLM（Gemini、GPT、Claude、Mistral）+ RAG | 斯洛維尼亞食品成分資料庫 | 依難度分級的查詢 | 簡單與中等難度查詢準確度高 | 困難查詢不可靠；預印本；不是對話式記錄 |
+| [R11] Dugas et al. | 2026 | 熱量計數 App 的使用與持續度 | （回顧研究） | 行為體重管理 | 2013–2024 的研究 | MyFitnessPal 記錄頻率在第 4–12 週由每週 5.4 天降到 1.4 天 | 範疇回顧，沒有合併效果量 |
+| [R12] Evenepoel et al. | 2020 | MyFitnessPal 資料庫算出的營養值是否準確 | （無；商用 App 資料庫） | 比利時食品成分資料庫 Nubel | 50 人，兩次 4 天飲食記錄 | 能量 r = 0.96，碳水、脂肪、蛋白質 r = 0.90；膽固醇與鈉相關性弱 | 受試者事先接受詳細指導；比利時食物 |
 | [R13] Chen et al. | 2019 | 自然情境下用 App 記錄飲食是否準確 | （無；人工記錄 App） | 24 小時回憶法、食物類別編碼 | 成人 4 天 MyFitnessPal 記錄 vs. 2 天 24 小時回憶 | 平均漏記 18% 品項（多為高熱量、低營養食物）；能量低估 1,863 kJ | 非台灣族群；樣本為澳洲成人 |
+| [R19] Poslusna et al. | 2009 | 飲食記錄與 24 小時回憶法的誤報有多嚴重 | （無；文獻回顧） | 食物記錄、24 小時回憶法 | 37 篇研究 | 約 30% 的受試者是低報者；能量約低估 15% | 回顧的是紙本與訪談方法，未涵蓋 App |
+| [R20] Gardner et al.（DIETFITS） | 2018 | 健康低脂與健康低碳飲食，哪個減重效果好 | （無；隨機試驗） | 巨量營養素組成、基因型、胰島素分泌 | 609 位過重成人，12 個月 | 兩組減重沒有顯著差異 | 美國族群；不是熱量記錄研究 |
+| [R24] Burke et al. | 2011 | 自我記錄和減重有沒有關聯 | （無；系統性回顧） | 行為減重的飲食、運動、體重自我記錄 | 22 篇研究（15 篇為飲食記錄） | 自我記錄與減重一致呈顯著相關 | 證據等級偏弱；樣本多為白人女性、依賴自報 |
 
 ### 方法分類比較（A2Z 的 J. Judgement / O. Organize）
 
@@ -79,7 +94,7 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 |---------|-------|-----------|---------|-----------|---------|
 | 手動資料庫 App（MyFitnessPal 等） | 中高（依使用者） | **高** | 中（使用者自建資料品質不一） | 低 | 搜尋、秤重、拆解很累 → 放棄 |
 | 影像 MLLM 直接估算 [R2–R5] | 中（MAPE 24–36%） | 低 | **低** | 低到中 | 看不出份量與隱藏油脂；數字無來源 |
-| 文字 LLM 直接估算 [R1] | 中 | **低** | **低** | 低 | 自然份量描述誤差大；可能有幻覺 |
+| 文字 LLM 直接估算 [R1] | 中 | **低** | **低** | 低 | 最佳模型碳水準確率約 67%；不同國家的餐點誤差差距大；數字無來源 |
 | 錨定 / RAG Agent [R6][R10] | 中高 | 低到中 | **高** | 依資料庫而定 | 錨定資料庫缺台灣熟食；多半只處理單次估算 |
 | **DietSense（本專題）** | 目標：中高（待驗證） | 低（最多一次追問） | **高** | **高**（台灣優先） | 需要自建料理庫；只支援文字 |
 
@@ -107,7 +122,7 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 | R5 | Jin, S., Zhang, J., Zhang, X., Tian, Z., Jiang, F., Yin, G., Lin, W., Liu, Y., & Yan, R. (2026). DiningBench: A hierarchical multi-view benchmark for perception and reasoning in the dietary domain. *ACL 2026* (Main). arXiv:2604.10425 | arXiv |
 | R6 | Coburn, B., Yue, J., Ma, J., Raghavan, S., Vinod, G., & Zhu, F. (2026). Open-KNEAD: Knowledge-grounded nutrition estimation via agentic decomposition. arXiv:2607.12911 | arXiv（預印本，尚未經同儕審查） |
 | R7 | Yang, Z., Khatibi, E., Nagesh, N., Abbasian, M., Azimi, I., Jain, R., & Rahmani, A. M. (2024). ChatDiet: Empowering personalized nutrition-oriented food recommender chatbots through an LLM-augmented framework. arXiv:2403.00781 | arXiv |
-| R8 | Lo, F. P.-W., Qiu, J., Wang, Z., Chen, J., Xiao, B., Yuan, W., Giannarou, S., Frost, G., & Lo, B. (2024). Dietary assessment with multimodal ChatGPT: A systematic analysis. *IEEE Journal of Biomedical and Health Informatics*, 28(12), 7577–7587. | 大學機構典藏（PMID 38900623） |
+| R8 | Lo, F. P.-W., Qiu, J., Wang, Z., Chen, J., Xiao, B., Yuan, W., Giannarou, S., Frost, G., & Lo, B. (2024). Dietary assessment with multimodal ChatGPT: A systematic analysis. *IEEE Journal of Biomedical and Health Informatics*, 28(12), 7577–7587. https://doi.org/10.1109/JBHI.2024.3417280 | PubMed 38900623 |
 | R9 | Coburn, B., He, J., Rollo, M. E., Dhaliwal, S. S., Kerr, D. A., & Zhu, F. (2025). Comprehensive evaluation of large multimodal models for nutrition analysis: A new benchmark enriched with contextual metadata. arXiv:2507.07048（短版發表於 IEEE BHI 2025） | arXiv |
 | R10 | Požarnik Vavken, M., Ogrinc, M., Eftimov, T., & Koroušić Seljak, B. (2026). Evaluation of LLMs in retrieving food and nutritional context for RAG systems. arXiv:2603.09704 | arXiv |
 | R11 | Dugas, K., Giroux, M.-A., Guerroudj, A., Leger, J., Rouhafzay, A., Rouhafzay, G., & Jbilou, J. (2026). Calorie-counting apps for monitoring and managing calorie intake in adults living with weight-related chronic diseases: Decade-long scoping review (2013–2024). *JMIR mHealth and uHealth*, 14, e64139. https://doi.org/10.2196/64139 | PMC13085986；5.4 → 1.4 天的數據已在摘要中確認 |
@@ -127,7 +142,7 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 | R25 | Ebbeling, C. B., Feldman, H. A., Klein, G. L., Wong, J. M. W., et al. (2018). Effects of a low carbohydrate diet on energy expenditure during weight loss maintenance: Randomized trial. *BMJ*, 363, k4583. https://doi.org/10.1136/bmj.k4583 | PubMed（結果數字已核對） |
 | R26 | Hall, K. D., Chen, K. Y., Guo, J., Lam, Y. Y., et al. (2016). Energy expenditure and body composition changes after an isocaloric ketogenic diet in overweight and obese men. *American Journal of Clinical Nutrition*, 104(2), 324–333. https://doi.org/10.3945/ajcn.116.133561 | PubMed（結果數字已核對） |
 | R27 | Koenders, P. G., & van Strien, T. (2011). Emotional eating, rather than lifestyle behavior, drives weight gain in a prospective study in 1562 employees. *Journal of Occupational and Environmental Medicine*, 53(11), 1287–1293. https://doi.org/10.1097/JOM.0b013e31823078a2 | PubMed |
-| R28 | 衛生福利部國民健康署。每日飲食指南（三大營養素占總熱量比例：蛋白質 10–20%、脂質 20–30%、醣類 50–60%）。 | 比例數值經政府教材引用核對；正式引用時附國健署手冊網址 |
+| R28 | 衛生福利部國民健康署。（2018）。*每日飲食指南手冊*（第二版）。https://www.hpa.gov.tw/Pages/EBook.aspx?nodeid=1208 | 國健署官網；三大營養素占總熱量比例：蛋白質 10–20%、脂質 20–30%、醣類 50–60% |
 | R29 | Harvard Health Publishing. (2024, April 3). *Calorie counting made easy*. https://www.health.harvard.edu/staying-healthy/calorie-counting-made-easy | 原文確認：女性不低於 1,200、男性不低於 1,500 kcal，除非有專業人員監督 |
 
 > 原本的 R13（Teixeira et al., 2018）查證後發現摘要裡沒有「漏記 18%、低估 1,863 kJ」這兩個數字，真正的出處是 Chen et al.（2019），已更正。
@@ -143,5 +158,5 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 | Ludwig et al. (2018) *JAMA Internal Medicine* | 正文寫 JAMA IM，參考文獻寫 *Science*，兩處不一致 | 爭論一改以 DIETFITS [R20] 為主要證據 |
 | Hall et al. (2012) | 年份錯誤 | 改為 2011 [R18] |
 | 「Lancet 2025：全球 43% 成人過重」、「台灣過重率 47.9%」、「醫療支出 500 億」、「App 市場 68 億美元」 | 找不到可查證的原始來源 | 改用 WHO [R14][R21] 與國健署 [R15]；市場規模數字刪除 |
-| Article Table [1]–[5]（沒有作者） | 無法查證 | 全部換成上表 9 篇 |
+| Article Table [1]–[5]（沒有作者） | 無法查證 | 全部換成上表 14 篇 |
 | 「USDA 900,000+ 品項」、「台灣資料庫 6,000+ 品項」 | 數字未查證 | 改成描述資料庫範圍，實際筆數在 W1 匯入時記錄 |

@@ -32,14 +32,18 @@ The system SHALL 讓評估集涵蓋已知誤差最高的類別（含料飲料如
 - **THEN** 報告列出每個類別的 MAPE 與 ±20% 命中率，並標示誤差最高的三個類別
 
 ### Requirement: 基準方法比較
-The system SHALL 在同一評估集上比較 DietSense 與至少兩種基準方法：純 LLM 直接估算（無資料錨定）與傳統資料庫手動查詢。
+The system SHALL 在同一評估集上比較 DietSense 與至少兩種基準方法：純 LLM 直接估算（無資料錨定，Base 與 Chain-of-Thought 兩種提示）與傳統資料庫手動查詢（可使用至少 100 筆的分層抽樣子集）。
 
 #### Scenario: 產出比較表
 - **WHEN** 評估完成
 - **THEN** 系統輸出每種方法的 MAE、MAPE、±10% 與 ±20% 命中率
 
+#### Scenario: 成對比較
+- **WHEN** 比較 DietSense 與純 LLM 在同一批資料上的結果
+- **THEN** 報告附上兩者誤差差異的 95% 信賴區間，不只列出平均值
+
 ### Requirement: 區間校準度
-The system SHALL 回報參考熱量落在系統輸出區間內的比例（coverage）與平均區間寬度。
+The system SHALL 回報參考熱量落在系統輸出區間內的比例（coverage）與平均區間寬度，每筆層級與每日層級都要回報。
 
 #### Scenario: 校準報告
 - **WHEN** 評估完成

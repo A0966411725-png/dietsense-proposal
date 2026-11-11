@@ -1,7 +1,7 @@
 # 02 Introduction 重構
 
 > 對應作業項目 4「Introduction refactor」。依規範 A–F（Attention、Background、Problem、Existing Limitations、Innovation、Contributions）撰寫，並對應 A2Z 的 G–L。核心問題：**Why is this project worth doing?**
-> 引用編號 R1–R24 見 [03-related-work.md](03-related-work.md#references已查證)；N1–N6 見 [04-perplexity-research.md](04-perplexity-research.md#新增來源n1n6)。
+> 引用編號 R1–R29 見 [03-related-work.md](03-related-work.md#references已查證)；N1–N6 見 [04-perplexity-research.md](04-perplexity-research.md#新增來源n1n6)。
 
 ## 重構了什麼（與期中稿比較）
 
@@ -19,7 +19,7 @@
 
 肥胖已是全球性的慢性病問題。WHO 指出，2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖，而且全球肥胖盛行率在 1990–2022 年間增加超過一倍 [R14]；2025 年 12 月，WHO 首度發布 GLP-1 藥物治療肥胖的指引，並提到全球肥胖人口已超過 10 億 [R21]。台灣也不例外：2017–2020 年國民營養健康狀況變遷調查顯示，成人男性過重 30.31%、肥胖 28.12%，女性過重 22.98%、肥胖 19.57% [R15]，也就是約一半的成人體重高於建議範圍。
 
-藥物之外，飲食自我記錄是行為體重管理中證據最充分的策略之一：記錄越持續，減重成效越好 [R24]。問題在於，**人們做不到持續記錄**。
+藥物之外，飲食自我記錄是行為體重管理的核心策略：系統性回顧一致發現，自我記錄與減重顯著相關 [R24]。問題在於，**人們做不到持續記錄**。
 
 ## B. Background（A2Z：G. General）
 
@@ -48,7 +48,7 @@
 | 手動資料庫 App（MyFitnessPal 等） | 能量與巨量營養素有可接受的相對效度 [R12] | 負擔高、持續度快速下降 [R11]；使用者自建資料品質不一；台灣小吃少 |
 | 影像 MLLM 直接估算 | 拍照即可，負擔低 | GPT-4o 熱量 MAPE 約 35.8% [R3]；與營養師一致性只有中等（ICC 0.31–0.67）[R2]；中式料理最佳 MAPE 仍有 24.45% [R5] |
 | 商業拍照 App（Cal AI 等） | 下載量大，市場接受度高 | 每餐少算 250–345 kcal、脂肪少算約 30 g（初步結果）[N2]；珍奶低估最多 76% [N1] |
-| 文字 LLM 直接估算 | 輸入最自然 | 自然份量描述誤差較大 [R1]；數字沒有來源，可能有幻覺 |
+| 文字 LLM 直接估算 | 輸入最自然 | 最佳模型的碳水估算準確率約 67%，不同國家的餐點誤差差距很大 [R1]；數字沒有來源，可能有幻覺 |
 | 資料錨定 Agent | 數字可追溯 | 現有研究以美國或歐洲資料庫為主 [R6][R10]；缺台灣熟食；較少處理對話與安全 |
 
 **判斷**：沒有任何一類方法同時做到「低負擔、可追溯、在地化、誠實呈現不確定性、具安全機制」。
@@ -73,4 +73,4 @@ DietSense 和現有系統的不同之處：
 
 ## L. List the organization（文章結構）
 
-本提案其餘章節安排如下：第二章 Related Work 依 AI 技術與營養領域知識兩部分回顧文獻，並整理 Article Summary Table 與 Research Gap；第三章 Deep Research 回答五個核心思維、三個專業爭論與十個深度問題；第四章 Proposed Scheme 以 ①–⑧ 模組說明系統架構、流程圖與虛擬碼；第五章說明實驗設計與預期成果；第六章為結論與未來工作。
+本提案其餘章節安排如下：第二章 Related Work 依 AI 技術與營養領域知識兩部分回顧文獻，並整理 Article Summary Table 與 Research Gap；第三章 Deep Research 回答五個核心思維、三個專業爭論與十個深度問題；第四章 Proposed Scheme 以 ①–⑧ 模組說明系統架構、流程圖、虛擬碼與技術可行性；第五章說明實驗設計與預期成果；第六章為結論與未來工作。

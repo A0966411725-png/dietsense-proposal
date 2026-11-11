@@ -6,7 +6,7 @@
 > 3. 「(Continue) review A to F，你想加強的部分盡量補充」
 >
 > **製作方式**：本文件由 Claude 用網路搜尋完成，沒有實際使用 Perplexity。每個數字都回到原始來源（期刊、PubMed、Crossref、官方報告）確認；N3 為科技媒體報導，數字由收購方提供。
-> 文獻編號 R1–R24 見 [03-related-work.md](03-related-work.md)；本文件新增的來源編號為 N1–N6。
+> 文獻編號 R1–R29 見 [03-related-work.md](03-related-work.md)；本文件新增的來源編號為 N1–N6。
 
 ---
 
@@ -36,7 +36,7 @@
 | P-3 | 國民營養健康狀況變遷調查（106–109 年）成果報告表 3.9.1（n = 9,954）：19 歲以上成人有 **68.0%** 每週外食 7 次以上（平均每天至少一餐），只有 11.4% 完全不外食；19–44 歲成人每週外食 7 次以上達 **83.7%** [N4] | 官方報告（已讀取原始 PDF） |
 | P-4 | 熱量 App 的記錄頻率在第 4 到 12 週間由每週 5.4 天降到 1.4 天 [R11]；即使有記錄，使用者也平均漏記約 18% 的品項 [R13] | 期刊論文 |
 | P-5 | Bilen 等人（2026，*Frontiers in Nutrition*）讓 ChatGPT-4o、Gemini 2.5 Pro、Claude 4.1、Bing Chat、Perplexity 替 4 位虛構的過重／肥胖 15 歲青少年排三天菜單：AI 菜單平均每天比營養師的菜單少約 **695 kcal**，碳水偏低、蛋白質與脂肪偏高 [N5] | 期刊論文（書目經 Science News 報導核對；樣本為 4 個虛構個案，提示詞為土耳其文） |
-| P-6 | 營養師對 ChatGPT 飲食建議最主要的疑慮是資訊不夠嚴謹，容易造成誤解或誤用（台灣 30 位營養師的研究，2024）[N6] | 期刊論文 |
+| P-6 | 台灣 30 位營養師評估 ChatGPT 給大學生的飲食建議：242 則回饋中，最常見的疑慮（52 次）是資訊不夠周延或嚴謹，容易造成誤解或誤用 [N6] | 期刊論文 |
 
 **一句話總結**：問題很大（P-1～P-3）、現有工具在台灣常見食物上最不準（I-1～I-3）、而 AI 工具也可能帶來安全風險（P-5、P-6）。DietSense 的「在地資料錨定 + 區間 + 安全守門」剛好對準這三點。
 
@@ -86,4 +86,4 @@
 | N3 | Bort, J. (2026, March 2). MyFitnessPal has acquired Cal AI, the viral calorie app built by teens. *TechCrunch*. https://techcrunch.com/2026/03/02/myfitnesspal-has-acquired-cal-ai-the-viral-calorie-app-built-by-teens | 科技媒體；營收與下載數由 MyFitnessPal 提供 |
 | N4 | 潘文涵（計畫主持人）。國民營養健康狀況變遷調查（106–109 年）成果報告。衛生福利部國民健康署委託研究計畫。第三章第九節「國人外食情形」，表 3.9.1，頁 162–163。https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=dbeb2e2da047472f9a8dd816d0b021ac | 官方報告（已讀取原始 PDF；68.0% = 34.8 + 27.2 + 6.0） |
 | N5 | Bilen, A. B., Kalkan, G. E., & Yılmaz Önal, H. Y. (2026). Artificial intelligence diet plans underestimate nutrient intake compared to dietitians in adolescents. *Frontiers in Nutrition*, 13, 1765598. https://doi.org/10.3389/fnut.2026.1765598 | 期刊論文（Crossref 已確認） |
-| N6 | Assessing the quality of ChatGPT's dietary advice for college students from dietitians' perspectives. *Nutrients*（2024）. PMC11206595 | 期刊論文 |
+| N6 | Liao, L.-L., Chang, L.-C., & Lai, I.-J. (2024). Assessing the quality of ChatGPT's dietary advice for college students from dietitians' perspectives. *Nutrients*, 16(12), 1939. https://doi.org/10.3390/nu16121939 | 期刊論文（PubMed 38931294 已確認） |

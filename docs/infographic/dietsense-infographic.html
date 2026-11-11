@@ -73,12 +73,12 @@
         <div class="body"><table>
           <tr><th>#</th><th>項目（比例）</th><th>對應內容</th><th>狀態</th></tr>
           <tr><td class="k">1.1</td><td>Introduction 20%</td><td>A–F + L；WHO、國健署原始附件、2025–26 研究</td><td class="ok">✔</td></tr>
-          <tr><td class="k">1.2</td><td>Related Work 20%</td><td>1/2 AI + 1/2 Domain；9 篇摘要表；G1–G4</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.2</td><td>Related Work 20%</td><td>1/2 AI + 1/2 Domain；14 篇摘要表；G1–G4</td><td class="ok">✔</td></tr>
           <tr><td class="k">1.3</td><td>Deep Research 20%</td><td>5 思維・3 爭論・10 問題＋回答（引用全部核對）</td><td class="ok">✔</td></tr>
-          <tr><td class="k">1.4</td><td>Agent + Architecture 20%</td><td>①–⑧ 模組、對應 5 個 capability</td><td class="ok">✔</td></tr>
-          <tr><td class="k">1.5</td><td>Flowchart + Pseudocode 15%</td><td>含判斷／迴圈／例外；18 行 Algorithm 1</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.4</td><td>Agent + Architecture 20%</td><td>①–⑧ 模組逐一說明、端到端範例、5 個 capability</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.5</td><td>Flowchart + Pseudocode + 可行性 15%</td><td>判斷／迴圈／例外；20 行 Algorithm 1；可行性分析</td><td class="ok">✔</td></tr>
           <tr><td class="k">1.6</td><td>GitHub + DESIGN.md 5%</td><td>私人 repo；OpenSpec <code>--strict</code> 通過</td><td class="ok">✔</td></tr>
-          <tr><td class="k">1.7</td><td>Proposal PPT（必繳）</td><td>依重構內容更新（presentation/）</td><td class="ok">✔</td></tr>
+          <tr><td class="k">1.7</td><td>Proposal 文件與 PPT（必繳）</td><td>24 頁 PDF（docs/proposal/）＋26 頁簡報</td><td class="ok">✔</td></tr>
         </table></div>
       </section>
 
@@ -138,19 +138,19 @@
         <h2><span class="n">5</span>Algorithm 1（節錄）與 10 個細節</h2>
         <div class="body">
 <pre>01 q ← normalize(Q);  intent, ents ← classify_and_extract(q)
-06 C ← retrieve(e, [TW_FCD, TW_DISH_VEC, USDA_FDC]); (m,c) ← rank(C)
-08 if c &lt; τ and not e.asked: ask(clarify(e)); e.asked ← true
-11 k ← grams · m.kcal_per_100g / 100
-12 w ← w0 + α(1−c) + β·vagueness(e);  log (k(1−w), k, k(1+w))
-14 S ← compute_daily_state(D, P)     ▷ 總量・巨量營養素・TDEE
-15 risk ← safety_check(D, H7, P, S)   ▷ 完整日 / 7 日平均</pre>
+07 C ← retrieve(e, [TW_FCD, TW_DISH, USDA_FDC]); (m,c) ← rank(C)
+09 if c &lt; τ and not e.asked: ask(clarify(e)); e.asked ← true
+11 if c &lt; τ_low: m ← decompose_by_ingredients(e)  ▷ 近似估算
+14 w ← min(w_max, w0 + α(1−c) + β·vagueness)   ▷ 區間半寬
+16 S ← compute_daily_state(D, P)     ▷ 總量・巨量營養素・TDEE
+17 risk ← safety_check(D, H7, P, S)   ▷ 完整日 / 7 日平均</pre>
           <div class="two" style="margin-top:1.1mm">
             <ol class="tight">
               <li>意圖四分類，不明就回問</li>
               <li>實體＝食物＋份量＋修飾＋餐別</li>
               <li>檢索順序：TW → 台式庫 → USDA</li>
-              <li>信心門檻 τ = 0.80（W6 校準）</li>
-              <li>區間：w0 .10、α .50、β .15</li>
+              <li>τ = 0.80 追問；&lt; 0.50 改食材拆解</li>
+              <li>區間：w0 .10、α .50、β .15、上限 .60</li>
             </ol>
             <ol class="tight" start="6">
               <li>份量表依食物類別換算克數</li>
@@ -172,8 +172,8 @@
           <table style="margin-top:1mm">
             <tr><th>#</th><th>Capability</th><th>模組</th><th>重點</th></tr>
             <tr><td class="k">6.1</td><td>conversational-food-logging</td><td>①②③</td><td>意圖、抽取、單次追問、修改</td></tr>
-            <tr><td class="k">6.2</td><td>nutrient-retrieval</td><td>④</td><td>多來源錨定、來源追溯、未知食物降級</td></tr>
-            <tr><td class="k">6.3</td><td>energy-analytics</td><td>⑤⑥</td><td>kcal 區間、巨量營養素、TDEE</td></tr>
+            <tr><td class="k">6.2</td><td>nutrient-retrieval</td><td>④</td><td>多來源錨定、來源追溯、查詢、降級處理</td></tr>
+            <tr><td class="k">6.3</td><td>energy-analytics</td><td>⑤⑥⑦</td><td>kcal 區間、巨量營養素、TDEE、替換建議</td></tr>
             <tr><td class="k">6.4</td><td>dietary-safety-guard</td><td>⑥⑦</td><td>7 日規則、拒絕極低熱量、暴食-節食</td></tr>
             <tr><td class="k">6.5</td><td>agent-evaluation</td><td>評估</td><td>500 筆、高誤差類別、校準、安全測試</td></tr>
           </table>

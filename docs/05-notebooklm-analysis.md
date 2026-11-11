@@ -11,11 +11,12 @@
 | 評分項目（比例） | 規範要求 | 本 repo 對應內容 | 狀態 | 和期中原稿相比 |
 |----------------|---------|-----------------|------|--------------|
 | Introduction（20%） | 重要性、動機、Evidence、Innovation；A–F 結構；有客觀證據 | [02-introduction.md](02-introduction.md)：A–F + L；WHO、國健署原始附件、2025–2026 研究 | ✅ | 移除查不到的數字；加入拍照 App 與珍奶誤差的新證據 |
-| Related Work（20%） | 約 1/2 AI + 1/2 Domain；Article Summary Table；Existing → Limitations → Gap → Our Project | [03-related-work.md](03-related-work.md)：M1–M3（AI）+ D1–D5（Domain）；9 篇摘要表；4 個缺口 | ✅ | 原表 [1]–[5] 沒有作者，已全部換成可查證文獻；R1–R24 都附 DOI 或官方網址 |
+| Related Work（20%） | 約 1/2 AI + 1/2 Domain；Article Summary Table；Existing → Limitations → Gap → Our Project | [03-related-work.md](03-related-work.md)：M1–M3（AI）+ D1–D5（Domain）；14 篇摘要表（AI 8 篇、Domain 6 篇）；4 個缺口 | ✅ | 原表 [1]–[5] 沒有作者，已全部換成可查證文獻；R1–R29 都附 DOI 或官方網址 |
 | Deep Research（20%） | 5 個核心思維、3 個爭論、10 個深度問題 | [06-deep-research.md](06-deep-research.md)：Q1–Q3 完整版，證據全面更新 | ✅ | 移除查不到的引用；每個思維與爭論都對應到系統設計 |
-| Proposed AI Agent + Architecture（20%） | ①–⑧ 模組架構圖，正文逐一說明 | [design.md](../openspec/changes/add-dietsense-agent/design.md)：Mermaid 架構圖 + 模組對應表 | ✅ | 每個模組都對應到 OpenSpec capability |
-| Flowchart + Pseudocode + Feasibility（15%） | 含 Decision／Loop／Exception 的流程圖；有行號的 Pseudocode | design.md：Mermaid 流程圖、Algorithm 1（18 行） | ✅ | 修正原稿兩個錯誤：早餐後誤報、`recommend` 用到未定義變數；追問改為有上限 |
-| GitHub + DESIGN.md + 完整度（5%） | 正式 Repository；從 Proposal 階段開始維護 DESIGN.md | 私人 repo `dietsense-proposal`；[DESIGN.md](../DESIGN.md) | ✅ | 原稿沒有 repo |
+| Proposed AI Agent + Architecture（20%） | ①–⑧ 模組架構圖，正文逐一說明 | [design.md](../openspec/changes/add-dietsense-agent/design.md)：Mermaid 架構圖 + 模組對應表 + 八個模組逐一說明 + 端到端範例 | ✅ | 每個模組都對應到 OpenSpec capability；正文逐一說明輸入、輸出與失敗時的處理 |
+| Flowchart + Pseudocode + Technical Feasibility（15%） | 含 Decision／Loop／Exception／Human Interaction 的流程圖；有行號的 Pseudocode；技術可行性 | design.md：Mermaid 流程圖、Algorithm 1（20 行）、符號與參數表、Technical Feasibility（資料來源查證、工作量估計、縮減順序） | ✅ | 修正原稿兩個錯誤：早餐後誤報、`recommend` 用到未定義變數；追問改為有上限；補上查詢分支與例外流程 |
+| GitHub + DESIGN.md + 完整度（5%） | 正式 Repository；從 Proposal 階段開始維護 DESIGN.md | 私人 repo `dietsense-proposal`；[DESIGN.md](../DESIGN.md)（完整版，含架構圖、流程圖、虛擬碼） | ✅ | 原稿沒有 repo |
+| Proposal Document（必繳） | Abstract、Introduction、Related Work、Deep Research、Proposed Scheme、References | [proposal/DietSense_Proposal.pdf](proposal/DietSense_Proposal.pdf)：由 docs/ 與 openspec/ 自動合成的單一文件 | ✅ | 原稿是 Word，引用有誤 |
 | Abstract（必繳） | A–F；Findings 不得虛構 | [01-abstract-A-F.md](01-abstract-A-F.md)：5 核心、3 取捨、10 細節、約 500 字摘要 | ✅ | 明確標註「預期目標，非實驗結果」 |
 | Proposal PPT（必繳） | 動機、文獻、Gap、Agent Design、Architecture、Flowchart、Pseudocode | [presentation/](../presentation/)：依重構內容更新的簡報 | ✅ | 數據、引用與架構全部同步 |
 
@@ -50,7 +51,7 @@
 | **L** | List organization | 章節結構說明 | 02-L |
 | **M** | Methods | AI 三類（M1–M3）+ Domain 五類（D1–D5） | 03 |
 | **N** | New proposed | Existing → Limitations → Gap（G1–G4）→ DietSense | 03-N |
-| **O** | Organize | Article Summary Table（9 篇）+ 方法比較表 | 03-O |
+| **O** | Organize | Article Summary Table（14 篇）+ 方法比較表 | 03-O |
 | **PA** | Aim | 低負擔、可追溯、在地化、誠實呈現不確定性的熱量 Agent | proposal Why |
 | **PB** | Based on | 食藥署資料庫、USDA FDC、AMDR、Mifflin-St Jeor、能量平衡 [R17][R18] | design Context |
 | **PC** | Cure / Cause | LLM 不產生數值 → 消除幻覺；單次追問 → 降低模糊又不增加負擔 | design Decisions 1、4 |
@@ -59,21 +60,21 @@
 | **PF** | Formulation | kcal = 克數 × kcal/100g ÷ 100；半寬比例 w = w0 + α(1 − c) + β·模糊度；BMR 公式 | design Pseudocode |
 | **PG** | Graph | Mermaid 架構圖與流程圖 | design |
 | **PH** | How | NER 抽取 → 多來源檢索排序 → 信心門檻 → 區間 → 安全檢查 | design Flowchart |
-| **PI** | Implementation | Algorithm 1（18 行）+ tasks.md 33 項任務 | design、tasks |
-| **PJ** | Jump to an example | 「一碗加蛋的台式牛肉麵，湯喝一半」端到端範例 | conversational-food-logging spec |
+| **PI** | Implementation | Algorithm 1（20 行）+ tasks.md 33 項任務 | design、tasks |
+| **PJ** | Jump to an example | 「一碗加蛋的台式牛肉麵，湯喝一半」端到端範例（九個步驟，含區間計算） | design Worked Example |
 | **PK** | Key contribution | 系統、500 筆台式料理標註集、評估框架、錨定管線 | 02-F、04 第四節 |
 | **PL** | Later simulation | W6 離線評估 + W7 使用者研究 | tasks 6–7 |
 | **PM** | Math proof | 區間 coverage 與寬度校準（避免以過寬區間換取覆蓋率） | agent-evaluation spec |
 | **Q** | Quality & Quantity | MAE、MAPE、±10%／±20%、coverage、寬度、記錄秒數、追問率、SUS、攔截率、誤報率 | agent-evaluation spec |
 | **R** | Related method | 純 LLM、手動資料庫查詢（可選：商業拍照 App） | agent-evaluation spec |
 | **S** | Simulation setup | 500 筆標註集 + 30 筆安全測試 + 本機向量庫與真實 API | tasks 6 |
-| **T** | Tuning | τ = 0.80、w0 = 0.10、α = 0.50、β = 0.15 | design Pseudocode |
+| **T** | Tuning | τ = 0.80、τ_low = 0.50、w0 = 0.10、α = 0.50、β = 0.15、w_max = 0.60 | design 符號與參數 |
 | **U** | Useful results | 熱量區間、巨量營養素圖、TDEE 缺口、分類別誤差 | energy-analytics spec |
 | **V** | Verify | 和基準比較；記錄時間與 SUS 驗證可用性 | tasks 6.3、7.3 |
 | **W** | What proposed | 解決「記錄負擔高 → 放棄」與「AI 數字無來源」兩個問題 | 結論（Final 再寫） |
 | **X** | eXcel | 台灣外食、混合料理、口語份量描述 | 02-E |
 | **Y** | Yields | GitHub repo、DESIGN.md、OpenSpec 規格、標註集、評估報告 | README |
-| **Z** | Zen | 限制：只支援文字（語音為 W8 延伸）、自報偏差仍在、安全下限只依性別區分；未來：影像輸入、微量營養素、依身體組成調整下限 | design Non-Goals、Open Questions |
+| **Z** | Zen | 限制：只支援文字（語音為 W8 延伸）、自報偏差仍在、安全下限只依性別區分；未來：影像輸入、微量營養素、依身體組成調整下限 | design Non-Goals、Risks |
 
 ---
 
@@ -94,7 +95,7 @@
 |-------------------|-------------------|
 | 客製化 GPT-4o 的熱量多落在秤重記錄 ±10–20% 內 [R4] | GPT-4o、Claude 照片估熱量 MAPE 約 36% [R3] |
 | 新一代 MLLM 直接估算已追上檢索管線 [R6] | 拍照 App 每餐少算 250–345 kcal，脂肪少算約 30 g [N2] |
-| NutriBench：多數 LLM 比營養師更快、更準 [R1] | 混合料理誤差最大，珍奶低估最多 76% [N1] |
+| NutriBench：LLM 的碳水估算與 3 位營養師相當或更準，而且快得多 [R1] | 混合料理誤差最大，珍奶低估最多 76% [N1] |
 
 - **目前共識**：AI 適合日常趨勢追蹤，不適合臨床精確計算；誤差集中在份量、隱藏油脂與混合料理。
 - **尚未解決**：如何讓使用者理解並正確使用不確定性；哪種錨定方式在新一代模型上仍有優勢。
@@ -117,3 +118,4 @@
 1. ~~依重構內容更新 Proposal PPT~~ 已完成：[presentation/](../presentation/)。
 2. ~~把 Deep Research Q1–Q3 搬進 repo~~ 已完成：[06-deep-research.md](06-deep-research.md)。
 3. ~~補上二手資料的原始來源~~ 已完成：外食比例改用國健署成果報告表 3.9.1，AI 青少年菜單改用 Bilen et al. (2026)。
+4. ~~依評分表再檢查一次~~ 已完成（第二輪複查）：補上 Technical Feasibility、模組逐一說明、端到端範例、查詢分支與例外流程；合成單一份 Proposal 文件；更正 NutriBench 的份量結論。

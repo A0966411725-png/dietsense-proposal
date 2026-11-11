@@ -13,6 +13,10 @@ The system SHALL 把每則使用者訊息分類為 `log_food`、`query_nutrition
 - **WHEN** 使用者輸入「午餐吃了一個雞腿便當」
 - **THEN** 系統判定意圖為 `log_food`
 
+#### Scenario: 查詢營養
+- **WHEN** 使用者輸入「一個雞腿便當大概多少熱量」
+- **THEN** 系統判定意圖為 `query_nutrition`，不寫入日誌
+
 #### Scenario: 意圖不明
 - **WHEN** 使用者輸入「牛肉麵」且沒有其他上下文
 - **THEN** 系統詢問使用者是要記錄這餐，還是查詢營養資訊

@@ -108,9 +108,9 @@ card(s, 6.7, 2.75, 6.0, 3.3);
 txt(s, "DietSense", { x: 6.9, y: 2.85, w: 3, h: 0.35, fontSize: 12, bold: true, color: C.text2 });
 txt(s, [
   { text: "台式牛肉麵（一碗）＋滷蛋（一顆），湯攝取 50%", options: { bold: true, breakLine: true } },
-  { text: "熱量：620–780 kcal（點估計 700）", options: { fontSize: 20, bold: true, color: C.accent2, breakLine: true } },
+  { text: "熱量：546–854 kcal（點估計 700）", options: { fontSize: 20, bold: true, color: C.accent2, breakLine: true } },
   { text: "蛋白質 19%・碳水 52%・脂肪 29%", options: { breakLine: true } },
-  { text: "今日累計 1,180–1,420 kcal／TDEE 2,050", options: { breakLine: true } },
+  { text: "今日累計 913–1,247 kcal／TDEE 2,046", options: { breakLine: true } },
   { text: "來源：自建台式料理庫 #TW-0412、食藥署資料庫", options: { fontSize: 12, color: C.accent5 } },
 ], { x: 6.9, y: 3.25, w: 5.6, h: 3.2, fontSize: 15, paraSpaceAfter: 6 });
 txt(s, [
@@ -145,7 +145,7 @@ table(s, [
   ["手動資料庫 App（MyFitnessPal）", "能量與巨量營養素相對效度可接受 [R12]", "負擔高、持續度崩落 [R11]；台灣小吃少"],
   ["影像 MLLM 直接估算", "拍照即可", "GPT-4o 熱量 MAPE 35.8% [R3]；與營養師 ICC 0.31–0.67 [R2]"],
   ["商業拍照 App（Cal AI 等）", "安裝逾 1,500 萬次 [N3]", "每餐少算 250–345 kcal（初步）[N2]；珍奶低估達 76% [N1]"],
-  ["文字 LLM 直接估算", "輸入最自然", "口語份量誤差大 [R1]；數字沒有來源"],
+  ["文字 LLM 直接估算", "輸入最自然", "最佳模型碳水準確率約 67% [R1]；數字沒有來源"],
   ["資料錨定 Agent", "數字可追溯", "以美國或歐洲資料庫為主 [R6][R10]；缺台灣熟食"],
 ], { fontSize: 16, rowH: 0.78, colW: [3.4, 3.7, 5.03] });
 note(s, "對應 Introduction D 與 A2Z 的 J（Judgement）。");
@@ -182,7 +182,7 @@ note(s, "AI 半邊：文字、影像、錨定三條路線。");
 
 // ================= 8. Domain =================
 s = content("文獻與缺口", "Related Work（二）：營養領域知識");
-[["D1", "能量平衡是動態的", "代謝會適應，不能線性推算 [R18][R26]"], ["D2", "自我記錄的效果與誤差", "有效 [R24]，但約 30% 低報、能量低估約 15% [R19]"], ["D3", "台灣食物成分資料", "食藥署資料庫以原料為主，熟食料理少 [R22]"], ["D4", "品質 vs. 數量", "DIETFITS：低脂與低碳 12 個月無顯著差異 [R20]"], ["D5", "巨量營養素基準", "國健署：醣 50–60%、蛋白 10–20%、脂 20–30% [R28]"], ["D6", "TDEE 估算", "Mifflin-St Jeor 公式，以健康成人建立 [R17]"]].forEach(([k, t, d], i) => {
+[["D1", "能量平衡是動態的", "代謝會適應，不能線性推算 [R18][R26]"], ["D2", "自我記錄的效果與誤差", "與減重顯著相關 [R24]，但約 30% 低報、能量低估約 15% [R19]"], ["D3", "台灣食物成分資料", "食藥署資料庫以原料為主，熟食料理少 [R22]"], ["D4", "品質 vs. 數量", "DIETFITS：低脂與低碳 12 個月無顯著差異 [R20]"], ["D5", "巨量營養素基準", "國健署：醣 50–60%、蛋白 10–20%、脂 20–30% [R28]"], ["D6", "TDEE 估算", "Mifflin-St Jeor 公式，以健康成人建立 [R17]"]].forEach(([k, t, d], i) => {
   const x = MX + (i % 3) * 4.1, y = 1.5 + Math.floor(i / 3) * 2.45;
   card(s, x, y, 3.85, 2.2);
   badge(s, x + 0.2, y + 0.2, k, C.accent3, 0.6);
@@ -192,7 +192,7 @@ s = content("文獻與缺口", "Related Work（二）：營養領域知識");
 note(s, "Domain 半邊：規範要求約 1/2 AI＋1/2 Domain。");
 
 // ================= 9. Article summary =================
-s = content("文獻與缺口", "Article Summary Table（2019–2026）");
+s = content("文獻與缺口", "Article Summary Table（節錄 9 篇，完整 14 篇見 docs/03）");
 table(s, [
   ["Ref", "年", "AI 方法", "資料", "發現", "限制"],
   ["Hua [R1]", "2025", "12 個 LLM＋CoT", "11,857 筆描述", "GPT-4o 準確率 66.8%", "以碳水為主"],
@@ -242,12 +242,12 @@ s = content("系統設計", "Agent Design：五個 OpenSpec capability");
 table(s, [
   ["Capability", "負責的行為", "模組", "代表性測試情境"],
   ["conversational-food-logging", "意圖分類、食物抽取、單次追問、修改記錄", "①②③", "「湯喝一半」被抽成修飾詞"],
-  ["nutrient-retrieval", "多來源錨定、來源追溯、未知食物降級", "④", "查無此物 → 依食材拆解，標示近似"],
-  ["energy-analytics", "熱量區間、巨量營養素、TDEE", "⑤⑥", "缺體重時先詢問，不用預設值"],
+  ["nutrient-retrieval", "多來源錨定、來源追溯、營養查詢、降級處理", "④", "查無此物 → 依食材拆解，標示近似"],
+  ["energy-analytics", "熱量區間、巨量營養素、TDEE、替換建議", "⑤⑥⑦", "缺體重時先詢問，不用預設值"],
   ["dietary-safety-guard", "7 日規則、拒絕極低熱量、暴食-節食提示", "⑥⑦", "早餐後不誤報攝取過低"],
   ["agent-evaluation", "500 筆標註集、基準比較、校準、安全測試", "評估", "分類別回報誤差最高的三類"],
 ], { fontSize: 15, rowH: 0.62, colW: [3.3, 4.1, 1.0, 3.73] });
-txt(s, "每個 capability 都有 Requirement（SHALL／MUST）與可測試的 Scenario；openspec validate --strict 通過", { x: MX, y: 5.5, w: W - 2 * MX, h: 0.5, fontSize: 14, italic: true, color: C.accent5 });
+txt(s, "共 24 個 Requirement（SHALL／MUST）、37 個可測試的 Scenario；openspec validate --strict 通過", { x: MX, y: 5.5, w: W - 2 * MX, h: 0.5, fontSize: 14, italic: true, color: C.accent5 });
 note(s, "規格位置：openspec/changes/add-dietsense-agent/specs/。");
 
 // ================= 13. Architecture =================
@@ -266,9 +266,26 @@ s.addShape(pres.shapes.DOWN_ARROW, { x: MX + 3 * 3.1 + 1.2, y: 3.55, w: 0.35, h:
 txt(s, "上排：理解與取得資料（LLM＋檢索）　下排：確定性計算與決策（不經 LLM 產生數值）", { x: MX, y: 6.3, w: W - 2 * MX, h: 0.4, fontSize: 14, color: C.accent5 });
 note(s, "依規範 ①–⑧ 編號，下排由右往左流到輸出。");
 
+// ================= 13b. Worked example =================
+s = content("系統設計", "端到端範例：一句話經過 ①–⑧");
+card(s, MX, 1.35, W - 2 * MX, 0.6, "FFF1E3");
+txt(s, "「午餐吃了一碗加蛋的台式牛肉麵，湯喝一半」　（30 歲女性、165 cm、60 kg；早餐已記錄 380 kcal）", { x: MX + 0.2, y: 1.43, w: W - 2 * MX - 0.4, h: 0.45, fontSize: 15, bold: true });
+table(s, [
+  ["模組", "發生什麼事"],
+  ["②", "意圖 = log_food；抽出「台式牛肉麵（一碗，湯 50%）」與「蛋（一顆）」，餐別 = 午餐"],
+  ["③④", "牛肉麵信心 0.86，不追問；蛋信心 0.72 → 追問一次「滷蛋還是荷包蛋？」→ 回答後信心 0.93"],
+  ["⑤⑥", "逐成分加總：麵 340 + 牛肉 160 + 湯 250 × 0.5 = 625 kcal；滷蛋 75 kcal"],
+  ["⑤", "半寬比例 0.245 與 0.21 → 這一餐 700 kcal，區間 546–854 kcal"],
+  ["⑤", "今日累計 1,080 kcal（913–1,247）；BMR 1,320、TDEE 約 2,046 kcal"],
+  ["⑦", "當日尚未結算，不判斷攝取過低；近 7 日平均高於下限 → 正常"],
+  ["⑧", "輸出兩項的區間、與 TDEE 的差距、資料來源，並註明滷蛋是依回答記錄"],
+], { y: 2.15, fontSize: 15, rowH: 0.52, colW: [1.1, 11.03] });
+txt(s, "熱量與信心都是示意數值，用來說明流程與公式；實作後以資料庫的實際數值為準", { x: MX, y: 6.45, w: W - 2 * MX, h: 0.35, fontSize: 12, italic: true, color: C.accent5 });
+note(s, "A2Z 的 PJ（Jump to an example）。三個重點：修飾詞只調整湯、每項只追問一次、合併後的區間比直接相加窄。");
+
 // ================= 14. Analytics =================
 s = content("系統設計", "Analytics：四個公式");
-[["熱量點估計", "kcal = 克數 × kcal_per_100g ÷ 100", "克數來自份量對照表（依食物類別換算「一碗」、「一份」）"], ["區間半寬比例", "w = 0.10 + 0.50 ×（1 − 信心）+ 0.15 × 份量模糊度", "輸出 (k(1−w), k, k(1+w))；係數在 W6 用評估集校準"], ["基礎代謝 BMR", "男 10W + 6.25H − 5A + 5｜女 10W + 6.25H − 5A − 161", "Mifflin-St Jeor [R17]；TDEE = BMR × 活動係數 1.2–1.9"], ["巨量營養素比例", "蛋白質、碳水 4 kcal/g；脂肪 9 kcal/g", "與國健署每日飲食指南比較 [R28]，AMDR 為參考"]].forEach(([t, f, d], i) => {
+[["熱量點估計", "kcal = 克數 × kcal_per_100g ÷ 100", "克數來自份量對照表（依食物類別換算「一碗」、「一份」）"], ["區間半寬比例", "w = 0.10 + 0.50 ×（1 − 信心）+ 0.15 × 份量模糊度", "輸出 (k(1−w), k, k(1+w))；w 上限 0.60；每日總量以平方和開根號合併"], ["基礎代謝 BMR", "男 10W + 6.25H − 5A + 5｜女 10W + 6.25H − 5A − 161", "Mifflin-St Jeor [R17]；TDEE = BMR × 活動係數 1.2–1.9"], ["巨量營養素比例", "蛋白質、碳水 4 kcal/g；脂肪 9 kcal/g", "與國健署每日飲食指南比較 [R28]，AMDR 為參考"]].forEach(([t, f, d], i) => {
   const x = MX + (i % 2) * 6.15, y = 1.45 + Math.floor(i / 2) * 2.55;
   card(s, x, y, 5.95, 2.3);
   txt(s, t, { x: x + 0.25, y: y + 0.15, w: 5.5, h: 0.45, fontSize: 17, bold: true, color: C.text2 });
@@ -278,73 +295,130 @@ s = content("系統設計", "Analytics：四個公式");
 note(s, "A2Z 的 PF（Formulation）。");
 
 // ================= 15. Flowchart =================
-s = content("系統設計", "Flowchart：信心門檻、單次追問與安全檢查");
+s = content("系統設計", "Flowchart：判斷、迴圈、例外與追問");
 const F = (x, y, w, h, t, kind) => {
   const shp = kind === "d" ? pres.shapes.DIAMOND : pres.shapes.ROUNDED_RECTANGLE;
-  const fill = kind === "d" ? "FFF1E3" : kind === "r" ? "FBE3E0" : HEX.soft;
-  s.addShape(shp, Object.assign(kind === "d" ? {} : { rectRadius: 0.08 }, { x, y, w, h, fill: { color: fill }, line: { color: kind === "d" ? HEX.orange : HEX.line, width: 1 }, objectName: ON() }));
-  s.addText(t, { x, y, w, h, isTextBox: true, objectName: ON(), align: "center", valign: "middle", fontSize: 13, bold: kind === "d", color: C.text1, margin: 0.03 });
+  const fill = kind === "d" ? "FFF1E3" : kind === "r" ? "FBE3E0" : kind === "h" ? "E3EEF9" : HEX.soft;
+  const line = kind === "d" ? HEX.orange : kind === "r" ? HEX.red : HEX.line;
+  s.addShape(shp, Object.assign(kind === "d" ? {} : { rectRadius: 0.08 }, { x, y, w, h, fill: { color: fill }, line: { color: line, width: 1 }, objectName: ON() }));
+  s.addText(t, { x, y, w, h, isTextBox: true, objectName: ON(), align: "center", valign: "middle", fontSize: 12, bold: kind === "d", color: C.text1, margin: 0.03 });
 };
-const L = (x1, y1, x2, y2) => s.addShape(pres.shapes.LINE, { x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.abs(x2 - x1) || 0.001, h: Math.abs(y2 - y1) || 0.001, line: { color: HEX.grey, width: 1.25, endArrowType: "triangle" }, flipH: x2 < x1, flipV: y2 < y1, objectName: ON() });
-F(0.6, 1.5, 1.7, 0.7, "接收輸入\n正規化");
-F(2.75, 1.35, 1.7, 1.0, "意圖?", "d");
-F(4.9, 1.5, 1.7, 0.7, "NER 抽取");
-F(7.05, 1.5, 1.9, 0.7, "多來源檢索\n＋排序");
-F(9.4, 1.3, 1.9, 1.1, "信心 ≥ 0.80?", "d");
-F(9.4, 3.05, 1.9, 0.75, "已追問過?", "d");
-F(11.6, 3.05, 1.3, 0.75, "追問 1 次");
-F(7.05, 3.05, 1.9, 0.75, "加寬區間\n標記低信心");
-F(9.4, 4.45, 1.9, 0.75, "kcal 區間\n寫入日誌");
-F(7.05, 4.45, 1.9, 0.75, "每日狀態\n總量・TDEE");
-F(4.75, 4.3, 1.9, 1.05, "安全檢查", "d");
-F(4.75, 5.85, 1.9, 0.7, "安全提示＋轉介", "r");
-F(2.6, 4.45, 1.7, 0.75, "缺口分析\n替換建議");
-F(0.6, 4.45, 1.6, 0.75, "輸出\n文字・圖・來源");
-L(2.3, 1.85, 2.75, 1.85); L(4.45, 1.85, 4.9, 1.85); L(6.6, 1.85, 7.05, 1.85); L(8.95, 1.85, 9.4, 1.85);
-L(10.35, 2.4, 10.35, 3.05); L(11.3, 3.42, 11.6, 3.42); L(9.4, 3.42, 8.95, 3.42);
-L(11.3, 1.85, 12.25, 1.85); L(12.25, 1.85, 12.25, 3.05);
-L(8.0, 3.8, 9.4, 4.82); L(10.35, 3.8, 10.35, 4.45);
-L(9.4, 4.82, 8.95, 4.82); L(7.05, 4.82, 6.65, 4.82); L(5.7, 5.35, 5.7, 5.85); L(4.75, 4.82, 4.3, 4.82); L(2.6, 4.82, 2.2, 4.82);
-[["否", 11.4, 1.5], ["是", 10.45, 2.5], ["否", 11.3, 3.1], ["是", 8.95, 3.1], ["風險", 5.8, 5.4], ["正常", 4.15, 4.45], ["回答後重新檢索", 11.25, 2.15]].forEach(([t, x, y]) => txt(s, t, { x, y, w: t.length > 2 ? 1.9 : 0.6, h: 0.3, fontSize: 11, bold: true, color: C.accent2 }));
-txt(s, "意圖為查詢或分析時，直接進入檢索或每日狀態；同一項食物最多追問一次", { x: MX, y: 6.65, w: 9, h: 0.3, fontSize: 12, color: C.accent5 });
-note(s, "Decision、Loop、Exception 都有：信心判斷、追問迴圈、安全例外。");
+const L = (x1, y1, x2, y2, plain) => s.addShape(pres.shapes.LINE, { x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.abs(x2 - x1) || 0.001, h: Math.abs(y2 - y1) || 0.001, line: Object.assign({ color: HEX.grey, width: 1.25 }, plain ? {} : { endArrowType: "triangle" }), flipH: x2 < x1, flipV: y2 < y1, objectName: ON() });
+// 上方通道：追問迴圈、查詢分支、來源逾時
+F(2.25, 1.3, 1.8, 0.45, "查詢：只檢索 → 輸出");
+F(4.2, 1.3, 1.95, 0.45, "來源逾時：略過並註明", "r");
+F(8.35, 1.3, 1.9, 0.45, "追問 1 次・使用者回答", "h");
+// 第一排
+F(0.6, 2.0, 1.55, 0.7, "接收輸入\n正規化");
+F(2.45, 1.85, 1.5, 1.0, "意圖?", "d");
+F(4.25, 2.0, 1.75, 0.7, "抽取 食物\n份量・修飾詞");
+F(6.3, 2.0, 1.75, 0.7, "多來源檢索\n＋排序");
+F(8.35, 1.85, 1.9, 1.0, "信心 ≥ 0.80?", "d");
+F(10.75, 1.85, 1.9, 1.0, "已追問過?", "d");
+// 第二排
+F(0.6, 3.55, 1.45, 0.75, "缺口分析\n替換建議");
+F(2.3, 3.42, 1.7, 1.0, "安全檢查", "d");
+F(4.25, 3.55, 1.75, 0.75, "每日狀態\n總量・TDEE");
+F(6.2, 3.42, 1.9, 1.0, "還有下一項?", "d");
+F(8.35, 3.55, 1.9, 0.75, "逐成分 kcal・區間\n寫入日誌");
+F(10.75, 3.42, 1.9, 1.0, "信心 ≥ 0.50?", "d");
+// 第三排
+F(0.6, 4.95, 1.45, 0.7, "輸出\n文字・圖・來源");
+F(2.3, 4.95, 1.7, 0.7, "安全提示＋轉介\n不給限制建議", "r");
+F(10.75, 4.95, 1.9, 0.7, "食材拆解\n標示近似估算", "r");
+// 第一排連線
+L(2.15, 2.35, 2.45, 2.35); L(3.95, 2.35, 4.25, 2.35); L(6.0, 2.35, 6.3, 2.35); L(8.05, 2.35, 8.35, 2.35); L(10.25, 2.35, 10.75, 2.35);
+L(3.2, 1.85, 3.2, 1.75);                                  // 意圖 → 查詢
+L(6.65, 2.0, 6.15, 1.6);                                    // 檢索 → 來源逾時
+L(11.7, 1.85, 11.7, 1.52, true); L(11.7, 1.52, 10.25, 1.52);   // 未追問 → 追問
+L(8.35, 1.52, 7.5, 1.52, true); L(7.5, 1.52, 7.5, 2.0);        // 追問 → 重新檢索
+// 往第二排
+L(9.3, 2.85, 9.3, 3.55);                                  // 信心足夠 → 計算
+L(11.7, 2.85, 11.7, 3.42);                                // 已追問 → 信心 0.50?
+L(10.75, 3.92, 10.25, 3.92);                              // 是 → 加寬區間後計算
+L(11.7, 4.42, 11.7, 4.95);                                // 否 → 食材拆解
+L(10.75, 5.3, 9.3, 5.3, true); L(9.3, 5.3, 9.3, 4.3);     // 食材拆解 → 計算
+L(8.35, 3.92, 8.1, 3.92);                                 // 計算 → 下一項?
+L(6.9, 3.5, 6.9, 2.7);                                    // 是 → 回到檢索
+L(6.2, 3.92, 6.0, 3.92); L(4.25, 3.92, 4.0, 3.92); L(2.3, 3.92, 2.05, 3.92);
+L(3.2, 2.85, 4.75, 3.55);                                 // 分析／建議 → 每日狀態
+L(3.15, 4.42, 3.15, 4.95); L(1.32, 4.3, 1.32, 4.95); L(2.3, 5.3, 2.05, 5.3);
+[["記錄", 3.78, 2.02, 0.7], ["否", 10.32, 2.02, 0.4], ["是", 9.35, 2.95, 0.4], ["否", 11.75, 1.55, 0.4], ["是", 11.75, 2.98, 0.4],
+ ["是：加寬區間", 9.75, 3.28, 1.3], ["否", 11.75, 4.52, 0.4], ["是", 6.95, 2.95, 0.4], ["否", 5.9, 3.3, 0.4], ["正常", 1.9, 3.3, 0.6],
+ ["風險", 3.2, 4.52, 0.6], ["分析／建議", 3.95, 2.88, 1.1], ["重新檢索", 7.55, 1.6, 0.9]].forEach(([t, x, y, w]) => txt(s, t, { x, y, w, h: 0.3, fontSize: 10.5, bold: true, color: C.accent2 }));
+txt(s, [
+  { text: "Decision（菱形）", options: { bold: true, color: C.accent2 } }, { text: "：意圖、信心 0.80、已追問、信心 0.50、下一項、安全檢查　　" },
+  { text: "Loop", options: { bold: true, color: C.accent2 } }, { text: "：逐項食物；追問後重新檢索（每項最多一次）", options: { breakLine: true } },
+  { text: "Exception（紅）", options: { bold: true, color: C.accent4 } }, { text: "：來源逾時、查無此物改食材拆解、安全風險　　" },
+  { text: "Human Interaction（藍）", options: { bold: true, color: C.hyperlink || C.accent1 } }, { text: "：澄清問題" },
+], { x: MX, y: 5.95, w: W - 2 * MX, h: 0.75, fontSize: 12 });
+note(s, "規範提到的四種元素都有：Decision、Loop、Exception、Human Interaction。完整的 Mermaid 版本在 DESIGN.md。");
 
 // ================= 16. Pseudocode =================
-s = content("系統設計", "Pseudocode：Algorithm 1（18 行）");
+s = content("系統設計", "Pseudocode：Algorithm 1（20 行）");
 const code = [
   "Algorithm 1: DietSense — Conversational Calorie Intake Agent",
   "Input : message Q, profile P, daily log D, 7-day history H",
-  "Output: response R, updated log D'",
+  "Output: response R, updated log D",
   "01: q ← normalize(Q)",
-  "02: intent, ents ← classify_and_extract(q)",
-  "03: if intent = UNKNOWN then return ask(\"要記錄還是查詢？\")",
-  "04: if intent = log_food then",
-  "05:   for each e in ents do",
-  "06:     C ← retrieve(e.name, [TW_FCD, TW_DISH_VEC, USDA_FDC])",
-  "07:     (m, c) ← rank(C, e.context)",
-  "08:     if c < τ and not e.asked then",
-  "09:       e ← update(e, ask(clarify(e, C))); e.asked ← true; goto 06",
-  "10:     g ← portion_to_grams(e.portion, m, PORTION_TABLE)",
-  "11:     k ← g · m.kcal_per_100g / 100",
-  "12:     w ← w0 + α(1 − c) + β · vagueness(e)",
-  "13:     D.add(m, g, (k(1−w), k, k(1+w)), source = m.id)",
-  "14: S ← compute_daily_state(D, P)",
-  "15: risk ← safety_check(D, H, P, S, q)",
-  "16: if risk ≠ OK then return render(alert(risk))",
-  "17: rec ← recommend(S, P) if intent ∈ {analyze, recommend}",
-  "18: return render(S, rec, sources, intervals(D)), D",
+  "02: (intent, ents) ← classify_and_extract(q)",
+  "03: if intent = UNKNOWN then return ask(\"要記錄這餐，還是查詢營養？\"), D",
+  "04: if intent = query_nutrition then return render(lookup(ents), sources), D",
+  "05: if intent = log_food then",
+  "06:   for each e in ents do",
+  "07:     C ← retrieve(e.name, [TW_FCD, TW_DISH, USDA_FDC])",
+  "08:     (m, c) ← rank(C, e.context)",
+  "09:     if c < τ and not e.asked then",
+  "10:       e ← update(e, ask(clarify(e, C))); e.asked ← true; goto 07",
+  "11:     if c < τ_low then m ← decompose_by_ingredients(e); e.approx ← true",
+  "12:     g ← portion_to_grams(e.portion, m, PORTION_TABLE)",
+  "13:     k ← Σ_j g · share_j(m) · kcal_j / 100 · adj_j(e.modifiers)",
+  "14:     w ← min(w_max, w0 + α(1 − c) + β · vagueness(e.portion))",
+  "15:     D.add(m, g, (k(1−w), k, k(1+w)), source = m.id, conf = c)",
+  "16: S ← compute_daily_state(D, P)",
+  "17: risk ← safety_check(D, H, P, S, q)",
+  "18: if risk ≠ OK then return render(alert(risk), sources), D",
+  "19: if intent ∈ {analyze, recommend} then rec ← recommend(S, P, KB)",
+  "20: return render(S, rec, sources, intervals(D)), D",
 ].join("\n");
 s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: MX, y: 1.35, w: 8.4, h: 5.55, rectRadius: 0.06, fill: { color: C.text2 }, line: { color: C.text2 }, objectName: ON() });
-txt(s, code, { x: MX + 0.2, y: 1.45, w: 8.1, h: 5.4, fontSize: 12, fontFace: "Consolas", color: C.background1 });
+txt(s, code, { x: MX + 0.2, y: 1.45, w: 8.1, h: 5.4, fontSize: 11, fontFace: "Consolas", color: C.background1 });
 card(s, 9.3, 1.35, 3.43, 5.55, "FFF1E3");
 txt(s, [
-  { text: "修正原稿的問題", options: { bold: true, fontSize: 17, color: C.accent2, breakLine: true } },
-  { text: "安全檢查改用完整日或 7 日平均，早餐後不會誤報", options: { bullet: true, breakLine: true } },
-  { text: "共用 compute_daily_state，recommend 不再用到未定義變數", options: { bullet: true, breakLine: true } },
-  { text: "追問有上限（第 08 行 e.asked）", options: { bullet: true, breakLine: true } },
-  { text: "參數：τ = 0.80、w0 = 0.10、α = 0.50、β = 0.15", options: { bullet: true } },
-], { x: 9.5, y: 1.55, w: 3.1, h: 5.2, fontSize: 14, paraSpaceAfter: 8 });
+  { text: "重點", options: { bold: true, fontSize: 17, color: C.accent2, breakLine: true } },
+  { text: "04：查詢只回覆，不寫入日誌", options: { bullet: true, breakLine: true } },
+  { text: "09–10：每項食物最多追問一次", options: { bullet: true, breakLine: true } },
+  { text: "11：查無此物改用食材拆解，標示近似", options: { bullet: true, breakLine: true } },
+  { text: "13：逐成分加總，「湯喝一半」只調整湯", options: { bullet: true, breakLine: true } },
+  { text: "16–17：共用每日狀態；安全檢查用完整日或 7 日平均（修正原稿的誤報與未定義變數）", options: { bullet: true, breakLine: true } },
+  { text: "參數：τ = 0.80、τ_low = 0.50、w0 = 0.10、α = 0.50、β = 0.15、w_max = 0.60", options: { bullet: true } },
+], { x: 9.5, y: 1.55, w: 3.1, h: 5.2, fontSize: 13, paraSpaceAfter: 7 });
 note(s, "有行號的 Pseudocode，符合規範第四節。");
+
+// ================= 16b. Technical feasibility =================
+s = content("系統設計", "Technical Feasibility：資料、工具與工作量");
+table(s, [
+  ["項目", "可行性依據（2026-11-11 查證）", "限制與對策"],
+  ["食藥署食品營養成分資料集", "政府資料開放平臺資料集 8543；CSV／JSON／XML；開放授權；每 3 個月更新", "熟食少 → 自建台式料理庫"],
+  ["USDA FoodData Central", "公開 API；CC0 公有領域；每個 IP 每小時 1,000 次", "本機快取；評估時分批查詢"],
+  ["LLM（意圖、抽取、規劃）", "結構化輸出與 function calling 是標準功能；用小型模型即可", "固定版本；格式錯誤重試一次"],
+  ["向量檢索與後端", "料理庫只有數百筆，本機索引即可；Python、FastAPI、SQLite，不需 GPU", "料理庫每筆記錄別名"],
+], { y: 1.4, fontSize: 14, rowH: 0.6, colW: [3.2, 5.9, 3.03] });
+card(s, MX, 4.6, 5.9, 2.15);
+txt(s, [
+  { text: "工作量估計（規劃值，不是量測結果）", options: { bold: true, color: C.text2, breakLine: true } },
+  { text: "台式料理庫 150 道 ≈ 50 小時（W2）", options: { bullet: true, breakLine: true } },
+  { text: "評估集 500 筆 ≈ 50 小時（W6）", options: { bullet: true, breakLine: true } },
+  { text: "雙人標註與標示比對 ≈ 10 小時；LLM 評估呼叫約 2,000–2,500 次", options: { bullet: true } },
+], { x: MX + 0.2, y: 4.7, w: 5.5, h: 1.95, fontSize: 14, paraSpaceAfter: 4 });
+card(s, 6.83, 4.6, 5.9, 2.15, "FFF1E3");
+txt(s, [
+  { text: "進度落後時依序縮減", options: { bold: true, color: C.accent2, breakLine: true } },
+  { text: "① 語音輸入　② 使用者研究 20 → 10 人", options: { breakLine: true } },
+  { text: "③ 手動基準只做 100 筆抽樣　④ 評估集 500 → 300（先改 spec）", options: { breakLine: true } },
+  { text: "安全守門與來源追溯不縮減", options: { bold: true } },
+], { x: 7.03, y: 4.7, w: 5.5, h: 1.95, fontSize: 14, paraSpaceAfter: 4 });
+note(s, "評分表第五項的 Technical Feasibility。資料建置約 110 小時是最大的時程風險。");
 
 // ================= 17–19. Deep Research =================
 pres.addSection({ title: "Deep Research" });
@@ -400,7 +474,7 @@ s = content("評估與成果", "Evaluation：資料集、基準與指標");
 });
 table(s, [
   ["面向", "指標", "比較對象"],
-  ["準確度", "MAE、MAPE、±10%／±20% 命中率（分類別回報）", "純 LLM 直估、手動資料庫查詢"],
+  ["準確度", "MAE、MAPE、±10%／±20% 命中率（分類別回報）", "純 LLM（Base、CoT）、手動資料庫查詢"],
   ["不確定性", "區間 coverage＋平均寬度", "避免以過寬區間換取覆蓋率"],
   ["效率與可用性", "每餐記錄秒數、追問率、SUS", "傳統 App（交叉使用）"],
   ["安全", "攔截率、誤報率", "30+ 筆不安全請求與風險模式"],
@@ -416,7 +490,7 @@ txt(s, [
   { text: "每餐記錄時間短於手動查詢", options: { bullet: true, breakLine: true } },
   { text: "SUS > 70", options: { bullet: true, breakLine: true } },
   { text: "安全攔截率 100%", options: { bullet: true, breakLine: true } },
-  { text: "區間 coverage 與寬度同時達到校準", options: { bullet: true, breakLine: true } },
+  { text: "區間 coverage ≥ 80%，並回報平均寬度", options: { bullet: true, breakLine: true } },
   { text: "以上是提案階段的預期目標，不是實驗結果", options: { italic: true, color: C.accent4, fontSize: 14 } },
 ], { x: MX + 0.3, y: 1.65, w: 5.4, h: 4.5, fontSize: 16, paraSpaceAfter: 8 });
 [["系統", "繁中對話式熱量 Agent，數字可追溯"], ["資料", "500 筆台式料理標註集（可作 benchmark）"], ["方法", "LLM 理解＋資料錨定＋確定性計算＋區間校準"], ["評估", "準確、不確定性、負擔、可用性、安全五面向"]].forEach(([t, d], i) => {
@@ -447,7 +521,7 @@ note(s, "作業項目 3：design.md 轉成 OpenSpec workflow。");
 
 // ================= 23. References =================
 pres.addSection({ title: "結尾" });
-s = content("結尾", "References（節錄，完整 34 筆見 docs/03 與 docs/04）");
+s = content("結尾", "References（節錄，完整 35 筆見 docs/03 與 docs/04）");
 const refs = [
   "[R1] Hua et al. (2025). NutriBench. ICLR 2025.",
   "[R3] Fridolfsson et al. (2025). Curr Dev Nutr, 9(10), 107556.",
