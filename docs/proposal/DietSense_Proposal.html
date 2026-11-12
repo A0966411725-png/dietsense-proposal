@@ -42,11 +42,17 @@
 
 ## 1. Abstract
 
-飲食自我記錄是行為體重管理的核心策略，但記錄負擔讓多數人難以持續。WHO 指出 2022 年全球逾 8.9 億成人肥胖；台灣 2017–2020 年國民營養調查顯示，約一半成人體重高於建議範圍。然而 2026 年的範疇回顧發現，熱量 App 的記錄頻率在第 4 至 12 週間由每週 5.4 天降至 1.4 天。現有工具要求使用者搜尋品項、估計份量並拆解複合料理，對台灣小吃支援不足；拍照 App 與大型語言模型雖然方便，照片估熱量的誤差約 36%，珍珠奶茶等混合飲品甚至低估達 76%，數值也無法追溯來源。
+### 中文摘要（約 300 字）
 
-為解決上述問題，本專題提出 DietSense 對話式熱量攝取 Domain AI Agent。使用者用一句中文描述飲食，LLM 負責意圖分類、食物抽取與任務規劃；營養數值則錨定於食藥署資料庫、自建台式料理庫與 USDA FoodData Central，再以份量對照表與 Mifflin-St Jeor 公式進行確定性計算。系統以熱量區間取代單一數字，信心不足時最多追問一次，並設有安全守門機制避免助長過度節食。
+台灣成人有 68% 每週外食 7 次以上，飲食記錄與減重顯著相關，但熱量 App 的記錄頻率在 12 週內由每週 5.4 天降至 1.4 天；拍照 App 與大型語言模型雖然方便，照片估熱量誤差約 36%，珍珠奶茶甚至低估達 76%，數值也無法追溯來源。本專題提出 DietSense 對話式熱量攝取 Domain AI Agent：使用者用一句中文描述飲食，LLM 只負責理解與規劃，營養數值錨定於食藥署資料庫、自建台式料理庫與 USDA FoodData Central，再以份量對照表與 Mifflin-St Jeor 公式計算並附上來源；熱量以區間呈現，信心不足時最多追問一次，並依性別安全下限防止過度節食。評估將以 500 筆台式料理標註集比較純 LLM 與手動查詢，並進行 20 人 7 天使用者研究；預期準確度優於純 LLM、記錄時間較短、SUS 高於 70，以上皆為預期目標，不是實驗結果。
 
-評估上，本研究將建立 500 筆台式料理標註集，與純 LLM 估算及手動查詢比較 MAE、±20% 命中率、區間覆蓋率、記錄時間、SUS 與安全攔截率，並進行 20 人 7 天使用者研究。預期 DietSense 的準確度優於純 LLM、記錄時間短於手動查詢、SUS 高於 70；以上皆為預期目標，實際成效將依實驗結果報告。
+### English Abstract（IEEE Transactions style）
+
+**Title—** DietSense: A Data-Grounded Conversational AI Agent With Uncertainty Intervals and Safety Guards for Calorie Intake Logging in Taiwan
+
+**Abstract—** Dietary self-monitoring is associated with weight loss, yet adherence declines quickly: in calorie-counting apps, logging frequency falls from 5.4 to 1.4 days per week within 12 weeks. Photo-based apps and large language models (LLMs) reduce the logging burden but remain unreliable for mixed dishes, with a mean absolute percentage error of about 36% for GPT-4o on meal photographs and underestimation of up to 76% for bubble milk tea, and their values are untraceable. This paper proposes DietSense, a conversational domain AI agent for calorie intake logging in Taiwan. An LLM planner performs only intent classification, food extraction, and tool orchestration. All nutrient values are retrieved from the Taiwan Food and Drug Administration food composition database, a curated Taiwanese dish database, and USDA FoodData Central, and are computed deterministically with portion conversion tables and the Mifflin–St Jeor equation. Each estimate is a low–point–high interval that widens as retrieval confidence decreases or portion descriptions become vaguer, and the agent asks at most one clarification question per food item. A rule-based safety guard evaluates intake over completed days or seven-day averages against sex-specific minimums and declines very-low-calorie plan requests. The evaluation plan comprises a 500-item annotated benchmark of Taiwanese dishes, comparisons with direct LLM estimation and manual database lookup, interval coverage analysis, a seven-day crossover user study with 20 participants, and a safety test suite. Expected outcomes, to be verified experimentally, include higher ±20% accuracy than direct LLM estimation, shorter logging time than manual lookup, and a System Usability Scale score above 70.
+
+**Index Terms—** Calorie estimation, conversational agents, dietary assessment, large language models, retrieval-augmented generation, uncertainty quantification.
 
 ### 摘要的 A–F 結構
 

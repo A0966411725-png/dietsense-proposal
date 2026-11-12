@@ -4,6 +4,18 @@
 
 本 repository 用 OpenSpec（spec-driven development）重構期中 Proposal。目前是 **Proposal 階段**：沒有程式碼，也沒有實驗結果。
 
+## DietSense 的四個核心創新
+
+| # | 核心創新 | 做法 | 規格位置 |
+|---|---------|------|---------|
+| 1 | **自然語言互動**（Natural Language Interaction） | 一句中文完成記錄，理解「一碗」、「湯喝一半」這類口語份量與修飾詞 | `conversational-food-logging` |
+| 2 | **主動式代理互動**（Proactive Agentic Interaction） | 信心不足時主動追問（每項最多一次）；查不到時主動改用食材拆解；攝取過低時主動提示並轉介 | `conversational-food-logging`、`dietary-safety-guard` |
+| 3 | **資料錨定與情境感知**（Data-Grounded, Context-Aware Analytics） | LLM 不產生數值：整合食藥署資料庫、台式料理庫、USDA，再結合個人資料、餐別與近 7 日歷史計算 TDEE、缺口與建議 | `nutrient-retrieval`、`energy-analytics` |
+| 4 | **誠實與安全**（Calibrated Uncertainty & Safety） | 熱量一律以區間呈現並校準 coverage；依性別安全下限，拒絕極低熱量計畫 | `energy-analytics`、`dietary-safety-guard` |
+
+核心研究價值：從「使用者配合資料庫填表」的被動式熱量追蹤，走向「Agent 理解口語、主動釐清、數字可追溯」的個人化熱量管理。
+主動提醒漏記的餐、串接穿戴裝置的活動量不在 Proposal 範圍內，列為 Future Work。
+
 ![DietSense 一頁資訊圖表](docs/infographic/dietsense-infographic.png)
 
 ## 先看這三份
@@ -26,6 +38,9 @@
 | 第一段 NotebookLM：依 A2Z 與規範解析 | 規範評分項目檢核、A2Z 26 字母對照、Deep Research 爭論證據更新 | [docs/05-notebooklm-analysis.md](docs/05-notebooklm-analysis.md) |
 | 第一段 ChatGPT：A4 橫式高密度編號資訊圖表 | 9 個編號區塊的一頁圖表（HTML、PDF、PNG） | [docs/infographic/](docs/infographic/) |
 | 第二段 Perplexity：最新研究、數據與案例 | Interesting／Innovation／Important 證據、預期貢獻與學術價值、A–F 補強建議 | [docs/04-perplexity-research.md](docs/04-perplexity-research.md) |
+| 第二段「A TO F」 | 期中 Proposal 的 A–F 逐段改寫（Attention → Findings），每段附引用 | [docs/01 § 六](docs/01-abstract-A-F.md) |
+| 第二段「最後摘取重要文字，重新產生 300 字」 | 約 290 字的中文摘要（Word 字數計算） | [docs/01 § 七](docs/01-abstract-A-F.md) |
+| 第三部分 IEEE Transactions Abstract | 英文 Title、Abstract（250 字）、Index Terms，附 IEEE 規則自我檢查與數字出處 | [docs/07-ieee-abstract.md](docs/07-ieee-abstract.md) |
 | 規範第三節 Deep Research（20%） | Q1 五個核心思維、Q2 三個爭論、Q3 十個問題＋回答；引用全部重新核對 | [docs/06-deep-research.md](docs/06-deep-research.md) |
 | 規範必繳 Proposal Document | Abstract、Introduction、Related Work、Deep Research、Proposed Scheme、References 合成單一文件 | [docs/proposal/](docs/proposal/) |
 | 規範必繳 Proposal PPT | 依重構內容重建的 26 頁簡報（PPTX、PDF、產生腳本） | [presentation/](presentation/) |
@@ -129,6 +144,13 @@ Change 'add-dietsense-agent' is valid
 - **規格**：新增營養查詢、來源失敗降級、缺口分析與替換建議三個需求；修正安全規格中兩處前後不一致的敘述。
 - **引用更正**：NutriBench 的份量結論原本引自二手摘要，回原文後改寫；Article Summary Table 由 9 篇擴充為 14 篇；R28 補上國健署手冊網址；N6 補上完整書目。
 - **新增**：單一份 Proposal 文件（PDF）；DESIGN.md 改為完整文件，由腳本從 OpenSpec 產生。
+
+## 第三輪（2026-11-12）依老師更新的作業說明補上
+
+- 第二段的「A TO F」逐段全文與 300 字摘要（docs/01 § 六、七）。
+- 第三部分的 IEEE Transactions 英文摘要（docs/07）。
+- README 開頭加上四個核心創新。
+- Proposal PDF 的 Abstract 改為「中文 300 字摘要 + IEEE 英文摘要 + A–F 結構表」。
 
 ## 待補事項
 

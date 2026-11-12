@@ -273,7 +273,12 @@ refs_r = body(d03, "## References（已查證）", "## 引用修正表（期中�
 refs_r = "\n".join(l for l in refs_r.split("\n") if not l.startswith("> ")).strip("\n")
 refs_n = body(d04, "## 新增來源（N1–N6）")
 deep = cut(d06, "## Q1. 五個核心思維")
-abstract = body(d01, "## 五、專業摘要（約 500 字）")
+abstract = body(d01, "## 七、300 字摘要（第二段：「最後摘取重要文字，重新產生 300 字」）")
+abstract = "\n".join(l for l in abstract.split("\n") if not l.startswith("> ")).strip("\n")
+d07 = read(ROOT / "docs" / "07-ieee-abstract.md")
+en_title = body(d07, "## Title", "## Abstract")
+en_abstract = body(d07, "## Abstract", "## Index Terms")
+en_terms = body(d07, "## Index Terms", "---")
 af_table = body(d01, "## 四、A–F 對照（精簡版）", "## 五、專業摘要（約 500 字）")
 af_table = "\n".join(l for l in af_table.split("\n") if not l.startswith("> ")).rstrip("-\n ")
 cores = body(d01, "## 一、5 個核心（Cores）：整個專題只要記住這五件事", "## 二、3 個取捨（Trade-offs）")
@@ -290,7 +295,17 @@ PROPOSAL = """# DietSense：對話式每日熱量攝取 Domain AI Agent
 
 ## 1. Abstract
 
+### 中文摘要（約 300 字）
+
 {abstract}
+
+### English Abstract（IEEE Transactions style）
+
+**Title—** {en_title}
+
+**Abstract—** {en_abstract}
+
+**Index Terms—** {en_terms}
 
 ### 摘要的 A–F 結構
 
@@ -379,7 +394,7 @@ PROPOSAL = """# DietSense：對話式每日熱量攝取 Domain AI Agent
 ### 新增來源 N1–N6
 
 {refs_n}
-""".format(repo=REPO_URL, abstract=abstract, af=af_table, intro=shift(intro, 1), related=shift(related, 1),
+""".format(repo=REPO_URL, abstract=abstract, en_title=en_title, en_abstract=en_abstract, en_terms=en_terms, af=af_table, intro=shift(intro, 1), related=shift(related, 1),
            deep=shift(deep, 1), cores=cores, tradeoffs=tradeoffs, details=details, req=req_plain,
            arch=arch, components=components, flowchart=flowchart, pseudocode=pseudocode, symbols=symbols,
            example=example, feasibility=shift(feasibility, 1), evaluation=evaluation,

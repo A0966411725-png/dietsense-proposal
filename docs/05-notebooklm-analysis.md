@@ -17,7 +17,7 @@
 | Flowchart + Pseudocode + Technical Feasibility（15%） | 含 Decision／Loop／Exception／Human Interaction 的流程圖；有行號的 Pseudocode；技術可行性 | design.md：Mermaid 流程圖、Algorithm 1（20 行）、符號與參數表、Technical Feasibility（資料來源查證、工作量估計、縮減順序） | ✅ | 修正原稿兩個錯誤：早餐後誤報、`recommend` 用到未定義變數；追問改為有上限；補上查詢分支與例外流程 |
 | GitHub + DESIGN.md + 完整度（5%） | 正式 Repository；從 Proposal 階段開始維護 DESIGN.md | 私人 repo `dietsense-proposal`；[DESIGN.md](../DESIGN.md)（完整版，含架構圖、流程圖、虛擬碼） | ✅ | 原稿沒有 repo |
 | Proposal Document（必繳） | Abstract、Introduction、Related Work、Deep Research、Proposed Scheme、References | [proposal/DietSense_Proposal.pdf](proposal/DietSense_Proposal.pdf)：由 docs/ 與 openspec/ 自動合成的單一文件 | ✅ | 原稿是 Word，引用有誤 |
-| Abstract（必繳） | A–F；Findings 不得虛構 | [01-abstract-A-F.md](01-abstract-A-F.md)：5 核心、3 取捨、10 細節、約 500 字摘要 | ✅ | 明確標註「預期目標，非實驗結果」 |
+| Abstract（必繳） | A–F；Findings 不得虛構 | [01-abstract-A-F.md](01-abstract-A-F.md)：5 核心、3 取捨、10 細節、A–F 全文、約 500 字與 300 字摘要；[07-ieee-abstract.md](07-ieee-abstract.md)：IEEE 英文摘要 | ✅ | 明確標註「預期目標，非實驗結果」 |
 | Proposal PPT（必繳） | 動機、文獻、Gap、Agent Design、Architecture、Flowchart、Pseudocode | [presentation/](../presentation/)：依重構內容更新的簡報 | ✅ | 數據、引用與架構全部同步 |
 
 **規範的核心原則檢查：「不要只做一個 Model，也不要只做一個 Chatbot」**

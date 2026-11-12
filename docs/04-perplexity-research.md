@@ -5,6 +5,8 @@
 > 2. 「幫我整理這份研究主題的預期貢獻與學術價值」
 > 3. 「(Continue) review A to F，你想加強的部分盡量補充」
 >
+> 老師更新的說明另外要求把期中 Proposal 整段丟入後輸入「A TO F」，最後「摘取重要文字，重新產生 300 字」。這兩份放在 [01 § 六、七](01-abstract-A-F.md)。
+>
 > **製作方式**：本文件由 Claude 用網路搜尋完成，沒有實際使用 Perplexity。每個數字都回到原始來源（期刊、PubMed、Crossref、官方報告）確認；N3 為科技媒體報導，數字由收購方提供。
 > 文獻編號 R1–R29 見 [03-related-work.md](03-related-work.md)；本文件新增的來源編號為 N1–N6。
 
