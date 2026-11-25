@@ -1,0 +1,186 @@
+% DietSense -- IEEE conference draft v1 (UNREVISED)
+% This version is a direct English rendering of the midterm proposal.
+% Its numbers, citations and pseudocode are kept AS-IS on purpose,
+% so that the review in paper/review/review-report.md can be checked against it.
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{iftex}
+\ifXeTeX
+  % Local build with Tectonic (XeTeX): use Times-like fonts. Overleaf (pdfLaTeX) uses Times.
+  \usepackage{fontspec}
+  \setmainfont{texgyretermes}[Extension=.otf, UprightFont=*-regular,
+    BoldFont=*-bold, ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setmonofont{texgyrecursor}[Extension=.otf, UprightFont=*-regular,
+    BoldFont=*-bold, ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+\else
+  \usepackage[T1]{fontenc}
+\fi
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyvrb}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+\title{DietSense: A Conversational Domain AI Agent\\for Daily Calorie Intake Analysis}
+
+\author{\IEEEauthorblockN{Yen-Kai Chen}
+\IEEEauthorblockA{National Chung Hsing University\\
+Taichung, Taiwan}}
+
+\maketitle
+
+\begin{abstract}
+\textbf{A. Attention Getter.} According to the 2025 WHO report, more than one billion people worldwide are living with obesity, and diet-related chronic diseases (diabetes, cardiovascular disease) account for 74\% of global deaths. Taiwan's 2025 National Health Survey shows that 47.9\% of adults aged 18 and over are overweight or obese, and obesity-related medical costs exceed NT\$50 billion per year. People who keep tracking their calorie intake are twice as likely to reach their weight goals as those who do not~\cite{teixeira2025}, yet only 15\% of people keep tracking for more than 30 days.
+\textbf{B. But.} Existing apps such as MyFitnessPal and Cronometer require manual database search and exact portions, cannot understand natural language such as ``a bowl of Taiwanese beef noodles with an egg, half of the soup'', and cannot handle mixed dishes or Taiwanese foods.
+\textbf{C. Cure.} We propose DietSense, a Dietary Calorie Intake Domain AI Agent.
+\textbf{D. Development.} GPT-4o / Gemini 1.5 Pro, RAG over USDA FoodData Central and the Taiwan food composition database, food NER, a Mifflin--St Jeor TDEE engine, and an uncertainty module.
+\textbf{E. Experiments.} USDA FoodData Central (900{,}000+ items), the Taiwan database, and 500 annotated Taiwanese dish descriptions; baseline: MyFitnessPal; 20 users for 7 days.
+\textbf{F. Findings.} Calorie accuracy within $\pm$20\% above 85\%, logging time reduced by 60\%, SUS above 70, and coverage of Taiwanese foods significantly better than Western databases.
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{Attention Getter}
+A 2025 study in \emph{The Lancet} reported that 43\% of adults worldwide are overweight or obese, and diet is the main modifiable risk factor. Taiwan's 2024 Health Promotion Administration data show that more than one in four adults has metabolic syndrome, with medical costs and productivity losses exceeding NT\$300 billion per year. The global healthy-eating app market reached US\$6.8 billion in 2025, growing 17.4\% per year.
+
+\subsection{Background}
+Calorie tracking is a scientifically validated weight-management method. A systematic review by Van Horn et al.\ (2024) showed that people who kept food records lost 3.3~kg more than controls. LLMs can now understand complex natural-language descriptions, reason in multiple steps and access large external knowledge bases through RAG, making conversational food tracking technically feasible for the first time.
+
+\subsection{Problem}
+Traditional calorie tracking has a high cognitive burden: (1) users must search tens of thousands of items; (2) users must estimate exact portions, which usually needs a scale; (3) users must decompose mixed dishes; and (4) Taiwanese dishes, night-market foods and home cooking are missing. As a result, 85\% of users give up within 30 days~\cite{helander2014}.
+
+\subsection{Existing Limitations}
+MyFitnessPal has a high database error rate (about 30\%), is fully manual and covers few Asian foods. AI food-recognition apps only handle photos, with no reasoning or personalisation. Research systems need special hardware such as food scales or 3D scanners. General LLMs such as ChatGPT have no real-time database access and no cross-meal tracking.
+
+\subsection{Innovation}
+(1) The first conversational Domain AI Agent that integrates LLM, RAG and a Taiwanese food database; (2) uncertainty quantification with calorie ranges; (3) Taiwanese localisation covering night markets, snacks and traditional dishes; (4) a safety mechanism that detects disordered eating patterns.
+
+\subsection{Contributions}
+(1) A deployable conversational calorie-tracking agent; (2) an annotated dataset of 500+ Taiwanese dish descriptions; (3) an evaluation framework covering accuracy, usability and safety; (4) a multi-source nutrition database pipeline with confidence scores.
+
+\section{Related Work}
+
+\textbf{AI technology.} LLM + RAG grounds answers in verified external databases and reduces hallucination. BERT/SpanBERT food NER extracts food names, portions and cooking methods. CNNs (EfficientNet, ResNet) and vision-language models (CLIP) estimate calories from photos. LLM function calling lets an agent call external APIs and databases.
+
+\textbf{Domain knowledge.} Energy metabolism (BMR, TDEE, TEF); macronutrient energy (carbohydrate 4~kcal/g, protein 4~kcal/g, fat 9~kcal/g, alcohol 7~kcal/g); portion estimation (food scales, hand-size methods, household containers); dietary guidelines (Taiwan Daily Food Guide, DRI, WHO).
+
+\begin{table}[t]
+\caption{Article Summary}
+\label{tab:summary}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}c c p{1.15cm} p{1.2cm} p{1.1cm} p{1.15cm} p{0.9cm} p{0.9cm}@{}}
+\toprule
+Ref & Year & Problem & AI Method & Domain & Dataset & Findings & Limit. \\
+\midrule
+{[1]} & 2025 & NL dietary assessment & GPT-4 + RAG & USDA & 24-h recall (1{,}200) & 82\% vs.\ dietitian & English only \\
+{[2]} & 2024 & Photo calories & EfficientNet-B4 & Food-101 portions & Food-101 (75{,}750) & Top-5 89\% & No mixed dishes \\
+{[3]} & 2025 & LLM advice & LLaMA-3 FT & Clinical guidelines & MFP logs & Wrong advice $-$43\% & No live data \\
+{[4]} & 2024 & Chat food logging & GPT-3.5 + FC & USDA & 500 chats & 3$\times$ faster & Portions imprecise \\
+{[5]} & 2025 & Taiwanese food recog. & YOLOv8 + ResNet-50 & Taiwan DB & 50k images & 76\% & Needs good photos \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Existing research has made progress on photo recognition and LLM nutrition Q\&A, but no system integrates conversational AI, a Taiwanese food database, uncertainty quantification and personal TDEE tracking. This project fills that gap.
+
+\section{Deep Research}
+
+\textbf{Energy balance.} Intake minus expenditure equals weight change. Hall et al.\ (2012, \emph{American Journal of Clinical Nutrition}) validated this model in strictly controlled metabolic-ward experiments~\cite{hall2012}.
+\textbf{Macronutrient composition.} AMDR: carbohydrate 45--65\%, protein 10--35\%, fat 20--35\%.
+\textbf{Portion uncertainty.} Self-reported intake is underestimated by 18--54\% on average~\cite{poslusna2009}.
+\textbf{Individual variation.} Glycemic responses to the same food differ up to tenfold between individuals~\cite{zeevi2015}.
+\textbf{Behavioural context.} 35\% of eating behaviour is related to emotion or environmental stress (Koenders \& van Strien, 2011).
+
+\textbf{Debate 1: calorie quality vs.\ quantity.} Ludwig et al.\ (2018, \emph{JAMA Internal Medicine}) reported metabolic advantages of low-carbohydrate diets~\cite{ludwig2018}.
+\textbf{Debate 2: AI portion accuracy.} GPT-4 reached 83\% accuracy on standard food descriptions~\cite{cheng2024}, while self-reported portions have a 50\% average error~\cite{subar2015}.
+\textbf{Debate 3: personalised vs.\ universal guidelines.} Personalised advice outperforms general advice~\cite{zeevi2015}.
+
+\section{Proposed Scheme}
+
+\subsection{System Architecture}
+(1) User scenario: text or voice through an app or web chat. (2) Input processing: Whisper speech-to-text (optional), normalisation, intent classification into \texttt{log\_food}, \texttt{query\_nutrition}, \texttt{get\_analysis} and \texttt{get\_recommendation}. (3) Planner (GPT-4o / Gemini 1.5 Pro): task decomposition, dialogue memory, tool selection and clarification. (4) Retrieval: USDA FoodData Central API (900{,}000+ items), Taiwan food composition database (6{,}000+ Taiwanese foods), a Taiwanese dish vector database and the user's history. (5) Analytics: grams $\times$ energy density, macronutrients, Mifflin--St Jeor TDEE and confidence intervals. (6) Domain knowledge: guideline rules, portion tables, safety rules ($<$1200~kcal warning) and substitutions. (7) Decision: daily summary, gap analysis, substitutions and safety alerts. (8) Output: Markdown, macro pie chart, trend line, calorie ranges.
+
+\subsection{Flowchart}
+Input $\rightarrow$ intent classifier $\rightarrow$ NER $\rightarrow$ multi-source query $\rightarrow$ ranking and confidence $\rightarrow$ [confidence $>$ 80\%? yes: calorie interval; no: clarification $\rightarrow$ re-query] $\rightarrow$ daily log $\rightarrow$ compare with TDEE $\rightarrow$ safety check [normal / alert] $\rightarrow$ output.
+
+\subsection{Pseudocode}
+\begin{figure*}[t]
+\centering
+\begin{minipage}{0.48\textwidth}
+\begin{Verbatim}[fontsize=\scriptsize,numbers=left,numbersep=4pt]
+def diet_agent(Q, P, D):
+    Q_norm = normalize_input(Q)
+    intent = classify_intent(Q_norm)
+    if intent == "log_food":
+        entities = extract_food_entities(Q_norm)
+        for food in entities:
+            cands = query_usda_api(food.name)
+            cands += query_taiwan_food_db(food.name)
+            cands += query_rag_vector_db(food.name)
+            best, conf = rank_candidates(cands, food.context)
+            if conf < 0.80:
+                q = generate_clarification_question(food, cands)
+                ans = await ask_user(q)
+                food = update_food_entity(food, ans)
+                best, conf = rank_candidates(
+                    query_all_db(food.name), food.context)
+            g = estimate_portion_grams(food.portion_desc, best)
+            kcal = g * best.kcal_per_100g / 100
+            lo, hi = compute_confidence_interval(
+                kcal, conf, food.portion_desc)
+            D.add_entry(best, g, (lo, kcal, hi), food.meal_type)
+    elif intent == "analyze":
+        total = sum(e.kcal_point for e in D.entries)
+        macro_ratio = compute_macronutrient_ratio(D)
+        bmr = calculate_bmr_mifflin(P.weight, P.height,
+                                    P.age, P.gender)
+\end{Verbatim}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+\begin{Verbatim}[fontsize=\scriptsize,numbers=left,numbersep=4pt,firstnumber=26]
+        tdee = bmr * P.activity_factor
+        gap = total - tdee
+    elif intent == "recommend":
+        rec = generate_recommendation(D, tdee, P, macro_ratio)
+    flag = safety_check(D, P)
+    if flag == "DANGER":
+        return format_response(alert=gen_alert(D, P)), D
+    return format_response(intent, D, rec), D
+
+def compute_confidence_interval(kcal, conf, portion):
+    uncertainty_ratio = 1 - conf     # 0.0 ~ 0.2
+    margin = kcal * (0.1 + uncertainty_ratio * 0.5)
+    return kcal - margin, kcal + margin
+
+def safety_check(D, P):
+    daily_total = sum(e.kcal_point for e in D.entries)
+    if daily_total < 1200:
+        return "DANGER"
+    if detect_binge_restrict_pattern(D, history_days=7):
+        return "WARNING"
+    return "OK"
+\end{Verbatim}
+\end{minipage}
+\caption{Algorithm 1: DietSense daily calorie intake agent (from the midterm proposal).}
+\label{fig:pseudo}
+\end{figure*}
+
+The core algorithm is shown in Fig.~\ref{fig:pseudo}.
+
+\section{Evaluation}
+Dataset: USDA FoodData Central (900{,}000+ items), the Taiwan food composition database and 500 annotated Taiwanese dish descriptions. Baseline: MyFitnessPal manual entry. Metrics: calorie accuracy ($\pm$10\%, $\pm$20\%), logging time, SUS and task completion. Case study: 20 users track their diet for 7 days, comparing the AI agent with a traditional app.
+
+\section{Conclusion}
+DietSense makes calorie tracking as easy as having a conversation.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

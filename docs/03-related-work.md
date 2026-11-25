@@ -63,7 +63,7 @@ NutriBench [R1]（ICLR 2025）用 11,857 筆由真實飲食調查資料產生的
 
 ### D5. 公共衛生背景
 
-WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R14]；2025 年 WHO 在 GLP-1 用藥指引中提到全球肥胖人口已超過 10 億 [R21]。台灣 2017–2020 年國民營養調查顯示，成人男性過重 30.31%、肥胖 28.12%；女性過重 22.98%、肥胖 19.57%（過重定義為 24 ≤ BMI < 27，肥胖為 BMI ≥ 27）[R15]。
+WHO 指出 2024 年全球有 26 億成人過重（占成人 45%），其中 9.4 億人肥胖 [R14]；2025 年 WHO 在 GLP-1 用藥指引中提到全球肥胖人口已超過 10 億 [R21]。台灣 2017–2020 年國民營養調查顯示，成人男性過重 30.31%、肥胖 28.12%；女性過重 22.98%、肥胖 19.57%（過重定義為 24 ≤ BMI < 27，肥胖為 BMI ≥ 27）[R15]。
 
 ---
 
@@ -128,7 +128,7 @@ WHO 指出 2022 年全球有 25 億成人過重，其中逾 8.9 億人肥胖 [R1
 | R11 | Dugas, K., Giroux, M.-A., Guerroudj, A., Leger, J., Rouhafzay, A., Rouhafzay, G., & Jbilou, J. (2026). Calorie-counting apps for monitoring and managing calorie intake in adults living with weight-related chronic diseases: Decade-long scoping review (2013–2024). *JMIR mHealth and uHealth*, 14, e64139. https://doi.org/10.2196/64139 | PMC13085986；5.4 → 1.4 天的數據已在摘要中確認 |
 | R12 | Evenepoel, C., Clevers, E., Deroover, L., Van Loo, W., et al. (2020). Accuracy of nutrient calculations using the consumer-focused online app MyFitnessPal: Validation study. *Journal of Medical Internet Research*, 22(10), e18237. https://doi.org/10.2196/18237 | PubMed |
 | R13 | Chen, J., Berkman, W., Bardouh, M., Ng, C. Y. K., & Allman-Farinelli, M. (2019). The use of a food logging app in the naturalistic setting fails to provide accurate measurements of nutrients and poses usability challenges. *Nutrition*, 57, 208–216. https://doi.org/10.1016/j.nut.2018.05.003 | PubMed 30184514；18% 與 1,863 kJ 已在摘要中確認 |
-| R14 | World Health Organization. (2025, December 8). *Obesity and overweight* [Fact sheet]. https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight | who.int |
+| R14 | World Health Organization. (2026, October 7). *Obesity and overweight* [Fact sheet]. https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight | who.int |
 | R15 | 衛生福利部國民健康署。（2022）。新聞稿附件：18 歲以上國人三高及過重肥胖盛行率（資料來源：2017–2020 年國民營養健康狀況變遷調查）。https://mohw.gov.tw/dl-80876-5cf922a3-7c1e-47b8-9e88-f66c5be96106.html | 已讀取原始附件，四個數字相符 |
 | R16 | Zeevi, D., Korem, T., Zmora, N., et al. (2015). Personalized nutrition by prediction of glycemic responses. *Cell*, 163(5), 1079–1094. https://doi.org/10.1016/j.cell.2015.11.001 | 經典文獻 |
 | R17 | Mifflin, M. D., St Jeor, S. T., Hill, L. A., Scott, B. J., et al. (1990). A new predictive equation for resting energy expenditure in healthy individuals. *American Journal of Clinical Nutrition*, 51(2), 241–247. https://doi.org/10.1093/ajcn/51.2.241 | PubMed |

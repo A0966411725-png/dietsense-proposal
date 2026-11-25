@@ -80,7 +80,7 @@ note(s, "開場：DietSense 是一個對話式的熱量攝取 Agent。這份是�
 pres.addSection({ title: "動機與問題" });
 s = content("動機與問題", "動機：問題很大，而且人們做不到持續記錄");
 const stats = [
-  ["8.9 億", "全球成人肥胖人數（2022）", "WHO 2025 [R14]"],
+  ["9.4 億", "全球成人肥胖人數（2024）", "WHO 2026 [R14]"],
   ["68%", "台灣成人每週外食 7 次以上", "國健署 106–109 年調查 [N4]"],
   ["5.4→1.4", "熱量 App 記錄天數／週（第 4→12 週）", "Dugas 2026 [R11]"],
 ];
@@ -530,7 +530,7 @@ const refs = [
   "[R6] Coburn et al. (2026). Open-KNEAD. arXiv:2607.12911.",
   "[R11] Dugas et al. (2026). JMIR mHealth uHealth, 14, e64139.",
   "[R13] Chen, J., et al. (2019). Nutrition, 57, 208–216.",
-  "[R14] WHO (2025). Obesity and overweight fact sheet.",
+  "[R14] WHO (2026). Obesity and overweight fact sheet.",
   "[R15] 國健署：2017–2020 國民營養調查新聞稿附件",
   "[R17] Mifflin et al. (1990). Am J Clin Nutr, 51(2), 241–247.",
   "[R19] Poslusna et al. (2009). Br J Nutr, 101(S2), S73–S85.",
