@@ -10,7 +10,7 @@
 |---------|---------|------|
 | 1. overleaf draft for IEEE conference | IEEEtran conference 格式的 LaTeX 專案，附 Overleaf 上傳用 zip；本機以 Tectonic 編譯驗證，沒有錯誤或未定義的引用 | [paper/](paper/) |
 | 一壞一好兩份 PDF | **v1 初稿**：期中稿原樣排成 IEEE 格式（3 頁，錯誤刻意保留）；**v2 修正稿**：依審稿報告修正（5 頁） | [v1](paper/pdf/DietSense_IEEE_v1_draft.pdf)、[v2](paper/pdf/DietSense_IEEE_v2_revised.pdf) |
-| 打造 agent、找出錯誤 | 審稿 agent `ieee-paper-reviewer` 依六類檢查清單審查 v1，找到 48 處問題（Critical 5、Major 33、Minor 10），v2 修正全部 Critical 與 Major | [.claude/agents/ieee-paper-reviewer.md](.claude/agents/ieee-paper-reviewer.md)、[paper/review/review-report.md](paper/review/review-report.md) |
+| 打造 agent、找出錯誤 | 審稿 agent `ieee-paper-reviewer` 依六類檢查清單審查 v1，找到 48 處問題（Critical 5、Major 33、Minor 10），v2 全部處理；作者另外逐句自查 v2，再修正 11 項 | [.claude/agents/ieee-paper-reviewer.md](.claude/agents/ieee-paper-reviewer.md)、[paper/review/review-report.md](paper/review/review-report.md) |
 | 確認 A–F | v2 摘要為單一段落 250 字，依 Attention → But → Cure → Development → Experiments → Findings 排列 | [paper/v2-revised/main.tex](paper/v2-revised/main.tex) |
 | 2. openspec on github | 變更 `add-ieee-conference-paper`（proposal、2 份規格、design、tasks）完成後已封存，規格合併到 `openspec/specs/` | [openspec/specs/](openspec/specs/)、[openspec/changes/archive/](openspec/changes/archive/) |
 

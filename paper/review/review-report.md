@@ -3,10 +3,10 @@
 | 項目 | 內容 |
 |------|------|
 | 審查者 | ieee-paper-reviewer agent（`.claude/agents/ieee-paper-reviewer.md`） |
-| 審查對象 | `paper/v1-draft/main.tex`、`paper/v1-draft/references.bib`；版面以 `paper/pdf/build-v1/main.pdf`（3 頁）核對 |
+| 審查對象 | `paper/v1-draft/main.tex`、`paper/v1-draft/references.bib`；版面以 `paper/pdf/DietSense_IEEE_v1_draft.pdf`（3 頁）核對 |
 | 審查日期 | 2026-11-25 |
 | 依據（權威順序） | ① `openspec/changes/add-dietsense-agent/design.md` 與 `specs/`；② `docs/03-related-work.md`（R1–R29、引用修正表）、`docs/04-perplexity-research.md`（N1–N6）、`docs/06-deep-research.md`；③ 網路原始來源：Crossref API、PubMed E-utilities、WHO 官網、衛福部新聞稿（經搜尋）、USDA FoodData Central 公開 API |
-| 說明 | 本稿刻意保留期中 Proposal 的原文，報告只指出錯誤與修正方向，不改寫論文。編譯紀錄中的 XeTeX 字型警告（`TU/ptm` undefined）是本機編譯工具造成的，不列為論文問題。Fig. 1 的行號以 PDF 上印出的號碼為準（第一欄 1–26、第二欄從 26 重新起算）。 |
+| 說明 | 本稿刻意保留期中 Proposal 的原文，報告只指出錯誤與修正方向，不改寫論文。編譯紀錄中的 XeTeX 字型警告（`TU/ptm` undefined）是本機編譯工具造成的，不列為論文問題。Fig. 1 的行號以 PDF 上印出的號碼為準（第一欄 1–26、第二欄從 26 重新起算）。審查後，v1 開頭加入 11 行字型設定（只讓本機編譯改用 Times 類字型，不改任何內容，字型警告也因此消除），本報告引用的 main.tex 行號已同步調整；Fig. 1 的行號不受影響。 |
 
 ---
 
@@ -47,7 +47,7 @@
 
 | ID | 類別 | 嚴重度 | 位置 | 問題 | 證據 | 建議修正 | v2 處理 |
 |----|------|--------|------|------|------|---------|---------|
-| E01 | 1 A–F 摘要 | Minor | Abstract（main.tex 第 27–32 行） | 摘要裡直接寫出「A. Attention Getter.」「B. But.」等課堂標籤，還放了引用 `[1]`；C 只有一句系統名稱，沒有說明方法；D、E 是名詞清單，不是完整句子。字數約 240–245 字（含標籤），落在 150–250 字內，但已接近上限。 | IEEE 摘要要求單段、自足、不含引用；A–F 應該是內容順序，不是印出來的標題。PDF 第 1 頁可以看到標籤和 `[1]` 印在摘要裡。 | 刪除 A–F 標籤與引用，改成依 A→F 順序連貫的完整句子；C 用一句話說明「LLM 只負責理解、數值錨定到資料庫並附區間」。 | 已修正：Abstract 改為單一段落 250 字，依 A→F 順序，無標籤與引用 |
+| E01 | 1 A–F 摘要 | Minor | Abstract（main.tex 第 38–43 行） | 摘要裡直接寫出「A. Attention Getter.」「B. But.」等課堂標籤，還放了引用 `[1]`；C 只有一句系統名稱，沒有說明方法；D、E 是名詞清單，不是完整句子。字數約 240–245 字（含標籤），落在 150–250 字內，但已接近上限。 | IEEE 摘要要求單段、自足、不含引用；A–F 應該是內容順序，不是印出來的標題。PDF 第 1 頁可以看到標籤和 `[1]` 印在摘要裡。 | 刪除 A–F 標籤與引用，改成依 A→F 順序連貫的完整句子；C 用一句話說明「LLM 只負責理解、數值錨定到資料庫並附區間」。 | 已修正：Abstract 改為單一段落 250 字，依 A→F 順序，無標籤與引用 |
 | E02 | 1 A–F 摘要 | Minor | 摘要之後 | 沒有 Index Terms。 | main.tex 中找不到 `IEEEkeywords` 環境；PDF 第 1 頁摘要後直接進入 I. Introduction。 | 在摘要後加上 `\begin{IEEEkeywords}`，關鍵詞依字母排序（例如 Calorie estimation, Conversational agent, Dietary assessment, Large language models, Retrieval-augmented generation, Uncertainty quantification）。 | 已修正：加入 Index Terms（6 個，依字母排序） |
 | E03 | 2 引用 | Critical | Abstract A；references.bib `teixeira2025` | 摘要的核心論點「持續記錄者達成目標的機率是 2 倍」引用 Teixeira et al. 2025, *Obesity Reviews* 26(1) e13450，但這篇不存在。 | Crossref `10.1111/obr.13450` 實際是 Martínez-Montoro et al., “Obesity-related glomerulopathy: Current approaches and future perspectives,” *Obesity Reviews* 23(7), 2022。以 Crossref 搜尋 Obesity Reviews 2025 年的 self-monitoring meta-analysis 也找不到 Teixeira 為作者的文章。docs/03 引用修正表也記錄「查不到此篇」。 | 刪除此引用與「2 倍」的說法；改用 Burke et al. 2011 [R24]（自我記錄與減重一致相關，但證據等級偏弱）與 Dugas et al. 2026 [R11]。 | 已移除：改引 Burke 2011 [burke2011] 與 Dugas 2026 [dugas2026]（I 節第 2 段） |
 | E04 | 2 引用 | Major | I-C Problem「85% of users give up within 30 days [2]」；bib `helander2014` | 書目存在，但內容不支持引用的數字。 | PubMed 25397613（Helander et al., *PLoS ONE* 9(11) e113164, 2014）摘要：研究 40 人、2,838 筆**自我量體重**紀錄，發現中斷超過一個月與體重增加有關。摘要中沒有飲食 App 放棄率，也沒有 85% 或 30 天。docs/03 修正表結論相同。 | 改用 [R11]：MyFitnessPal 記錄頻率在第 4–12 週由每週 5.4 天降到 1.4 天；若保留 Helander，只能用來說明「記錄中斷與體重回升有關」。 | 已修正：改用 Dugas 2026 的 5.4→1.4 天／週（I 節第 2 段） |
@@ -92,9 +92,9 @@
 | E43 | 5 宣稱 | Major | V Evaluation；Abstract E；I-F (3) | 評估設計和 spec 不一致：基準只有 MyFitnessPal；沒有 MAE、MAPE、區間 coverage 與寬度、安全攔截率與誤報率；把 USDA 資料庫當成「評估資料集」。Contributions 宣稱評估框架涵蓋 safety，但評估章節完全沒有安全指標。 | `specs/agent-evaluation`：基準必須包括純 LLM（Base 與 CoT 兩種提示）與資料庫手動查詢；要回報 MAE、MAPE、±10%／±20%、coverage 與平均寬度、高誤差類別分項結果、≥ 30 筆安全測試的攔截率與誤報率；統計用 McNemar 與成對 bootstrap 95% CI。design.md Evaluation Protocol：20 人 × 7 天、受試者內交叉設計、使用順序平衡，並排除未成年人、孕婦與有飲食失調病史者。 | 以 design.md 的 Evaluation Protocol 重寫第 V 節；評估資料集只寫 500 筆標註集（含類別分布與三層參考值驗證）。 | 已修正：IV 節依 design.md 重寫（兩種基準、MAE／MAPE／命中率、coverage 與寬度、成對統計、安全測試） |
 | E44 | 5 宣稱 | Minor | I-B「Calorie tracking is a scientifically validated weight-management method」；II「LLM + RAG … reduces hallucination」 | 沒有引用的概括說法，而且比現有證據更強。 | [R24] Burke 2011：自我記錄與減重一致相關，但「證據等級偏弱」；[R1] NutriBench：RAG 不一定提升準確率。 | 加上引用並把語氣調弱，例如「self-monitoring is consistently associated with weight loss, although evidence quality is limited [R24]」。 | 已修正：改為「系統性回顧發現自我記錄與減重一致相關」並引用 [burke2011] |
 | E45 | 6 格式 | Minor | 全文章節結構 | 章節標題沿用課堂範本（「Attention Getter」「Deep Research」等）；沒有 Results、Discussion、Limitations；Conclusion 只有一句口號。 | PDF 第 1–2 頁的章節為 I. Introduction（A–F 子節）、II. Related Work、III. Deep Research、IV. Proposed Scheme、V. Evaluation、VI. Conclusion。 | 改用 IEEE 常見的結構：Introduction → Related Work → System Design → Evaluation Plan → Limitations → Conclusion；把 Deep Research 的內容併入 Background 或 Related Work。 | 已修正：章節改為 Introduction → Related Work → Proposed System → Evaluation Plan → Feasibility and Limitations → Conclusion |
-| E46 | 6 格式 | Minor | Table I | 表格太擠：編譯時有 4 個 Overfull hbox；PDF 上「Findings」和「Limit.」兩個欄名擠在一起（「FindingsLimit.」），內文字也被斷成很多行。 | main.log 第 498、543、628、638 行有 Overfull \hbox（2.8–10.0 pt）；PDF 第 2 頁。 | 改成跨欄的 `table*`，或刪減欄位、使用縮寫並加上表註。 | 已修正：Table I 改為跨欄 table*，欄位靠左對齊，編譯無 Overfull |
+| E46 | 6 格式 | Minor | Table I | 表格太擠：審查時的本機編譯有 4 個 Overfull hbox；PDF 上「Findings」和「Limit.」兩個欄名擠在一起（「FindingsLimit.」），內文字也被斷成很多行。 | 審查時的 main.log 有 4 個 Overfull \hbox（2.8–10.0 pt）；加入字型設定後本機與 Overleaf 各剩 1 個（Table I），「FindingsLimit.」仍擠在一起；PDF 第 2 頁。 | 改成跨欄的 `table*`，或刪減欄位、使用縮寫並加上表註。 | 已修正：Table I 改為跨欄 table*，欄位靠左對齊，編譯無 Overfull |
 | E47 | 6 格式 | Minor | Fig. 1 | 偽代碼用 `figure*` + Verbatim 呈現，標題卻寫「Algorithm 1」，混用了 Figure 與 Algorithm 兩種編號；這個 float 被排到參考文獻之後（第 3 頁），在正文中只被提到一次。 | PDF 第 3 頁只有 Fig. 1，參考文獻在第 2 頁就結束了。 | 改用 `algorithm` + `algorithmic` 環境（標題寫 Algorithm 1），放在 System Design 小節附近；標題用一句話說明重點。 | 已修正：改用 algorithm 環境，標題為 Algorithm 1，放在 III-E |
-| E48 | 6 格式 | Minor | 作者區塊 | 作者區塊只有校名與城市，沒有系所與 email。頁數為 3 頁，沒有超過 6 頁上限；IEEEtran conference class 使用正確。 | main.tex 第 20–22 行。IEEE 會議範本的作者區塊通常包含系所、學校、城市、國家與 email。 | 補上系所與 email。 | 已修正：作者區塊加上 Department of Electrical Engineering；email 依作者意願不列 |
+| E48 | 6 格式 | Minor | 作者區塊 | 作者區塊只有校名與城市，沒有系所與 email。頁數為 3 頁，沒有超過 6 頁上限；IEEEtran conference class 使用正確。 | main.tex 第 31–33 行。IEEE 會議範本的作者區塊通常包含系所、學校、城市、國家與 email。 | 補上系所與 email。 | 已修正：作者區塊加上 Department of Electrical Engineering；email 依作者意願不列 |
 
 ---
 
@@ -141,3 +141,24 @@
 - Minor 10 件：全部已修正（E48 加上系所；email 依作者意願不列）。
 - 修正稿：`paper/v2-revised/`；PDF：`paper/pdf/DietSense_IEEE_v2_revised.pdf`（5 頁，編譯沒有錯誤或未定義的引用）。
 - 審查期間另外發現：WHO 肥胖 fact sheet 於 2026-10-07 更新為 2024 年資料（26 億成人過重、9.4 億肥胖），v2 與 repo 的 docs 已全部改用新數字。
+
+## 五、作者第二次自查（2026-11-25）
+
+審稿 agent 只審 v1。v2 完成後，作者再逐句核對 v2 與原始來源，另外修正了下列問題（這些不在上面 48 項之內）：
+
+| # | 位置 | 問題 | 修正 |
+|---|------|------|------|
+| S1 | Abstract、I 節、Table I | 「5.4 → 1.4 天／週」寫成所有熱量 App 的數據 | PubMed 原文（PMID 41329042）是 MyFitnessPal 的數據，改為 MyFitnessPal |
+| S2 | I 節、參考文獻 [10] | N2 的 BibTeX 標題是自己擬的，不是原始標題 | 改引可查證的 ScienceDaily 新聞稿（American Society for Nutrition, 2026-07-26），註明研究者 A. Hengist、O. Charles 與初步結果；正文改寫為原文的「約 250–345 kcal、脂肪約 30 g」 |
+| S3 | I 節 | Bilen 2026 寫成「青少年研究」 | 原文是 4 位虛構個案、5 個 AI 聊天機器人，改寫為 case study |
+| S4 | II-A | DiningBench 寫成「在 2,086 道中式料理上 MAPE 24.45%」 | 24.45% 是整個 3,021 道菜 benchmark 的結果，改寫 |
+| S5 | III-C、Algorithm 1 | 符號衝突：H 同時是每日半寬、身高、7 日歷史；e 同時是食物項目與熱量密度 | 每日半寬改為 Δ，熱量密度改為 ρ，BMR 改用 weight、height、age |
+| S6 | 全文 | TFDA、USDA、BMR、TDEE、MAE、ICC、RAG、MLLM 沒有定義 | 第一次出現時寫出全名 |
+| S7 | III-E | 會議論文正文出現 “midterm design” | 改為說明演算法本身的安全設計 |
+| S8 | III-F | 範例的 340、160、250 沒有標明成分 | 標明麵、牛肉、半碗湯，並說明每日區間含早餐 |
+| S9 | 全文 | 英式與美式拼字混用 | 統一為美式（IEEE 規定） |
+| S10 | 參考文獻 | `chen2025` 作者欄的 `others` 放在中間；DOI 沒有印出；網站缺少存取日期；國健署成果報告的出版年沒有註明依據 | 修正作者欄；15 筆期刊文獻印出 DOI；網站加上 [Online]、存取日期；成果報告註明「封面無出版日期，檔案日期 2022 年 5 月」 |
+| S11 | 引用核對 | 國健署成果報告的 68.0% 外食比例 | 重讀原始 PDF 表 3.9.1（n = 9,954）：34.8 + 27.2 + 6.0 = 68.0%，相符 |
+
+v2 修正後重新編譯：5 頁，30 筆文獻全部被引用，沒有錯誤或未定義的引用。
+

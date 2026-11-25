@@ -9,7 +9,7 @@ Problem → Requirements → Architecture → Components → Data → AI/Analyti
 
 ## 1. Problem
 
-飲食自我記錄是行為體重管理的核心策略，系統性回顧一致發現它和減重顯著相關（Burke et al., 2011），但使用者很快就放棄：熱量 App 的記錄頻率在第 4 到第 12 週之間，從每週約 5.4 天降到 1.4 天（JMIR mHealth uHealth, 2026, scoping review）。放棄的原因是記錄太費力：要搜尋品項、估計份量、手動拆解複合料理，而且資料庫幾乎沒有台灣小吃。另一方面，直接問 LLM 也不可靠：GPT-4o 從照片估熱量的 MAPE 約 36%（Fridolfsson et al., 2025），而且數字無法追溯來源。DietSense 要在「好用」與「有依據」之間取得平衡。
+飲食自我記錄是行為體重管理的核心策略，系統性回顧一致發現它和減重顯著相關（Burke et al., 2011），但使用者很快就放棄：MyFitnessPal 的記錄頻率在第 4 到第 12 週之間，從每週約 5.4 天降到 1.4 天（JMIR mHealth uHealth, 2026, scoping review）。放棄的原因是記錄太費力：要搜尋品項、估計份量、手動拆解複合料理，而且資料庫幾乎沒有台灣小吃。另一方面，直接問 LLM 也不可靠：GPT-4o 從照片估熱量的 MAPE 約 36%（Fridolfsson et al., 2025），而且數字無法追溯來源。DietSense 要在「好用」與「有依據」之間取得平衡。
 
 ## 2. Requirements
 

@@ -10,13 +10,13 @@
 
 ### 中文摘要（約 300 字）
 
-台灣成人有 68% 每週外食 7 次以上，飲食記錄與減重顯著相關，但熱量 App 的記錄頻率在 12 週內由每週 5.4 天降至 1.4 天；拍照 App 與大型語言模型雖然方便，照片估熱量誤差約 36%，珍珠奶茶甚至低估達 76%，數值也無法追溯來源。本專題提出 DietSense 對話式熱量攝取 Domain AI Agent：使用者用一句中文描述飲食，LLM 只負責理解與規劃，營養數值錨定於食藥署資料庫、自建台式料理庫與 USDA FoodData Central，再以份量對照表與 Mifflin-St Jeor 公式計算並附上來源；熱量以區間呈現，信心不足時最多追問一次，並依性別安全下限防止過度節食。評估將以 500 筆台式料理標註集比較純 LLM 與手動查詢，並進行 20 人 7 天使用者研究；預期準確度優於純 LLM、記錄時間較短、SUS 高於 70，以上皆為預期目標，不是實驗結果。
+台灣成人有 68% 每週外食 7 次以上，飲食記錄與減重顯著相關，但 MyFitnessPal 的記錄頻率在 12 週內由每週 5.4 天降至 1.4 天；拍照 App 與大型語言模型雖然方便，照片估熱量誤差約 36%，珍珠奶茶甚至低估達 76%，數值也無法追溯來源。本專題提出 DietSense 對話式熱量攝取 Domain AI Agent：使用者用一句中文描述飲食，LLM 只負責理解與規劃，營養數值錨定於食藥署資料庫、自建台式料理庫與 USDA FoodData Central，再以份量對照表與 Mifflin-St Jeor 公式計算並附上來源；熱量以區間呈現，信心不足時最多追問一次，並依性別安全下限防止過度節食。評估將以 500 筆台式料理標註集比較純 LLM 與手動查詢，並進行 20 人 7 天使用者研究；預期準確度優於純 LLM、記錄時間較短、SUS 高於 70，以上皆為預期目標，不是實驗結果。
 
 ### English Abstract（IEEE Transactions style）
 
 **Title—** DietSense: A Data-Grounded Conversational AI Agent With Uncertainty Intervals and Safety Guards for Calorie Intake Logging in Taiwan
 
-**Abstract—** Dietary self-monitoring is associated with weight loss, yet adherence declines quickly: in calorie-counting apps, logging frequency falls from 5.4 to 1.4 days per week within 12 weeks. Photo-based apps and large language models (LLMs) reduce the logging burden but remain unreliable for mixed dishes, with a mean absolute percentage error of about 36% for GPT-4o on meal photographs and underestimation of up to 76% for bubble milk tea, and their values are untraceable. This paper proposes DietSense, a conversational domain AI agent for calorie intake logging in Taiwan. An LLM planner performs only intent classification, food extraction, and tool orchestration. All nutrient values are retrieved from the Taiwan Food and Drug Administration food composition database, a curated Taiwanese dish database, and USDA FoodData Central, and are computed deterministically with portion conversion tables and the Mifflin–St Jeor equation. Each estimate is a low–point–high interval that widens as retrieval confidence decreases or portion descriptions become vaguer, and the agent asks at most one clarification question per food item. A rule-based safety guard evaluates intake over completed days or seven-day averages against sex-specific minimums and declines very-low-calorie plan requests. The evaluation plan comprises a 500-item annotated benchmark of Taiwanese dishes, comparisons with direct LLM estimation and manual database lookup, interval coverage analysis, a seven-day crossover user study with 20 participants, and a safety test suite. Expected outcomes, to be verified experimentally, include higher ±20% accuracy than direct LLM estimation, shorter logging time than manual lookup, and a System Usability Scale score above 70.
+**Abstract—** Dietary self-monitoring is associated with weight loss, yet adherence declines quickly: among MyFitnessPal users, logging frequency falls from 5.4 to 1.4 days per week within 12 weeks. Photo-based apps and large language models (LLMs) reduce the logging burden but remain unreliable for mixed dishes, with a mean absolute percentage error of about 36% for GPT-4o on meal photographs and underestimation of up to 76% for bubble milk tea, and their values are untraceable. This paper proposes DietSense, a conversational domain AI agent for calorie intake logging in Taiwan. An LLM planner performs only intent classification, food extraction, and tool orchestration. All nutrient values are retrieved from the Taiwan Food and Drug Administration food composition database, a curated Taiwanese dish database, and USDA FoodData Central, and are computed deterministically with portion conversion tables and the Mifflin–St Jeor equation. Each estimate is a low–point–high interval that widens as retrieval confidence decreases or portion descriptions become vaguer, and the agent asks at most one clarification question per food item. A rule-based safety guard evaluates intake over completed days or seven-day averages against sex-specific minimums and declines very-low-calorie plan requests. The evaluation plan comprises a 500-item annotated benchmark of Taiwanese dishes, comparisons with direct LLM estimation and manual database lookup, interval coverage analysis, a seven-day crossover user study with 20 participants, and a safety test suite. Expected outcomes, to be verified experimentally, include higher ±20% accuracy than direct LLM estimation, shorter logging time than manual lookup, and a System Usability Scale score above 70.
 
 **Index Terms—** Calorie estimation, conversational agents, dietary assessment, large language models, retrieval-augmented generation, uncertainty quantification.
 
@@ -25,7 +25,7 @@
 | 段落 | 內容 | 用到的核心 / 取捨 / 細節 |
 |------|------|-----------------------|
 | **A. Attention** | WHO：2024 年全球 26 億成人過重（45%），其中 9.4 億人肥胖 [R14]；台灣 2017–2020 成人過重加肥胖，男性約 58%、女性約 43% [R15]；成人 68% 平均每天至少外食一餐（19–44 歲達 84%）[N4]；拍照記熱量 App Cal AI 兩年安裝逾 1,500 萬、被 MyFitnessPal 收購 [N3] | C1 |
-| **B. But** | App 記錄頻率在 12 週內大幅下降 [R11]；MyFitnessPal 使用者漏記約 18% 的品項 [R13]；GPT-4o 照片估熱量 MAPE 約 36% [R3]；四個熱門拍照 App 每餐少算 250–345 kcal（NUTRITION 2026，初步結果）[N2]；AI App 把珍珠奶茶的熱量低估最多 76% [N1]；中式料理 benchmark 的最佳模型 MAPE 仍有 24% [R5] | C1、C2 |
+| **B. But** | MyFitnessPal 的記錄頻率在 12 週內大幅下降 [R11]；MyFitnessPal 使用者漏記約 18% 的品項 [R13]；GPT-4o 照片估熱量 MAPE 約 36% [R3]；四個熱門拍照 App 每餐少算 250–345 kcal（NUTRITION 2026，初步結果）[N2]；AI App 把珍珠奶茶的熱量低估最多 76% [N1]；中式料理 benchmark 的最佳模型 MAPE 仍有 24% [R5] | C1、C2 |
 | **C. Cure** | 提出 DietSense 對話式熱量攝取 Domain AI Agent：讓使用者用語言補充照片看不到的資訊（油、湯、份量） | C3 |
 | **D. Development** | LLM function calling Planner + 台灣優先的多來源 RAG + 份量對照表 + Mifflin-St Jeor + 區間量化 + 安全守門；完整設計見 design.md | C3–C5、T1–T3、細節 1–9 |
 | **E. Experiments** | 500 筆標註集（必含珍奶、湯麵、燴飯等高誤差類別，並分類別回報誤差）、兩種基準、六類指標、20 人 7 天研究、30+ 筆安全測試 | 細節 10 |
@@ -57,7 +57,7 @@
 3. **複合料理**：一碗牛肉麵包含麵、湯、肉、蛋，需要拆解。
 4. **在地資料不足**：台灣小吃與熟食在常用資料庫中覆蓋不足 [R22][R23]。
 
-證據顯示這些障礙會直接造成放棄：熱量 App 的記錄頻率在第 4 到 12 週間，由每週約 5.4 天降到 1.4 天 [R11]；即使有記錄，使用者也平均漏記約 18% 的品項，而且能量明顯被低估 [R13]。改用拍照也沒有解決問題：AI App 對混合料理特別不準，把珍珠奶茶的熱量低估最多 76% [N1]；美國 NIDDK 團隊在 2026 年的初步結果也顯示，四個熱門拍照 App 平均每餐少算 250–345 kcal，主要是看不到油脂 [N2]。
+證據顯示這些障礙會直接造成放棄：MyFitnessPal 的記錄頻率在第 4 到 12 週間，由每週約 5.4 天降到 1.4 天 [R11]；即使有記錄，使用者也平均漏記約 18% 的品項，而且能量明顯被低估 [R13]。改用拍照也沒有解決問題：AI App 對混合料理特別不準，把珍珠奶茶的熱量低估最多 76% [N1]；美國 NIDDK 團隊在 2026 年的初步結果也顯示，四個熱門拍照 App 平均每餐少算 250–345 kcal，主要是看不到油脂 [N2]。
 
 ### D. Existing Limitations（A2Z：I. In literature → J. Judgement）
 
@@ -287,7 +287,7 @@ WHO 指出 2024 年全球有 26 億成人過重（占成人 45%），其中 9.4 
 
 | # | 核心 | 一句話說明 | 落在哪一段 |
 |---|------|-----------|-----------|
-| C1 | **問題：記錄太累，所以沒人持續記錄** | 飲食自我記錄有效，但 App 使用率在 12 週內從每週約 5.4 天降到 1.4 天 [R11] | A、B |
+| C1 | **問題：記錄太累，所以沒人持續記錄** | 飲食自我記錄有效，但 MyFitnessPal 的記錄頻率在第 4 到 12 週間從每週約 5.4 天降到 1.4 天 [R11] | A、B |
 | C2 | **缺口：好用的不準，準的不好用** | 手動 App 準但耗時、資料庫有使用者自建的錯誤 [R12][R13]；純 LLM 好用但熱量 MAPE 約 36% 且無來源 [R3] | B |
 | C3 | **解法：LLM 只理解語言，數字交給資料庫與公式** | DietSense = 對話式 Planner + 台灣優先的多來源營養資料錨定 + 確定性計算 | C、D |
 | C4 | **誠實：以區間取代單一數字** | 每筆熱量輸出 low / point / high，並附上來源；信心不足時最多追問一次 | D、F |
@@ -649,7 +649,7 @@ Proposal 階段沒有實驗結果。以下是**預期目標**，W6–W7 完成�
 | 編號 | 來源 | 等級 |
 |------|------|------|
 | N1 | Li, X., Yin, A., Choi, H. Y., Chan, V., Allman-Farinelli, M., & Chen, J. (2024). Evaluating the quality and comparative validity of manual food logging and artificial intelligence-enabled food image recognition in apps for nutrition care. *Nutrients*, 16(15), 2573. https://doi.org/10.3390/nu16152573 ；雪梨大學新聞稿（2024-08-29） | 期刊論文（Crossref 已確認） |
-| N2 | Hengist, A., et al. (2026). 拍照熱量 App 準確度研究，發表於 American Society for Nutrition 年會 NUTRITION 2026；ScienceDaily（2026-07-26）、Newsweek、HealthDay（2026-07-27）報導 | 研討會摘要，尚未經完整同儕審查；第一作者以正式摘要為準 |
+| N2 | A. Hengist 與 O. Charles（NIDDK）的拍照熱量 App 準確度研究，由 O. Charles 於 NUTRITION 2026（American Society for Nutrition 年會，2026-07-25）口頭發表。新聞稿：American Society for Nutrition. (2026, July 26). *Your AI calorie-tracking app may be off by 345 calories*. ScienceDaily. https://sciencedaily.com/releases/2026/07/260726015237.htm ；Newsweek、HealthDay（2026-07-27）亦有報導 | 研討會摘要，尚未經同儕審查（新聞稿明確註明為初步結果）；作者順序以正式摘要為準 |
 | N3 | Bort, J. (2026, March 2). MyFitnessPal has acquired Cal AI, the viral calorie app built by teens. *TechCrunch*. https://techcrunch.com/2026/03/02/myfitnesspal-has-acquired-cal-ai-the-viral-calorie-app-built-by-teens | 科技媒體；營收與下載數由 MyFitnessPal 提供 |
 | N4 | 潘文涵（計畫主持人）。國民營養健康狀況變遷調查（106–109 年）成果報告。衛生福利部國民健康署委託研究計畫。第三章第九節「國人外食情形」，表 3.9.1，頁 162–163。https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=dbeb2e2da047472f9a8dd816d0b021ac | 官方報告（已讀取原始 PDF；68.0% = 34.8 + 27.2 + 6.0） |
 | N5 | Bilen, A. B., Kalkan, G. E., & Yılmaz Önal, H. Y. (2026). Artificial intelligence diet plans underestimate nutrient intake compared to dietitians in adolescents. *Frontiers in Nutrition*, 13, 1765598. https://doi.org/10.3389/fnut.2026.1765598 | 期刊論文（Crossref 已確認） |

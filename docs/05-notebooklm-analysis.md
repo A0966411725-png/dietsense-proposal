@@ -38,7 +38,7 @@
 | 字母 | A2Z 定義 | DietSense 重構後內容 | 文件位置 |
 |------|---------|--------------------|---------|
 | **A** | Attention Getter | WHO 2024 年 9.4 億成人肥胖 [R14]；台灣男性過重 + 肥胖 58.4%、女性 42.6% [R15]；成人 68% 每天至少外食一餐 [N4] | 01、02-A |
-| **B** | But | App 持續度 5.4 → 1.4 天／週 [R11]；漏記 18% [R13]；拍照 App 每餐少算 250–345 kcal [N2]；珍奶低估 76% [N1] | 01、02-C |
+| **B** | But | MyFitnessPal 持續度 5.4 → 1.4 天／週 [R11]；漏記 18% [R13]；拍照 App 每餐少算 250–345 kcal [N2]；珍奶低估 76% [N1] | 01、02-C |
 | **C** | Cure | DietSense 對話式熱量攝取 Domain AI Agent | 01、proposal |
 | **D** | Development | LLM Planner + 台灣優先 RAG + 份量表 + Mifflin-St Jeor + 區間 + 安全守門 | 01、design |
 | **E** | Experiments | 500 筆標註集（高誤差類別各 ≥ 30 筆）、純 LLM 與手動查詢兩種基準、20 人 7 天 | 01、agent-evaluation spec |

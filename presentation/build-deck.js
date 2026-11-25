@@ -82,7 +82,7 @@ s = content("動機與問題", "動機：問題很大，而且人們做不到持
 const stats = [
   ["9.4 億", "全球成人肥胖人數（2024）", "WHO 2026 [R14]"],
   ["68%", "台灣成人每週外食 7 次以上", "國健署 106–109 年調查 [N4]"],
-  ["5.4→1.4", "熱量 App 記錄天數／週（第 4→12 週）", "Dugas 2026 [R11]"],
+  ["5.4→1.4", "MyFitnessPal 記錄天數／週（第 4→12 週）", "Dugas 2026 [R11]"],
 ];
 stats.forEach(([v, l, src], i) => {
   const x = MX + i * 4.1;
@@ -134,7 +134,7 @@ s = content("動機與問題", "問題：四個障礙讓人放棄記錄");
 });
 txt(s, [
   { text: "後果：", options: { bold: true, color: C.accent4 } },
-  { text: "使用者平均漏記 18% 的品項，能量明顯低估 [R13]；記錄頻率 12 週內崩落 [R11]。" },
+  { text: "使用者平均漏記 18% 的品項，能量明顯低估 [R13]；MyFitnessPal 的記錄頻率 12 週內崩落 [R11]。" },
 ], { x: MX, y: 5.2, w: W - 2 * MX, h: 0.6, fontSize: 16 });
 note(s, "Problem 段落：四個障礙與後果。");
 
@@ -161,7 +161,7 @@ card(s, 8.3, 1.5, 4.4, 5.0);
 txt(s, [
   { text: "讀圖重點", options: { bold: true, fontSize: 18, color: C.text2, breakLine: true } },
   { text: "Fridolfsson 2025：52 張標準化照片 [R3]", options: { breakLine: true } },
-  { text: "DiningBench 2026：2,086 道中式料理 [R5]", options: { breakLine: true } },
+  { text: "DiningBench 2026：3,021 道菜，中式 2,086 道 [R5]", options: { breakLine: true } },
   { text: "最好的模型仍有約四分之一的誤差", options: { bold: true, color: C.accent2, breakLine: true } },
   { text: "誤差集中在份量、看不見的油脂與混合料理 → DietSense 讓使用者用語言補充" },
 ], { x: 8.55, y: 1.75, w: 3.95, h: 4.6, fontSize: 15, paraSpaceAfter: 10 });

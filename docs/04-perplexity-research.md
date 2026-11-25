@@ -18,7 +18,7 @@
 |---|------|------------------------|---------|
 | I-1 | 雪梨大學評估 18 個飲食 App（從 800 個中篩選）：AI 影像辨識把**越南牛肉河粉**的熱量高估 49%，把**珍珠奶茶**低估最多 76%；作者指出 App 對混合料理特別不準，而這正是多數亞洲料理的型態 [N1] | 珍奶、湯麵、燴飯是台灣日常飲食，現有 App 在這裡誤差最大，也是 DietSense 要補的地方 | 期刊論文 |
 | I-2 | 美國 NIDDK 研究團隊在 NUTRITION 2026 發表：在代謝廚房秤重到 0.1 公克的 102 份餐點上，MyFitnessPal、Lose It!、Cal AI、Appediet 四個拍照 App **平均每餐少算 250–345 kcal、脂肪少算約 30 公克**，大約低估三分之一 [N2] | 「拍照就好」並不等於準；看不見的油脂與份量是主要誤差。DietSense 選擇讓使用者用語言補充（「湯喝一半」、「多加辣油」） | 研討會摘要（尚未經完整同儕審查）＋新聞 |
-| I-3 | 中式料理 benchmark DiningBench（ACL 2026）收錄 2,086 道中式料理，表現最好的模型營養估算 MAPE 仍有 24.45% [R5] | 即使是最新的模型，中式料理也還沒有被解決 | 頂會論文 |
+| I-3 | 飲食領域 benchmark DiningBench（ACL 2026）收錄 3,021 道菜，其中 2,086 道為中式料理；表現最好的模型營養估算 MAPE 仍有 24.45% [R5] | 即使是最新的模型，中式料理也還沒有被解決 | 頂會論文 |
 
 ## 二、Innovation：為什麼現在做、新在哪裡
 
@@ -36,7 +36,7 @@
 | P-1 | WHO：2024 年全球 26 億成人過重（占成人 45%），其中 9.4 億人肥胖；肥胖盛行率 1990–2024 年間增加超過一倍 [R14]；2025 年 12 月 WHO 發布首份 GLP-1 用藥指引，指出全球肥胖人口已超過 10 億 [R21] | 官方 |
 | P-2 | 台灣 2017–2020 年國民營養調查：成人男性過重 30.31%、肥胖 28.12%；女性過重 22.98%、肥胖 19.57% [R15] | 官方（已讀取原始附件） |
 | P-3 | 國民營養健康狀況變遷調查（106–109 年）成果報告表 3.9.1（n = 9,954）：19 歲以上成人有 **68.0%** 每週外食 7 次以上（平均每天至少一餐），只有 11.4% 完全不外食；19–44 歲成人每週外食 7 次以上達 **83.7%** [N4] | 官方報告（已讀取原始 PDF） |
-| P-4 | 熱量 App 的記錄頻率在第 4 到 12 週間由每週 5.4 天降到 1.4 天 [R11]；即使有記錄，使用者也平均漏記約 18% 的品項 [R13] | 期刊論文 |
+| P-4 | MyFitnessPal 的記錄頻率在第 4 到 12 週間由每週 5.4 天降到 1.4 天 [R11]；即使有記錄，使用者也平均漏記約 18% 的品項 [R13] | 期刊論文 |
 | P-5 | Bilen 等人（2026，*Frontiers in Nutrition*）讓 ChatGPT-4o、Gemini 2.5 Pro、Claude 4.1、Bing Chat、Perplexity 替 4 位虛構的過重／肥胖 15 歲青少年排三天菜單：AI 菜單平均每天比營養師的菜單少約 **695 kcal**，碳水偏低、蛋白質與脂肪偏高 [N5] | 期刊論文（書目經 Science News 報導核對；樣本為 4 個虛構個案，提示詞為土耳其文） |
 | P-6 | 台灣 30 位營養師評估 ChatGPT 給大學生的飲食建議：242 則回饋中，最常見的疑慮（52 次）是資訊不夠周延或嚴謹，容易造成誤解或誤用 [N6] | 期刊論文 |
 
@@ -84,7 +84,7 @@
 | 編號 | 來源 | 等級 |
 |------|------|------|
 | N1 | Li, X., Yin, A., Choi, H. Y., Chan, V., Allman-Farinelli, M., & Chen, J. (2024). Evaluating the quality and comparative validity of manual food logging and artificial intelligence-enabled food image recognition in apps for nutrition care. *Nutrients*, 16(15), 2573. https://doi.org/10.3390/nu16152573 ；雪梨大學新聞稿（2024-08-29） | 期刊論文（Crossref 已確認） |
-| N2 | Hengist, A., et al. (2026). 拍照熱量 App 準確度研究，發表於 American Society for Nutrition 年會 NUTRITION 2026；ScienceDaily（2026-07-26）、Newsweek、HealthDay（2026-07-27）報導 | 研討會摘要，尚未經完整同儕審查；第一作者以正式摘要為準 |
+| N2 | A. Hengist 與 O. Charles（NIDDK）的拍照熱量 App 準確度研究，由 O. Charles 於 NUTRITION 2026（American Society for Nutrition 年會，2026-07-25）口頭發表。新聞稿：American Society for Nutrition. (2026, July 26). *Your AI calorie-tracking app may be off by 345 calories*. ScienceDaily. https://sciencedaily.com/releases/2026/07/260726015237.htm ；Newsweek、HealthDay（2026-07-27）亦有報導 | 研討會摘要，尚未經同儕審查（新聞稿明確註明為初步結果）；作者順序以正式摘要為準 |
 | N3 | Bort, J. (2026, March 2). MyFitnessPal has acquired Cal AI, the viral calorie app built by teens. *TechCrunch*. https://techcrunch.com/2026/03/02/myfitnesspal-has-acquired-cal-ai-the-viral-calorie-app-built-by-teens | 科技媒體；營收與下載數由 MyFitnessPal 提供 |
 | N4 | 潘文涵（計畫主持人）。國民營養健康狀況變遷調查（106–109 年）成果報告。衛生福利部國民健康署委託研究計畫。第三章第九節「國人外食情形」，表 3.9.1，頁 162–163。https://www.hpa.gov.tw/Pages/ashx/GetFile.ashx?lang=c&type=1&sid=dbeb2e2da047472f9a8dd816d0b021ac | 官方報告（已讀取原始 PDF；68.0% = 34.8 + 27.2 + 6.0） |
 | N5 | Bilen, A. B., Kalkan, G. E., & Yılmaz Önal, H. Y. (2026). Artificial intelligence diet plans underestimate nutrient intake compared to dietitians in adolescents. *Frontiers in Nutrition*, 13, 1765598. https://doi.org/10.3389/fnut.2026.1765598 | 期刊論文（Crossref 已確認） |
